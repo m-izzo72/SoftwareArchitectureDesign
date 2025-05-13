@@ -13,7 +13,7 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Paths.get("src/main/java/org/softwarearchitecturedesigngroup10/view/view.fxml").toUri().toURL());
         Scene scene = new Scene(fxmlLoader.load(), 640, 480);
-        stage.setTitle("Software Architecture Design");
+        stage.setTitle("Software Architecture Design ");
         stage.setScene(scene);
         stage.show();
     }
