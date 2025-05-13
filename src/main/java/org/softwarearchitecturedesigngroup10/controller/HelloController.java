@@ -1,4 +1,4 @@
-package org.example.softwarearchitecturedesigngroup10;
+package org.softwarearchitecturedesigngroup10.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
