@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 
 public class Ellipse extends Shape {
 
-    double radiusX, radiusY;
+    private double radiusX, radiusY;
 
     public Ellipse(double y, double x, Color borderColor, Color fillColor, boolean isSelected, double radiusY, double radiusX) {
 

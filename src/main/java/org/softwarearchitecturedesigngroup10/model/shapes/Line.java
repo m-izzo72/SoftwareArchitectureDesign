@@ -14,7 +14,7 @@ public class Line extends Shape{
     }
 
     @Override
-    void draw(GraphicsContext gc) {
+    public void draw(GraphicsContext gc) {
         gc.setStroke(borderColor);
         gc.setLineWidth(isSelected ? 3 : 1); // linea più spessa se selezionata
         gc.strokeLine(x, y, x2, y2);
