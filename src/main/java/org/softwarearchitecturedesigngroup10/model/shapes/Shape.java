@@ -22,6 +22,11 @@ public abstract class Shape {
         this.isSelected = isSelected;
     }
 
+    void setShapePosition(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
     void setShapeBorderColor(Color borderColor) {
         this.borderColor = borderColor;
     }
@@ -38,9 +43,12 @@ public abstract class Shape {
         return borderColor;
     }
 
+
     public boolean isSelected() {
         return isSelected;
     }
+
+
 
     abstract void draw(GraphicsContext gc);
 
