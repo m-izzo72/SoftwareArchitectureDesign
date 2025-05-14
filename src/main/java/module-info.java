@@ -1,4 +1,4 @@
-module org.example.softwarearchitecturedesigngroup10 {
+module org.softwarearchitecturedesigngroup10 {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
@@ -10,6 +10,8 @@ module org.example.softwarearchitecturedesigngroup10 {
     requires org.kordamp.bootstrapfx.core;
     //requires eu.hansolo.tilesfx;
 
-    opens org.example.softwarearchitecturedesigngroup10 to javafx.fxml;
-    exports org.example.softwarearchitecturedesigngroup10;
+    opens org.softwarearchitecturedesigngroup10 to javafx.fxml;
+    exports org.softwarearchitecturedesigngroup10;
+    exports org.softwarearchitecturedesigngroup10.controller;
+    opens org.softwarearchitecturedesigngroup10.controller to javafx.fxml;
 }
