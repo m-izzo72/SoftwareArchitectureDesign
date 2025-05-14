@@ -1,4 +1,7 @@
 package org.softwarearchitecturedesigngroup10.model.factories;
 
-public class LineFactory {
+import org.softwarearchitecturedesigngroup10.model.shapes.Line;
+
+public class LineFactory extends Line {
+    public Shape createShape();
 }
