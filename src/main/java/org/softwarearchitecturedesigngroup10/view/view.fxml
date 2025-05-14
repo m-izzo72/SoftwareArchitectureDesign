@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<Pane fx:id="rootPane" maxWidth="1.7976931348623157E308" prefHeight="324.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.softwarearchitecturedesigngroup10.controller.Controller">
+<Pane fx:id="rootPane" maxWidth="1.7976931348623157E308" prefHeight="324.0" prefWidth="600.0" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.softwarearchitecturedesigngroup10.controller.Controller">
    <children>
       <VBox fx:id="backgroundPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="324.0" prefWidth="600.0">
          <children>
@@ -26,23 +26,43 @@
             </HBox>
             <HBox prefHeight="273.0" prefWidth="600.0" style="-fx-background-color: blue;">
                <children>
-                  <VBox fx:id="navigationPanel" prefHeight="273.0" prefWidth="55.0" style="-fx-background-color: pink;">
+                  <VBox fx:id="navigationPanel" alignment="TOP_CENTER" prefHeight="273.0" prefWidth="55.0" spacing="6.0" style="-fx-background-color: pink;">
                      <children>
-                        <Button fx:id="fileNavigation" mnemonicParsing="false" text="F" />
-                        <Button fx:id="shapeNavigation" mnemonicParsing="false" text="S" />
-                        <Button fx:id="clipboardNavigation" mnemonicParsing="false" text="C" />
+                        <Button fx:id="fileNavigation" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#onFileNavigationButtonClick" prefHeight="30.0" prefWidth="30.0" text="F" />
+                        <Button fx:id="shapeNavigation" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#onShapeNavigationButtonClick" prefHeight="30.0" prefWidth="30.0" text="S" />
+                        <Button fx:id="clipboardNavigation" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#onClipboardNavigationButtonClick" prefHeight="30.0" prefWidth="30.0" text="C" />
                      </children>
+                     <padding>
+                        <Insets top="8.0" />
+                     </padding>
                   </VBox>
                   <VBox fx:id="toolbar" prefHeight="273.0" prefWidth="92.0" style="-fx-background-color: green;">
                      <children>
-                        <VBox fx:id="fileToolbar" prefHeight="273.0" prefWidth="79.0">
+                        <VBox fx:id="clipboardToolbar" alignment="TOP_CENTER" minHeight="0.0" prefHeight="0.0" prefWidth="79.0" spacing="8.0">
                            <children>
-                              <Button fx:id="newCanvasButton" mnemonicParsing="false" onAction="#onNewCanvasButtonClick" text="NewC" />
-                              <Button fx:id="saveFileButton" mnemonicParsing="false" onAction="#onSaveFileButtonClick" text="SaveF" />
-                              <Button fx:id="openFileButton" mnemonicParsing="false" onAction="#onOpenFileButtonClick" text="OpenF" />
+                              <Button fx:id="copyButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onNewCanvasButtonClick" prefHeight="60.0" prefWidth="60.0" text="Copy" />
+                              <Button fx:id="pasteButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onSaveFileButtonClick" prefHeight="60.0" prefWidth="60.0" text="Paste" />
+                              <Button fx:id="deleteButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onOpenFileButtonClick" prefHeight="60.0" prefWidth="60.0" text="Delete" />
+                           </children>
+                        </VBox>
+                        <VBox fx:id="shapeToolbar" alignment="TOP_CENTER" minHeight="0.0" prefHeight="0.0" prefWidth="79.0" spacing="8.0">
+                           <children>
+                              <Button fx:id="lineButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onNewCanvasButtonClick" prefHeight="60.0" prefWidth="60.0" text="Line" />
+                              <Button fx:id="rectangleButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onSaveFileButtonClick" prefHeight="60.0" prefWidth="60.0" text="Rect" />
+                              <Button fx:id="ellipseButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onOpenFileButtonClick" prefHeight="60.0" prefWidth="60.0" text="Ell" />
+                           </children>
+                        </VBox>
+                        <VBox fx:id="fileToolbar" alignment="TOP_CENTER" minHeight="0.0" prefHeight="0.0" prefWidth="79.0" spacing="8.0">
+                           <children>
+                              <Button fx:id="newCanvasButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onNewCanvasButtonClick" prefHeight="60.0" prefWidth="60.0" text="NewC" />
+                              <Button fx:id="saveFileButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onSaveFileButtonClick" prefHeight="60.0" prefWidth="60.0" text="SaveF" />
+                              <Button fx:id="openFileButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onOpenFileButtonClick" prefHeight="60.0" prefWidth="60.0" text="OpenF" />
                            </children>
                         </VBox>
                      </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
                   </VBox>
                   <VBox prefHeight="273.0" prefWidth="373.0">
                      <children>

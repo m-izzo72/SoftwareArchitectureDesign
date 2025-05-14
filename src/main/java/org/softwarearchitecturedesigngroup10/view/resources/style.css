@@ -1,0 +1,8 @@
+#newCanvasButton, #openFileButton, #ellipseButton, #rectangleButton, #saveFileButton, #lineButton{
+    -fx-pref-width: 60 !important;
+    -fx-pref-height: 60 !important;
+}
+
+#shapeToolbar, #clipboardToolbar, #fileToolbar {
+  -fx-padding: 8 0 0 0;
+}
