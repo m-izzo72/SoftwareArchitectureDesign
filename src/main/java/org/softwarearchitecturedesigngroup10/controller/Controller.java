@@ -14,7 +14,6 @@ import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Controller {
 
