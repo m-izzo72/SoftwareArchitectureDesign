@@ -8,6 +8,7 @@ module org.softwarearchitecturedesigngroup10 {
     requires net.synedra.validatorfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
+    requires java.desktop;
     //requires eu.hansolo.tilesfx;
 
     opens org.softwarearchitecturedesigngroup10 to javafx.fxml;
