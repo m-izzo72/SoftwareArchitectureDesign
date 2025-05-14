@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 
 
 public  class Rectangle extends Shape {
-    public double width,height;
+    private double width,height;
     public Rectangle(double width, double height, double y, double x, Color borderColor, Color fillColor, boolean isSelected) {
         super(y, x, borderColor, fillColor, isSelected);
         this.width = width;
