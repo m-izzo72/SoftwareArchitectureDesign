@@ -52,6 +52,20 @@ public class Controller {
     private Button fileNavigation;
     @FXML
     private Button newCanvasButton;
+    @FXML
+    private Button ellipseButton;
+    @FXML
+    private Button deleteButton;
+    @FXML
+    private VBox shapeToolbar;
+    @FXML
+    private VBox fileToolbar;
+    @FXML
+    private Button lineButton;
+    @FXML
+    private VBox clipboardToolbar;
+    @FXML
+    private Button rectangleButton;
 
     @FXML
     protected void onMinimizeButtonClick() {
@@ -66,6 +80,9 @@ public class Controller {
     public void initialize() {
         HBox.setHgrow(titleBar, Priority.ALWAYS);
         titleBar.setMaxWidth(Double.MAX_VALUE);
+
+        shapeToolbar.setVisible(false);
+        clipboardToolbar.setVisible(false);
 
         if (rootPane != null && titleBar != null)
 
@@ -113,5 +130,32 @@ public class Controller {
 
     @FXML
     public void onOpenFileButtonClick(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void onShapeNavigationButtonClick(ActionEvent actionEvent) {
+        fileToolbar.setVisible(false);
+
+        clipboardToolbar.setVisible(false);
+
+        shapeToolbar.setVisible(true);
+    }
+
+    @FXML
+    public void onFileNavigationButtonClick(ActionEvent actionEvent) {
+        fileToolbar.setVisible(true);
+        clipboardToolbar.setVisible(false);
+
+        shapeToolbar.setVisible(false);
+
+    }
+
+    @FXML
+    public void onClipboardNavigationButtonClick(ActionEvent actionEvent) {
+        fileToolbar.setVisible(false);
+
+        clipboardToolbar.setVisible(true);
+        shapeToolbar.setVisible(false);
+
     }
 }
