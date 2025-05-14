@@ -122,7 +122,6 @@ public class Controller {
             icon.setStrokeWidth(0.5);
         }
 
-
         fileNavigation.setGraphic(iconList.get(0));
         shapeNavigation.setGraphic(iconList.get(1));
         clipboardNavigation.setGraphic(iconList.get(2));
