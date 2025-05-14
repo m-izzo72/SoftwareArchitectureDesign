@@ -1,8 +1,65 @@
 #newCanvasButton, #openFileButton, #ellipseButton, #rectangleButton, #saveFileButton, #lineButton{
-    -fx-pref-width: 60 !important;
-    -fx-pref-height: 60 !important;
+
 }
 
-#shapeToolbar, #clipboardToolbar, #fileToolbar {
-  -fx-padding: 8 0 0 0;
+@font-face {
+    font-family: 'Inter';
+    src: url('./fonts/Inter.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+#rootPane {
+    -fx-font-family: 'Inter';
+    -fx-font-smoothing-type: lcd;
+    -fx-font-size: 11pt;
+    -fx-background-radius: 15 15 15 15;
+}
+
+#titleBar {
+    -fx-background-radius: 15 15 0 0;
+}
+
+#bottomPane {
+    -fx-background-radius: 0 0 15 15;
+}
+
+#backgroundPane {
+    -fx-background-color: transparent;
+}
+
+#fileNavigation, #shapeNavigation, #clipboardNavigation,
+#lineButton, #rectangleButton, #ellipseButton {
+    -fx-background-color: transparent;
+    -fx-background-radius: 7;
+}
+
+#fileNavigation:hover, #shapeNavigation:hover, #clipboardNavigation:hover,
+#lineButton:hover, #rectangleButton:hover, #ellipseButton:hover {
+    -fx-background-color: #e5e5e7;
+}
+
+#fileNavigation:selected, #shapeNavigation:selected, #clipboardNavigation:selected,
+#lineButton:selected, #rectangleButton:selected, #ellipseButton:selected {
+    -fx-background-color: #5874e6;
+
+}
+
+#lineButton:selected SVGPath, #rectangleButton:selected SVGPath, #ellipseButton:selected SVGPath {
+    -fx-fill: #ffffff;
+}
+
+#lineButton:selected:hover, #rectangleButton:selected:hover, #ellipseButton:selected:hover {
+    -fx-background-color: #4366f6;
+}
+
+#fileNavigation:pressed, #shapeNavigation:pressed, #clipboardNavigation:pressed {
+    -fx-background-color: #e5e5e7;
+}
+
+#navigationPanel, #toolbarPanel {
+    -fx-background-color: #f7f7f9;
+    -fx-border-style: solid solid hidden hidden;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
 }

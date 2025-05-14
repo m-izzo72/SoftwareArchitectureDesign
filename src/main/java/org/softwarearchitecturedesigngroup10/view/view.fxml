@@ -4,17 +4,18 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<Pane fx:id="rootPane" maxWidth="1.7976931348623157E308" prefHeight="324.0" prefWidth="600.0" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.softwarearchitecturedesigngroup10.controller.Controller">
+<Pane fx:id="rootPane" maxWidth="1.7976931348623157E308" prefHeight="650.0" prefWidth="900.0" stylesheets="@resources/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.softwarearchitecturedesigngroup10.controller.Controller">
    <children>
-      <VBox fx:id="backgroundPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="324.0" prefWidth="600.0">
+      <VBox fx:id="backgroundPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="650.0" prefWidth="900.0">
          <children>
-            <HBox fx:id="titleBar" alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="34.0" prefWidth="600.0" style="-fx-background-color: grey;">
+            <HBox fx:id="titleBar" alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="900.0" style="-fx-background-color: grey;">
                <children>
-                  <Label fx:id="title" maxWidth="1.7976931348623157E308" text="New Canvas" HBox.hgrow="ALWAYS">
+                  <Label fx:id="title" maxWidth="1.7976931348623157E308" prefHeight="20.0" prefWidth="796.0" text="New Canvas" HBox.hgrow="ALWAYS">
                      <HBox.margin>
                         <Insets left="8.0" top="8.0" />
                      </HBox.margin>
@@ -24,47 +25,63 @@
                   <Button fx:id="closeButton" mnemonicParsing="false" onAction="#onCloseButtonClick" text="X" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <HBox prefHeight="273.0" prefWidth="600.0" style="-fx-background-color: blue;">
+            <HBox fx:id="operatingArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="384.0" prefWidth="900.0" style="-fx-background-color: blue;">
                <children>
-                  <VBox fx:id="navigationPanel" alignment="TOP_CENTER" prefHeight="273.0" prefWidth="55.0" spacing="6.0" style="-fx-background-color: pink;">
+                  <VBox fx:id="navigationPanel" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="384.0" prefWidth="45.0" spacing="6.0" style="-fx-background-color: #f7f7f9;" HBox.hgrow="ALWAYS">
                      <children>
-                        <Button fx:id="fileNavigation" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#onFileNavigationButtonClick" prefHeight="30.0" prefWidth="30.0" text="F" />
-                        <Button fx:id="shapeNavigation" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#onShapeNavigationButtonClick" prefHeight="30.0" prefWidth="30.0" text="S" />
-                        <Button fx:id="clipboardNavigation" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" onAction="#onClipboardNavigationButtonClick" prefHeight="30.0" prefWidth="30.0" text="C" />
+                        <Button fx:id="fileNavigation" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onFileNavigationButtonClick" prefHeight="32.0" prefWidth="32.0">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </Button>
+                        <Button fx:id="shapeNavigation" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onShapeNavigationButtonClick" prefHeight="32.0" prefWidth="32.0" />
+                        <Button fx:id="clipboardNavigation" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onClipboardNavigationButtonClick" prefHeight="32.0" prefWidth="32.0" />
                      </children>
                      <padding>
                         <Insets top="8.0" />
                      </padding>
                   </VBox>
-                  <VBox fx:id="toolbar" prefHeight="273.0" prefWidth="92.0" style="-fx-background-color: green;">
+                  <VBox fx:id="toolbar" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="384.0" prefWidth="79.0" style="-fx-background-color: #f7f7f9;" HBox.hgrow="ALWAYS">
                      <children>
                         <VBox fx:id="clipboardToolbar" alignment="TOP_CENTER" minHeight="0.0" prefHeight="0.0" prefWidth="79.0" spacing="8.0">
                            <children>
-                              <Button fx:id="copyButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onNewCanvasButtonClick" prefHeight="60.0" prefWidth="60.0" text="Copy" />
-                              <Button fx:id="pasteButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onSaveFileButtonClick" prefHeight="60.0" prefWidth="60.0" text="Paste" />
-                              <Button fx:id="deleteButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onOpenFileButtonClick" prefHeight="60.0" prefWidth="60.0" text="Delete" />
+                              <Button fx:id="copyButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onNewCanvasButtonClick" prefHeight="55.0" prefWidth="55.0" text="Copy" />
+                              <Button fx:id="pasteButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSaveFileButtonClick" prefHeight="55.0" prefWidth="55.0" text="Paste" />
+                              <Button fx:id="deleteButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onOpenFileButtonClick" prefHeight="55.0" prefWidth="55.0" text="Delete" />
                            </children>
+                           <padding>
+                              <Insets top="8.0" />
+                           </padding>
                         </VBox>
                         <VBox fx:id="shapeToolbar" alignment="TOP_CENTER" minHeight="0.0" prefHeight="0.0" prefWidth="79.0" spacing="8.0">
                            <children>
-                              <Button fx:id="lineButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onNewCanvasButtonClick" prefHeight="60.0" prefWidth="60.0" text="Line" />
-                              <Button fx:id="rectangleButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onSaveFileButtonClick" prefHeight="60.0" prefWidth="60.0" text="Rect" />
-                              <Button fx:id="ellipseButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onOpenFileButtonClick" prefHeight="60.0" prefWidth="60.0" text="Ell" />
+                              <ToggleButton fx:id="lineButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onLineButtonClick" prefHeight="55.0" prefWidth="55.0" />
+                              <ToggleButton fx:id="rectangleButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onRectangleButtonClick" prefHeight="55.0" prefWidth="55.0" />
+                              <ToggleButton fx:id="ellipseButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onEllipseButtonClick" prefHeight="55.0" prefWidth="55.0" />
                            </children>
+                           <padding>
+                              <Insets top="8.0" />
+                           </padding>
                         </VBox>
                         <VBox fx:id="fileToolbar" alignment="TOP_CENTER" minHeight="0.0" prefHeight="0.0" prefWidth="79.0" spacing="8.0">
                            <children>
-                              <Button fx:id="newCanvasButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onNewCanvasButtonClick" prefHeight="60.0" prefWidth="60.0" text="NewC" />
-                              <Button fx:id="saveFileButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onSaveFileButtonClick" prefHeight="60.0" prefWidth="60.0" text="SaveF" />
-                              <Button fx:id="openFileButton" maxHeight="60.0" maxWidth="60.0" minHeight="60.0" minWidth="60.0" mnemonicParsing="false" onAction="#onOpenFileButtonClick" prefHeight="60.0" prefWidth="60.0" text="OpenF" />
+                              <Button fx:id="newCanvasButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onNewCanvasButtonClick" prefHeight="55.0" prefWidth="55.0" text="NewC" />
+                              <Button fx:id="saveFileButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSaveFileButtonClick" prefHeight="55.0" prefWidth="55.0" text="SaveF" />
+                              <Button fx:id="openFileButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onOpenFileButtonClick" prefHeight="55.0" prefWidth="55.0" text="OpenF" />
                            </children>
+                           <padding>
+                              <Insets top="8.0" />
+                           </padding>
                         </VBox>
                      </children>
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
                   </VBox>
-                  <VBox prefHeight="273.0" prefWidth="373.0">
+                  <VBox fx:id="canvasContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="363.0" prefWidth="732.0" HBox.hgrow="ALWAYS">
                      <children>
                         <HBox fx:id="canvasToolbar" prefHeight="27.0" prefWidth="424.0" style="-fx-background-color: yellow;" />
                         <Canvas fx:id="canvas" height="246.0" width="479.0" />
@@ -72,7 +89,7 @@
                   </VBox>
                </children>
             </HBox>
-            <HBox fx:id="bottomPane" prefHeight="24.0" prefWidth="600.0" style="-fx-background-color: red;" />
+            <HBox fx:id="bottomPane" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="900.0" style="-fx-background-color: red;" />
          </children>
       </VBox>
    </children>
