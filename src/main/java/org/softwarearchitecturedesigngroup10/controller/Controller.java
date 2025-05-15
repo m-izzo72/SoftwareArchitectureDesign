@@ -1,10 +1,12 @@
 package org.softwarearchitecturedesigngroup10.controller;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.*;
@@ -75,6 +77,10 @@ public class Controller {
     private Button openFileButton;
     @FXML
     private Button copyButton;
+    @FXML
+    private ColorPicker borderColorPicker;
+    @FXML
+    private ColorPicker shapeColorPicker;
 
     @FXML
     protected void onMinimizeButtonClick() {
@@ -289,5 +295,9 @@ public class Controller {
     public void onLineButtonClick(ActionEvent actionEvent) {
         rectangleButton.setSelected(false);
         ellipseButton.setSelected(false);
+    }
+
+    @FXML
+    public void handleMouseClick(Event event) {
     }
 }
