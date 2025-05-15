@@ -13,15 +13,15 @@
     -fx-font-family: 'Inter';
     -fx-font-smoothing-type: lcd;
     -fx-font-size: 11pt;
-    -fx-background-radius: 15 15 15 15;
+    -fx-background-radius: 11 11 11 11;
 }
 
 #titleBar {
-    -fx-background-radius: 15 15 0 0;
+    -fx-background-radius: 8 8 0 0;
 }
 
 #bottomPane {
-    -fx-background-radius: 0 0 15 15;
+    -fx-background-radius: 0 0 8 8;
 }
 
 #backgroundPane {
@@ -29,23 +29,46 @@
 }
 
 #fileNavigation, #shapeNavigation, #clipboardNavigation,
-#lineButton, #rectangleButton, #ellipseButton {
+#lineButton, #rectangleButton, #ellipseButton,
+#openFileButton, #saveFileButton, #newCanvasButton {
+
     -fx-background-color: transparent;
     -fx-background-radius: 7;
 }
 
+#closeButton, #minimizeButton, #maximizeButton {
+    -fx-background-color: transparent;
+}
+
+#minimizeButton:hover, #maximizeButton:hover {
+    -fx-background-color: #3c3d45;
+    -fx-background-radius: 0;
+}
+
+#closeButton:hover {
+    -fx-background-color: #dd4242;
+    -fx-background-radius: 0 8 0 0;
+}
+
+/*#closeButton:hover SVGPath, #minimizeButton:hover SVGPath, #maximizeButton:hover SVGPath {
+    -fx-fill:
+}*/
+
 #fileNavigation:hover, #shapeNavigation:hover, #clipboardNavigation:hover,
-#lineButton:hover, #rectangleButton:hover, #ellipseButton:hover {
+#lineButton:hover, #rectangleButton:hover, #ellipseButton:hover,
+#openFileButton:hover, #newCanvasButton:hover, #saveFileButton:hover {
     -fx-background-color: #e5e5e7;
 }
 
 #fileNavigation:selected, #shapeNavigation:selected, #clipboardNavigation:selected,
-#lineButton:selected, #rectangleButton:selected, #ellipseButton:selected {
+#lineButton:selected, #rectangleButton:selected, #ellipseButton:selected,
+#openFileButton:selected, #saveFileButton:selected, #newCanvasButton:selected {
     -fx-background-color: #5874e6;
 
 }
 
-#lineButton:selected SVGPath, #rectangleButton:selected SVGPath, #ellipseButton:selected SVGPath {
+#lineButton:selected SVGPath, #rectangleButton:selected SVGPath, #ellipseButton:selected SVGPath,
+#openFileButton:selected SVGPath, #saveFileButton:selected SVGPath, #newCanvasButton:selected SVGPath {
     -fx-fill: #ffffff;
 }
 
@@ -60,6 +83,24 @@
 #navigationPanel, #toolbarPanel {
     -fx-background-color: #f7f7f9;
     -fx-border-style: solid solid hidden hidden;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
+}
+
+#toolbar {
+    -fx-border-style: hidden solid hidden hidden;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
+}
+
+#bottomPane {
+    -fx-border-style: solid hidden hidden hidden;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
+}
+
+#canvasToolbar {
+    -fx-border-style: hidden hidden solid hidden;
     -fx-border-width: 1;
     -fx-border-color: #eaebef;
 }
