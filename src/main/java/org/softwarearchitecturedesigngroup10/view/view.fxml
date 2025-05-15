@@ -97,7 +97,7 @@
                   <VBox fx:id="canvasContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="363.0" prefWidth="732.0" style="-fx-background-color: #fffffe;" HBox.hgrow="ALWAYS">
                      <children>
                         <HBox fx:id="canvasToolbar" prefHeight="27.0" prefWidth="424.0" style="-fx-background-color: yel#fffffelow;" />
-                        <Canvas fx:id="canvas" height="246.0" width="479.0" />
+                        <Canvas fx:id="canvas" height="246.0" onMouseClicked="#handleMouseClick" width="479.0" />
                      </children>
                   </VBox>
                </children>
