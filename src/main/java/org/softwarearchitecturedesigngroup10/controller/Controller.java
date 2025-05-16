@@ -321,7 +321,9 @@ public class Controller {
         public void handleMouseClick(MouseEvent event) {
 
             if(lineButton.isSelected()) {
-
+                factory =
+                Line line = new LineFactory().createShape(x, y);
+                line.setX();
                 LineFactory lineFactory = new LineFactory();
                 Shape line = lineFactory.createShape();
                 line.setShapePosition(event.getX(), event.getY());

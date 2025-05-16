@@ -7,7 +7,6 @@ public class Ellipse extends Shape {
     private double radiusX, radiusY;
 
 
-
     @Override
     public void draw(GraphicsContext gc) {
         // Save the actual state of the drawing area
