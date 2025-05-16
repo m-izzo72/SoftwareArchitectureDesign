@@ -13,7 +13,7 @@
     -fx-font-family: 'Inter';
     -fx-font-smoothing-type: lcd;
     -fx-font-size: 11pt;
-    -fx-background-radius: 11 11 11 11;
+    -fx-background-radius: 9 9 9 9;
 }
 
 #titleBar {
@@ -94,6 +94,7 @@
 }
 
 #bottomPane {
+    -fx-background-color: #f7f7f9;
     -fx-border-style: solid hidden hidden hidden;
     -fx-border-width: 1;
     -fx-border-color: #eaebef;
@@ -105,9 +106,70 @@
     -fx-border-color: #eaebef;
 }
 
-#rootPane {
-    -fx-outline-style: solid;
-    -fx-outline-width: 10;
-    -fx-outline-color: #ffffff;
 
+
+
+#fileTab, #shapesTab, #clipboardTab {
+    -fx-pref-width: 42; -fx-pref-height: 32;
+    -fx-max-width: 32; -fx-max-height: 32;
+    -fx-min-width: 32; -fx-min-height: 32;
+    /*-fx-padding: 0 300 0 0;*/
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-style: solid solid solid solid;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+}
+
+.tab-header-background {
+    -fx-background-color: #f7f7f9;
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
+}
+
+#fileTab:selected .focus-indicator, #shapesTab:selected .focus-indicator, #clipboardTab:selected .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+#fileTab:selected SVGPath, #shapesTab:selected SVGPath, #clipboardTab:selected SVGPath {
+    -fx-fill: #696b77;
+}
+
+#fileTab SVGPath, #shapesTab SVGPath, #clipboardTab SVGPath {
+    -fx-fill: #b6b6bc;
+}
+
+#rootPane {
+    -fx-background-color: #464646;
+}
+
+/*#fileTab .tab-label {
+    -fx-graphic: url("/icons/files.svg");
+}*/
+
+#fileTabContainer, #shapesTabContainer, #clipboardTabContainer {
+    -fx-background-color: #f7f7f9;
+    -fx-border-style: hidden solid hidden hidden;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
+}
+
+#quickToolbar {
+    -fx-background-color: #fffffe;
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
+}
+
+#canvas {
+    -fx-background-color: transparent;
+}
+
+#operatingArea {
+    -fx-background-color: #fffffe;
+}
+
+#titleBar {
+    -fx-background-color: #2b2c31;
 }
