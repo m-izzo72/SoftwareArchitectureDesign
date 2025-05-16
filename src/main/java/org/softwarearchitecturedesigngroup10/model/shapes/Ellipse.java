@@ -1,7 +1,6 @@
 package org.softwarearchitecturedesigngroup10.model.shapes;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 public class Ellipse extends Shape {
 
