@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import org.softwarearchitecturedesigngroup10.model.factories.EllipseFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.LineFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.RectangleFactory;
+import org.softwarearchitecturedesigngroup10.model.factories.ShapeFactory;
 import org.softwarearchitecturedesigngroup10.model.shapes.Line;
 import org.softwarearchitecturedesigngroup10.model.shapes.Shape;
 
@@ -320,24 +321,29 @@ public class Controller {
 
         public void handleMouseClick(MouseEvent event) {
 
+
+            ShapeFactory factory;
+
             if(lineButton.isSelected()) {
 
-                LineFactory lineFactory = new LineFactory();
-                Shape line = lineFactory.createShape();
+                factory = new LineFactory();
+                Shape line = factory.createShape();
                 line.setShapePosition(event.getX(), event.getY());
                 line.draw(gc);
 
             } else if(ellipseButton.isSelected()) {
-                EllipseFactory ellipseFactory = new EllipseFactory();
-                Shape ellipse = ellipseFactory.createShape();
-                ellipse.setShapePosition(event.getX(), event.getY());
-                ellipse.draw(gc);
+                factory = new EllipseFactory();
+                Shape line = factory.createShape();
+                line.setShapePosition(event.getX(), event.getY());
+                line.draw(gc);
+
             } else if(rectangleButton.isSelected()) {
-                RectangleFactory rectangleFactory = new RectangleFactory();
-                Shape rectangle = rectangleFactory.createShape();
-                rectangle.setShapePosition(event.getX(), event.getY());
-                rectangle.draw(gc);
+                factory = new RectangleFactory();
+                Shape line = factory.createShape();
+                line.setShapePosition(event.getX(), event.getY());
+                line.draw(gc);
             }
-        }
+
+    }
 
 }
