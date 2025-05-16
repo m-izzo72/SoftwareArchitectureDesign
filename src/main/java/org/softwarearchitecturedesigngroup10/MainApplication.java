@@ -16,7 +16,8 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        System.setProperty("prism.lcdtext", "false");
+
+        System.setProperty("prism.lcdtext", "false"); // Fixes font rendering
         FXMLLoader fxmlLoader = new FXMLLoader();//new FXMLLoader(Paths.get("src/main/java/org/softwarearchitecturedesigngroup10/view/view.fxml").toUri().toURL());
 
         /*Controller controller = new Controller();
