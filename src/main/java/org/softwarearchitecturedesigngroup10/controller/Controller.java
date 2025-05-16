@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import org.softwarearchitecturedesigngroup10.model.factories.EllipseFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.LineFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.RectangleFactory;
+import org.softwarearchitecturedesigngroup10.model.shapes.Line;
 import org.softwarearchitecturedesigngroup10.model.shapes.Shape;
 
 import java.util.ArrayList;
@@ -314,14 +315,18 @@ public class Controller {
         ellipseButton.setSelected(false);
     }
 
+
     @FXML
 
         public void handleMouseClick(MouseEvent event) {
+
             if(lineButton.isSelected()) {
+
                 LineFactory lineFactory = new LineFactory();
                 Shape line = lineFactory.createShape();
                 line.setShapePosition(event.getX(), event.getY());
                 line.draw(gc);
+
             } else if(ellipseButton.isSelected()) {
                 EllipseFactory ellipseFactory = new EllipseFactory();
                 Shape ellipse = ellipseFactory.createShape();

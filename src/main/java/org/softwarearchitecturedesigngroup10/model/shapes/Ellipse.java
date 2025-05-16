@@ -17,18 +17,12 @@ public class Ellipse extends Shape {
         gc.setStroke(getBorderColor());
         gc.setFill(getFillColor());
 
-        // Draw Ellipse
-        /* Se la forma è selezionata, si potrebbe voler aggiungere un effetto visivo
-        if (isSelected()) {
-            // Opzionale: disegna un indicatore di selezione, ad esempio un contorno tratteggiato
-            gc.setLineDashes(3);
-            gc.strokeOval(getX() - radiusX, getY() - radiusY, radiusX * 2, radiusY * 2);
-            gc.setLineDashes(null);
-        }*/
+
 
         // Draw the colored ellipse
-        gc.fillOval(getRadiusX() - radiusX, getRadiusY() - radiusY, radiusX * 2, radiusY * 2);
-        gc.strokeOval(getRadiusX() - radiusX, getRadiusY() - radiusY, radiusX * 2, radiusY * 2);
+
+        gc.fillOval(getX() - radiusX, getY() - radiusY, radiusX * 2, radiusY * 2);
+        gc.strokeOval(getX() - radiusX, getY() - radiusY, radiusX * 2, radiusY * 2);
 
         gc.restore();
     }

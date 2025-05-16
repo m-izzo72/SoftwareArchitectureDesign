@@ -9,8 +9,8 @@ public class Line extends Shape{
     @Override
     public void draw(GraphicsContext gc) {
         gc.setStroke(this.getBorderColor());
-        gc.setLineWidth(this.isSelected() ? 3 : 1); // linea più spessa se selezionata
-        gc.strokeLine(this.getX(), this.getY(), x2, y2);
+
+        gc.strokeLine(this.getX(), this.getY(), this.getX() + 200, this.getY());
     }
 
 

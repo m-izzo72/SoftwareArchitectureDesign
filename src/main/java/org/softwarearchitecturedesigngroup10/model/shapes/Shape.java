@@ -10,14 +10,6 @@ public abstract class Shape {
     private Color fillColor;
     private boolean isSelected;
 
-    /* public Shape(double y, double x, Color borderColor, Color fillColor, boolean isSelected) {
-        this.y = y;
-        this.x = x;
-        this.borderColor = borderColor;
-        this.fillColor = fillColor;
-        this.isSelected = isSelected;
-    }*/
-
 
     public void setSelected(boolean isSelected) {
         this.isSelected = isSelected;
