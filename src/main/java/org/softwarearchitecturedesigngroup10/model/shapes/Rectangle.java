@@ -25,10 +25,10 @@ public  class Rectangle extends Shape{
     @Override
      public void draw(GraphicsContext gc){
         gc.setFill(this.getFillColor());
-        gc.fillRect(this.getX(), this.getY(), width, height);
+        gc.fillRect(this.getX1(), this.getY1(), width, height);
 
         gc.setStroke(this.getBorderColor());
-        gc.strokeRect(this.getX(), this.getY(), width, height);
+        gc.strokeRect(this.getX1(), this.getY1(), width, height);
     }
 
 

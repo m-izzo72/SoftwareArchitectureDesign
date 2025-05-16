@@ -9,10 +9,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.Stage;
+import org.softwarearchitecturedesigngroup10.model.factories.EllipseFactory;
+import org.softwarearchitecturedesigngroup10.model.factories.LineFactory;
+import org.softwarearchitecturedesigngroup10.model.factories.RectangleFactory;
+import org.softwarearchitecturedesigngroup10.model.factories.ShapeFactory;
+import org.softwarearchitecturedesigngroup10.model.shapes.Line;
+import org.softwarearchitecturedesigngroup10.model.shapes.Shape;
 
 import java.util.ArrayList;
 
@@ -81,6 +88,8 @@ public class Controller {
     private ColorPicker borderColorPicker;
     @FXML
     private ColorPicker shapeColorPicker;
+    @FXML
+    private StackPane canvasListener;
 
     @FXML
     protected void onMinimizeButtonClick() {
@@ -170,11 +179,20 @@ public class Controller {
         clipboardToolbar.setVisible(false);
     }
 
+    GraphicsContext gc;
+
     @FXML
     public void initialize() {
 
         initStyle();
         initToolBar();
+
+        canvas.widthProperty().bind(canvasListener.widthProperty());
+        canvas.heightProperty().bind(canvasListener.heightProperty());
+
+
+
+        gc = canvas.getGraphicsContext2D();
 
         HBox.setHgrow(titleBar, Priority.ALWAYS);
         titleBar.setMaxWidth(Double.MAX_VALUE);
@@ -195,6 +213,7 @@ public class Controller {
         canvasContainer.prefHeightProperty().bind(rootPane.heightProperty().subtract(60));
         navigationPanel.prefHeightProperty().bind(rootPane.heightProperty().subtract(60));
         toolbar.prefHeightProperty().bind(rootPane.heightProperty().subtract(60));
+        canvasListener.prefHeightProperty().bind(rootPane.heightProperty().subtract(60));
         title.setMaxWidth(Double.MAX_VALUE);
         titleBar.setOnMousePressed(event -> {
             xOffset = event.getSceneX();
@@ -297,7 +316,34 @@ public class Controller {
         ellipseButton.setSelected(false);
     }
 
+
     @FXML
-    public void handleMouseClick(Event event) {
+
+        public void handleMouseClick(MouseEvent event) {
+
+
+            ShapeFactory factory;
+
+            if(lineButton.isSelected()) {
+
+                factory = new LineFactory();
+                Shape line = factory.createShape();
+                line.setShapePosition(event.getX(), event.getY());
+                line.draw(gc);
+
+            } else if(ellipseButton.isSelected()) {
+                factory = new EllipseFactory();
+                Shape line = factory.createShape();
+                line.setShapePosition(event.getX(), event.getY());
+                line.draw(gc);
+
+            } else if(rectangleButton.isSelected()) {
+                factory = new RectangleFactory();
+                Shape line = factory.createShape();
+                line.setShapePosition(event.getX(), event.getY());
+                line.draw(gc);
+            }
+
     }
+
 }

@@ -5,27 +5,21 @@ import javafx.scene.paint.Color;
 
 public abstract class Shape {
 
-    private double x, y;
+    private double x1, y1, x2, y2;
     private Color borderColor;
     private Color fillColor;
     private boolean isSelected;
-
-    /* public Shape(double y, double x, Color borderColor, Color fillColor, boolean isSelected) {
-        this.y = y;
-        this.x = x;
-        this.borderColor = borderColor;
-        this.fillColor = fillColor;
-        this.isSelected = isSelected;
-    }*/
 
 
     public void setSelected(boolean isSelected) {
         this.isSelected = isSelected;
     }
 
-    public void setShapePosition(double x, double y) {
-        this.x = x;
-        this.y = y;
+    public void setShapePosition(double x1, double y1, double x2, double y2) {
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
     }
 
     public void setShapeBorderColor(Color borderColor) {
@@ -44,12 +38,20 @@ public abstract class Shape {
         return borderColor;
     }
 
-    public double getX() {
-        return x;
+    public double getX1() {
+        return x1;
     }
 
-    public double getY() {
-        return y;
+    public double getY1() {
+        return y1;
+    }
+
+    public double getX2() {
+        return x2;
+    }
+
+    public double getY2() {
+        return y2;
     }
 
     public boolean isSelected() {

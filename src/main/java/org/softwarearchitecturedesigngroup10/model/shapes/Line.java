@@ -4,31 +4,19 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class Line extends Shape{
-    private double x2, y2;
+    private double thickness;
 
     @Override
     public void draw(GraphicsContext gc) {
         gc.setStroke(this.getBorderColor());
-        gc.setLineWidth(this.isSelected() ? 3 : 1); // linea più spessa se selezionata
-        gc.strokeLine(this.getX(), this.getY(), x2, y2);
+        gc.strokeLine(this.getX1(), this.getY1(), this.getX2(), this.getY2());
     }
 
-
-    public double getX2() {
-        return x2;
+    public double getThickness() {
+        return thickness;
     }
 
-    public void setX2(double x2) {
-        this.x2 = x2;
+    public void setThickness(double thickness) {
+        this.thickness = thickness;
     }
-
-    public double getY2() {
-        return y2;
-    }
-
-    public void setY2(double y2) {
-        this.y2 = y2;
-    }
-
-
 }

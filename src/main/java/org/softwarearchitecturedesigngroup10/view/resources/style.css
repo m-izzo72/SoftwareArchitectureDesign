@@ -104,3 +104,10 @@
     -fx-border-width: 1;
     -fx-border-color: #eaebef;
 }
+
+#rootPane {
+    -fx-outline-style: solid;
+    -fx-outline-width: 10;
+    -fx-outline-color: #ffffff;
+
+}
