@@ -10,7 +10,7 @@ public class EllipseFactory implements ShapeFactory{
     @Override
     public Shape createShape() {
         Ellipse ellipse = new Ellipse();
-        ellipse.setShapePosition(0, 0);
+        //ellipse.setShapePosition(0, 0);
         ellipse.setShapeBorderColor(Color.BLACK);
         ellipse.setShapeFillColor(Color.LIGHTGRAY);
         ellipse.setSelected(false);

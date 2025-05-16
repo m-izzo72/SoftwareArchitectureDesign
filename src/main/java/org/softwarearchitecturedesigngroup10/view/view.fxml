@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -19,15 +23,15 @@
                <children>
                   <HBox alignment="CENTER_RIGHT" layoutX="20.0" layoutY="-1.0" prefHeight="35.0" prefWidth="879.0">
                      <children>
-                        <Label prefHeight="21.0" prefWidth="789.0" text="New Canvas" textFill="WHITE" />
+                        <Label fx:id="title" prefHeight="21.0" prefWidth="789.0" text="New Canvas" textFill="WHITE" />
                         <Button fx:id="minimizeButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onMinimizeButtonClick" prefHeight="35.0" prefWidth="45.0">
                            <graphic>
-                              <SVGPath content="M260-160v-40h440v40H260Z" fill="WHITE" scaleX="0.025" scaleY="0.025" />
+                              <SVGPath content="M260-160v-40h440v40H260Z" fill="#fffffe" scaleX="0.025" scaleY="0.025" />
                            </graphic>
                         </Button>
                         <Button fx:id="closeButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCloseButtonClick" prefHeight="35.0" prefWidth="45.0">
                            <graphic>
-                              <SVGPath content="M256-227.69 227.69-256l224-224-224-224L256-732.31l224 224 224-224L732.31-704l-224 224 224 224L704-227.69l-224-224-224 224Z" fill="WHITE" scaleX="0.025" scaleY="0.025" />
+                              <SVGPath content="M256-227.69 227.69-256l224-224-224-224L256-732.31l224 224 224-224L732.31-704l-224 224 224 224L704-227.69l-224-224-224 224Z" fill="#fffffe" scaleX="0.025" scaleY="0.025" />
                            </graphic>
                         </Button>
                      </children>
@@ -67,15 +71,34 @@
                                     <ToggleButton fx:id="lineButton" layoutX="6.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onLineButtonClick" prefHeight="55.0" prefWidth="55.0">
                                        <graphic>
                                           <SVGPath content="M200-440v-80h560v80H200Z" fill="#797b86" rotate="-35.5" scaleX="0.07" scaleY="0.05" />
-                                       </graphic></ToggleButton>
+                                       </graphic>
+                                       <tooltip>
+                                          <Tooltip text="Draw new Line" />
+                                       </tooltip></ToggleButton>
                                     <ToggleButton fx:id="rectangleButton" layoutX="6.0" layoutY="81.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onRectangleButtonClick" prefHeight="55.0" prefWidth="55.0">
                                        <graphic>
                                           <SVGPath content="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
-                                       </graphic></ToggleButton>
+                                       </graphic>
+                                       <tooltip>
+                                          <Tooltip text="Draw new Rectangle" />
+                                       </tooltip></ToggleButton>
                                     <ToggleButton fx:id="ellipseButton" layoutX="6.0" layoutY="147.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onEllipseButtonClick" prefHeight="55.0" prefWidth="55.0">
                                        <graphic>
                                           <SVGPath content="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
-                                       </graphic></ToggleButton>
+                                       </graphic>
+                                       <tooltip>
+                                          <Tooltip text="Draw new Ellipse" />
+                                       </tooltip></ToggleButton>
+                                    <Separator layoutX="-1.0" layoutY="217.0" prefHeight="1.0" prefWidth="70.0" />
+                                    <ColorPicker fx:id="fillColorPicker" layoutX="35.0" layoutY="229.0" prefHeight="24.0" prefWidth="24.0" />
+                                    <ColorPicker fx:id="strokeColorPicker" layoutX="35.0" layoutY="267.0" prefHeight="24.0" prefWidth="24.0">
+                                       <padding>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="100.0" />
+                                       </padding>
+                                    </ColorPicker>
+                                    <SVGPath content="M80 0v-120h800V0H80Zm160-303.46h49.46l332-331.39-25.15-25.53-24.92-24.54-331.39 332v49.46Zm-60 60v-135l448.39-447.77q8.69-8.69 19.73-13.15 11.03-4.46 22.96-4.46 11.94 0 23.12 4.46 11.18 4.46 20.49 13.77l48.08 48.69q9.31 8.69 13.46 19.91 4.15 11.21 4.15 23.18 0 11.22-4.21 22.31-4.21 11.1-13.4 20.29L315-243.46H180Zm540.38-490.92-49.46-49.46 49.46 49.46Zm-98.92 99.53-25.15-25.53-24.92-24.54 50.07 50.07Z" fill="#797b86" layoutX="-1.0" layoutY="174.0" scaleX="0.03" scaleY="0.03" translateX="-462.0" translateY="526.0" />
+                                    <SVGPath content="m255.46-880.54 42.39-42.53L632-588.92q21.08 21.08 21.08 51.61 0 30.54-21.08 51.62L458.92-311.85q-20.69 20.7-51.23 20.7-30.54 0-51.23-20.7L183.39-485.69q-21.08-21.08-21.08-51.62 0-30.53 21.08-51.61l181.92-181.77-109.85-109.85Zm152.62 152.62L224.77-545.38q-1.92 1.92-2.5 4.04-.58 2.11-.58 4.42h372q0-2.31-.57-4.42-.58-2.12-2.5-4.04L408.08-727.92Zm343.46 461.77q-29.16 0-49.58-20.43-20.42-20.42-20.42-49.57 0-19.46 10.96-40.19 10.96-20.73 23.65-39.04 8.23-11.23 17.08-22.69 8.85-11.47 18.31-22.7 9.46 11.23 18.31 22.7 8.84 11.46 17.07 22.69 12.69 18.31 23.66 39.04 10.96 20.73 10.96 40.19 0 29.15-20.43 49.57-20.42 20.43-49.57 20.43ZM80 0v-120h800V0H80Z" fill="#797b86" layoutX="10.0" layoutY="223.0" scaleX="0.03" scaleY="0.03" stroke="BLACK" strokeType="INSIDE" translateX="-473.0" translateY="478.0" />
+                                    <Separator layoutY="310.0" prefHeight="1.0" prefWidth="70.0" />
                                  </children>
                               </AnchorPane>
                         </content>
@@ -96,12 +119,12 @@
                   <VBox fx:id="operatingArea" prefHeight="581.0" prefWidth="793.0">
                      <children>
                         <Pane fx:id="quickToolbar" prefHeight="36.0" prefWidth="781.0" />
-                        <Pane fx:id="canvas" onMouseClicked="#handleMouseClick" prefHeight="547.0" prefWidth="781.0" />
+                        <Pane fx:id="canvas" onMouseClicked="#handleMouseClick" prefHeight="546.0" prefWidth="793.0" />
                      </children>
                   </VBox>
                </children>
             </HBox>
-            <Pane fx:id="bottomPane" prefHeight="29.0" prefWidth="898.0" />
+            <Pane fx:id="bottomPane" prefHeight="28.0" prefWidth="898.0" />
          </children>
       </VBox>
    </children>

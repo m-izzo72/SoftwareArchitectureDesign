@@ -3,23 +3,15 @@ package org.softwarearchitecturedesigngroup10.controller;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.SVGPath;
+import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import org.softwarearchitecturedesigngroup10.model.factories.EllipseFactory;
-import org.softwarearchitecturedesigngroup10.model.factories.LineFactory;
-import org.softwarearchitecturedesigngroup10.model.factories.RectangleFactory;
-import org.softwarearchitecturedesigngroup10.model.shapes.Line;
-import org.softwarearchitecturedesigngroup10.model.shapes.Shape;
-
-import java.util.ArrayList;
 
 public class Controller {
 
@@ -68,6 +60,12 @@ public class Controller {
     private AnchorPane shapesTabContainer;
     @FXML
     private Button closeButton;
+    @FXML
+    private Label title;
+    @FXML
+    private ColorPicker strokeColorPicker;
+    @FXML
+    private ColorPicker fillColorPicker;
 
     @FXML
     protected void onMinimizeButtonClick() {
@@ -100,17 +98,20 @@ public class Controller {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
-                    rootPane.setStyle("-fx-background-color: #464646;");
+                    rootPane.setStyle("-fx-background-color: #525355;");
+                    titleBar.setStyle("-fx-background-color: #242525;");
+                    minimizeButton.getGraphic().setStyle("-fx-fill: #fffffe");
+                    closeButton.getGraphic().setStyle("-fx-fill: #fffffe");
+                    title.setTextFill(Color.valueOf("#fffffe"));
                 } else { // La finestra HA PERSO il focus
-                    rootPane.setStyle("-fx-background-color: #5e5c5c;");
+                    rootPane.setStyle("-fx-background-color: #5a5b5e;");
+                    titleBar.setStyle("-fx-background-color: #2e2e2e;");
+                    minimizeButton.getGraphic().setStyle("-fx-fill: #797979");
+                    closeButton.getGraphic().setStyle("-fx-fill: #797979");
+                    title.setTextFill(Color.valueOf("#797979"));
                 }
             }
         });
-    }
-
-    @Deprecated
-    public void onMaximizeButtonClick(ActionEvent actionEvent) {
-        stage.setMaximized(!stage.isMaximized());
     }
 
     @FXML
@@ -155,33 +156,24 @@ public class Controller {
     public void onOpenFileClickButton(ActionEvent actionEvent) {
     }
 
-    /*
-    @Deprecated
+    @FXML
     public void handleMouseClick(MouseEvent event) {
-
-        ShapeFactory factory;
-            if(lineButton.isSelected()) {
-                factory =
-                Line line = new LineFactory().createShape(x, y);
-                line.setX();
-                LineFactory lineFactory = new LineFactory();
-                Shape line = lineFactory.createShape();
-                line.setShapePosition(event.getX(), event.getY());
-                line.draw(gc);
-
-            } else if(ellipseButton.isSelected()) {
-                EllipseFactory ellipseFactory = new EllipseFactory();
-                Shape ellipse = ellipseFactory.createShape();
-                ellipse.setShapePosition(event.getX(), event.getY());
-                ellipse.draw(gc);
-            } else if(rectangleButton.isSelected()) {
-                RectangleFactory rectangleFactory = new RectangleFactory();
-                Shape rectangle = rectangleFactory.createShape();
-                rectangle.setShapePosition(event.getX(), event.getY());
-                rectangle.draw(gc);
-            }
-
-
-        }*/
+        if(shapesTab.isSelected() && lineButton.isSelected()){
+            Line line = new Line(event.getX(),event.getY(),100,100);
+            line.setFill(fillColorPicker.getValue());
+            line.setStroke(fillColorPicker.getValue());
+            canvas.getChildren().add(line);
+        } else if(shapesTab.isSelected() && rectangleButton.isSelected()){
+            Rectangle rect = new Rectangle(event.getX(),event.getY(),100,100);
+            rect.setFill(fillColorPicker.getValue());
+            rect.setStroke(strokeColorPicker.getValue());
+            canvas.getChildren().add(rect);
+        } else if(shapesTab.isSelected() && ellipseButton.isSelected()){
+            Ellipse ellipse = new Ellipse(event.getX() + 50,event.getY() + 50,50,50);
+            ellipse.setFill(fillColorPicker.getValue());
+            ellipse.setStroke(strokeColorPicker.getValue());
+            canvas.getChildren().add(ellipse);
+        };
+    }
 
 }

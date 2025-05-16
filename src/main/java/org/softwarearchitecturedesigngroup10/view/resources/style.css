@@ -12,7 +12,7 @@
 #rootPane {
     -fx-font-family: 'Inter';
     -fx-font-smoothing-type: lcd;
-    -fx-font-size: 11pt;
+    -fx-font-size: 10pt;
     -fx-background-radius: 9 9 9 9;
 }
 
@@ -123,7 +123,7 @@
 
 .tab-header-background {
     -fx-background-color: #f7f7f9;
-    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-style: hidden solid solid hidden;
     -fx-border-width: 1;
     -fx-border-color: #eaebef;
 }
@@ -150,14 +150,14 @@
 
 #fileTabContainer, #shapesTabContainer, #clipboardTabContainer {
     -fx-background-color: #f7f7f9;
-    -fx-border-style: hidden solid hidden hidden;
+    -fx-border-style: solid solid hidden hidden;
     -fx-border-width: 1;
     -fx-border-color: #eaebef;
 }
 
 #quickToolbar {
     -fx-background-color: #fffffe;
-    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-style: solid hidden solid hidden;
     -fx-border-width: 1;
     -fx-border-color: #eaebef;
 }
@@ -171,5 +171,28 @@
 }
 
 #titleBar {
-    -fx-background-color: #2b2c31;
+    -fx-background-color: #242525;
+}
+
+.separator .line {
+    -fx-background-color: #eaebef;
+    -fx-pref-height: 1;
+    -fx-border-color: null;
+}
+
+#fillColorPicker, #strokeColorPicker {
+    -fx-color-rect-width: 24;
+    -fx-color-rect-height: 24;
+    -fx-padding: 0 0 0 0;
+    -fx-font-size: 1;
+    -fx-background-color: transparent;
+
+}
+
+#fillColorPicker .large-rect-picker, #strokeColorPicker .large-rect-picker {
+    -fx-border-color: #eaebef;
+}
+
+#fillColorPicker .focus-indicator, #strokeColorPicker .focus-indicator {
+    -fx-border-color: transparent;
 }
