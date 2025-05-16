@@ -20,8 +20,8 @@ public class Ellipse extends Shape {
 
         // Draw the colored ellipse
 
-        gc.fillOval(getX() - radiusX, getY() - radiusY, radiusX * 2, radiusY * 2);
-        gc.strokeOval(getX() - radiusX, getY() - radiusY, radiusX * 2, radiusY * 2);
+        gc.fillOval(getX1() - radiusX, getY1() - radiusY, radiusX * 2, radiusY * 2);
+        gc.strokeOval(getX1() - radiusX, getY1() - radiusY, radiusX * 2, radiusY * 2);
 
         gc.restore();
     }
