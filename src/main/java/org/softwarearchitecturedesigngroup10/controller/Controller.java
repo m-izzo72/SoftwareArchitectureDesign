@@ -224,6 +224,7 @@ public class Controller {
         );
 
         // Aggiungi la forma al modello usando il pattern Command
+        canvas.getChildren().add(shape);
         canvasModel.paint(shape);
     }
 
