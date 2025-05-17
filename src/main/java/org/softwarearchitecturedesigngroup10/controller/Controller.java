@@ -1,5 +1,6 @@
 package org.softwarearchitecturedesigngroup10.controller;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -66,6 +67,8 @@ public class Controller {
     private ColorPicker strokeColorPicker;
     @FXML
     private ColorPicker fillColorPicker;
+    @FXML
+    private Label canvasInfoLabel;
 
     @FXML
     protected void onMinimizeButtonClick() {
@@ -78,7 +81,7 @@ public class Controller {
     @FXML
     public void initialize() {
 
-
+        canvasInfoLabel.textProperty().bind(Bindings.size(canvas.getChildren()).asString().concat(" shapes on the canvas."));
 
         titleBar.setOnMousePressed(event -> {
             xOffset = event.getSceneX();
@@ -99,13 +102,15 @@ public class Controller {
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
                     rootPane.setStyle("-fx-background-color: #525355;");
-                    titleBar.setStyle("-fx-background-color: #242525;");
+                    titleBar.getStyleClass().add("watercolorTitleBar");
+                    titleBar.getStyleClass().remove("unfocused");
                     minimizeButton.getGraphic().setStyle("-fx-fill: #fffffe");
                     closeButton.getGraphic().setStyle("-fx-fill: #fffffe");
                     title.setTextFill(Color.valueOf("#fffffe"));
                 } else { // La finestra HA PERSO il focus
                     rootPane.setStyle("-fx-background-color: #5a5b5e;");
-                    titleBar.setStyle("-fx-background-color: #2e2e2e;");
+                    titleBar.getStyleClass().remove("watercolorTitleBar");
+                    titleBar.getStyleClass().add("unfocused");
                     minimizeButton.getGraphic().setStyle("-fx-fill: #797979");
                     closeButton.getGraphic().setStyle("-fx-fill: #797979");
                     title.setTextFill(Color.valueOf("#797979"));
