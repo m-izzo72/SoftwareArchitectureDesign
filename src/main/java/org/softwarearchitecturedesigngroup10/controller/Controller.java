@@ -77,6 +77,8 @@ public class Controller {
     private Label canvasInfoLabel;
     @FXML
     private Button deleteShapeButton;
+    @FXML
+    private ToggleButton selectToolButton;
 
     @FXML
     protected void onMinimizeButtonClick() {
@@ -176,32 +178,6 @@ public class Controller {
 
     @Deprecated
     public void onOpenFileClickButton(ActionEvent actionEvent) {
-    }
-
-    @Deprecated
-    public void handleMouseClick(MouseEvent event) {
-
-//        ShapeFactory factory;
-//        if(shapesTab.isSelected() && lineButton.isSelected()) {
-//            factory = new LineFactory();
-//            Line line = (Line) factory.createShape();
-//            line.setStartX(event.getX());
-//            line.setStartY(event.getY());
-//            line.setEndX();
-//            line.setEndY();
-//            line.setFill();
-//            line.setStroke();
-//            canvas.getChildren().add(line);
-//        } else if(shapesTab.isSelected() && rectangleButton.isSelected()) {
-//            factory = new RectangleFactory();
-//            Rectangle rectangle = (Rectangle) factory.createShape();
-//
-//        } else if(shapesTab.isSelected() && ellipseButton.isSelected()) {
-////            Ellipse ellipse = new Ellipse(event.getX() + 50,event.getY() + 50,50,50);
-////            ellipse.setFill(fillColorPicker.getValue());
-////            ellipse.setStroke(strokeColorPicker.getValue());
-////            canvas.getChildren().add(ellipse);
-//        };
     }
 
     double startX, startY, endX, endY;

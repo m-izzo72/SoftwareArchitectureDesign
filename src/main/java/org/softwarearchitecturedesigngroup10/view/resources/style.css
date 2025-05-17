@@ -31,7 +31,7 @@
 #fileNavigation, #shapeNavigation, #clipboardNavigation,
 #lineButton, #rectangleButton, #ellipseButton,
 #openFileButton, #saveFileButton, #newCanvasButton,
-#deleteShapeButton {
+#deleteShapeButton, #selectToolButton {
 
     -fx-background-color: transparent;
     -fx-background-radius: 7;
@@ -51,28 +51,27 @@
     -fx-background-radius: 0 8 0 0;
 }
 
-/*#closeButton:hover SVGPath, #minimizeButton:hover SVGPath, #maximizeButton:hover SVGPath {
-    -fx-fill:
-}*/
-
 #fileNavigation:hover, #shapeNavigation:hover, #clipboardNavigation:hover,
 #lineButton:hover, #rectangleButton:hover, #ellipseButton:hover,
 #openFileButton:hover, #newCanvasButton:hover, #saveFileButton:hover,
-#deleteShapeButton:hover {
+#deleteShapeButton:hover,
+#selectToolButton:hover {
     -fx-background-color: #e5e5e7;
 }
 
 #fileNavigation:selected, #shapeNavigation:selected, #clipboardNavigation:selected,
 #lineButton:selected, #rectangleButton:selected, #ellipseButton:selected,
 #openFileButton:selected, #saveFileButton:selected, #newCanvasButton:selected,
-#deleteShapeButton:selected {
+#deleteShapeButton:selected,
+#selectToolButton:selected {
     -fx-background-color: #5874e6;
 
 }
 
 #lineButton:selected SVGPath, #rectangleButton:selected SVGPath, #ellipseButton:selected SVGPath,
 #openFileButton:selected SVGPath, #saveFileButton:selected SVGPath, #newCanvasButton:selected SVGPath,
-#deleteShapeButton:selected SVGPath {
+#deleteShapeButton:selected SVGPath,
+#selectToolButton:selected SVGPath {
     -fx-fill: #ffffff;
 }
 
@@ -215,3 +214,22 @@
 #fillColorPicker .focus-indicator, #strokeColorPicker .focus-indicator {
     -fx-border-color: transparent;
 }
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.scroll-pane:focused {
+    -fx-background-insets: 0;
+}
+
+.scroll-pane .corner {
+    -fx-background-insets: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
