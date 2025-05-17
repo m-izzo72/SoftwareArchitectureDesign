@@ -216,37 +216,32 @@ public class Controller {
 
     @FXML
     public void setOnMouseReleased(MouseEvent event) {
+        if (!shapesTab.isSelected()) {
+            return;
+        }
 
         ShapeFactory factory;
-        if(shapesTab.isSelected() && lineButton.isSelected()) {
+
+        // Seleziona la factory appropriata
+        if (lineButton.isSelected()) {
             factory = new LineFactory();
-            Line line = (Line) factory.createShape();
-            line.setStartX(startX);
-            line.setStartY(startY);
-            line.setEndX(event.getX());
-            line.setEndY(event.getY());
-            line.setFill(fillColorPicker.getValue());
-            line.setStroke(strokeColorPicker.getValue());
-            canvas.getChildren().add(line);
-        } else if(shapesTab.isSelected() && rectangleButton.isSelected()) {
+        } else if (rectangleButton.isSelected()) {
             factory = new RectangleFactory();
-            Rectangle rectangle = (Rectangle) factory.createShape();
-            rectangle.setX(startX);
-            rectangle.setY(startY);
-            rectangle.setWidth(event.getX() - startX);
-            rectangle.setHeight(event.getY() - startY);
-            rectangle.setFill(fillColorPicker.getValue());
-            rectangle.setStroke(strokeColorPicker.getValue());
-
-        } else if(shapesTab.isSelected() && ellipseButton.isSelected()) {
+        } else if (ellipseButton.isSelected()) {
             factory = new EllipseFactory();
-            Ellipse ellipse = (Ellipse) factory.createShape();
-            ellipse.setRadiusX(startX - event.getX());
-            ellipse.setRadiusY(startY - event.getY());
-            ellipse.setCenterX(event.getX() / 2);
-            ellipse.setCenterY(event.getY() / 2);
+        } else {
+            return;
+        }
 
-        };
+        double thikness = 3;
+        // Crea e configura la forma utilizzando la factory con tutti i parametri necessari
+        Shape shape = factory.createShape(
+                startX, startY, event.getX(), event.getY(),
+                fillColorPicker.getValue(), strokeColorPicker.getValue(), thikness
+        );
+
+        // Aggiungi la forma al modello usando il pattern Command
+        canvasModel.paint(shape);
     }
 
 
