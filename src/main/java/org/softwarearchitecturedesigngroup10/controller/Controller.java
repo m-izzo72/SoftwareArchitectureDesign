@@ -12,7 +12,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
+import org.softwarearchitecturedesigngroup10.model.CanvasModel;
+import org.softwarearchitecturedesigngroup10.model.factories.EllipseFactory;
+import org.softwarearchitecturedesigngroup10.model.factories.LineFactory;
+import org.softwarearchitecturedesigngroup10.model.factories.RectangleFactory;
+import org.softwarearchitecturedesigngroup10.model.factories.ShapeFactory;
 
 public class Controller {
 
@@ -69,17 +75,22 @@ public class Controller {
     private ColorPicker fillColorPicker;
     @FXML
     private Label canvasInfoLabel;
+    @FXML
+    private Button deleteShapeButton;
 
     @FXML
     protected void onMinimizeButtonClick() {
         stage.setIconified(true);
     }
 
+    private CanvasModel canvasModel;
+
     private double xOffset = 0;
     private double yOffset = 0;
 
     @FXML
     public void initialize() {
+        canvasModel = new CanvasModel(canvas);
 
         canvasInfoLabel.textProperty().bind(Bindings.size(canvas.getChildren()).asString().concat(" shapes on the canvas."));
 
@@ -92,11 +103,11 @@ public class Controller {
             stage.setX(event.getScreenX() - xOffset);
             stage.setY(event.getScreenY() - yOffset);
         });
+
+
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-
+    public void addFocusListener() {
         stage.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -107,7 +118,7 @@ public class Controller {
                     minimizeButton.getGraphic().setStyle("-fx-fill: #fffffe");
                     closeButton.getGraphic().setStyle("-fx-fill: #fffffe");
                     title.setTextFill(Color.valueOf("#fffffe"));
-                } else { // La finestra HA PERSO il focus
+                } else {
                     rootPane.setStyle("-fx-background-color: #5a5b5e;");
                     titleBar.getStyleClass().remove("watercolorTitleBar");
                     titleBar.getStyleClass().add("unfocused");
@@ -117,6 +128,12 @@ public class Controller {
                 }
             }
         });
+
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+
     }
 
     @FXML
@@ -131,7 +148,7 @@ public class Controller {
 
     @FXML
     public void onNewCanvasButtonClick(ActionEvent actionEvent) {
-
+        canvas.getChildren().clear();
     }
 
     @FXML
@@ -161,24 +178,76 @@ public class Controller {
     public void onOpenFileClickButton(ActionEvent actionEvent) {
     }
 
-    @FXML
+    @Deprecated
     public void handleMouseClick(MouseEvent event) {
-        if(shapesTab.isSelected() && lineButton.isSelected()){
-            Line line = new Line(event.getX(),event.getY(),100,100);
+
+//        ShapeFactory factory;
+//        if(shapesTab.isSelected() && lineButton.isSelected()) {
+//            factory = new LineFactory();
+//            Line line = (Line) factory.createShape();
+//            line.setStartX(event.getX());
+//            line.setStartY(event.getY());
+//            line.setEndX();
+//            line.setEndY();
+//            line.setFill();
+//            line.setStroke();
+//            canvas.getChildren().add(line);
+//        } else if(shapesTab.isSelected() && rectangleButton.isSelected()) {
+//            factory = new RectangleFactory();
+//            Rectangle rectangle = (Rectangle) factory.createShape();
+//
+//        } else if(shapesTab.isSelected() && ellipseButton.isSelected()) {
+////            Ellipse ellipse = new Ellipse(event.getX() + 50,event.getY() + 50,50,50);
+////            ellipse.setFill(fillColorPicker.getValue());
+////            ellipse.setStroke(strokeColorPicker.getValue());
+////            canvas.getChildren().add(ellipse);
+//        };
+    }
+
+    double startX, startY, endX, endY;
+
+    @FXML
+    public void setOnMouseClicked(MouseEvent event) {
+        startX = event.getX();
+        startY = event.getY();
+        event.consume();
+        System.out.println("Mouse clicked at: " + startX + ", " + startY);
+    }
+
+    @FXML
+    public void setOnMouseReleased(MouseEvent event) {
+
+        ShapeFactory factory;
+        if(shapesTab.isSelected() && lineButton.isSelected()) {
+            factory = new LineFactory();
+            Line line = (Line) factory.createShape();
+            line.setStartX(startX);
+            line.setStartY(startY);
+            line.setEndX(event.getX());
+            line.setEndY(event.getY());
             line.setFill(fillColorPicker.getValue());
-            line.setStroke(fillColorPicker.getValue());
+            line.setStroke(strokeColorPicker.getValue());
             canvas.getChildren().add(line);
-        } else if(shapesTab.isSelected() && rectangleButton.isSelected()){
-            Rectangle rect = new Rectangle(event.getX(),event.getY(),100,100);
-            rect.setFill(fillColorPicker.getValue());
-            rect.setStroke(strokeColorPicker.getValue());
-            canvas.getChildren().add(rect);
-        } else if(shapesTab.isSelected() && ellipseButton.isSelected()){
-            Ellipse ellipse = new Ellipse(event.getX() + 50,event.getY() + 50,50,50);
-            ellipse.setFill(fillColorPicker.getValue());
-            ellipse.setStroke(strokeColorPicker.getValue());
-            canvas.getChildren().add(ellipse);
+        } else if(shapesTab.isSelected() && rectangleButton.isSelected()) {
+            factory = new RectangleFactory();
+            Rectangle rectangle = (Rectangle) factory.createShape();
+            rectangle.setX(startX);
+            rectangle.setY(startY);
+            rectangle.setWidth(event.getX() - startX);
+            rectangle.setHeight(event.getY() - startY);
+            rectangle.setFill(fillColorPicker.getValue());
+            rectangle.setStroke(strokeColorPicker.getValue());
+
+        } else if(shapesTab.isSelected() && ellipseButton.isSelected()) {
+            factory = new EllipseFactory();
+            Ellipse ellipse = (Ellipse) factory.createShape();
+            ellipse.setRadiusX(startX - event.getX());
+            ellipse.setRadiusY(startY - event.getY());
+            ellipse.setCenterX(event.getX() / 2);
+            ellipse.setCenterY(event.getY() / 2);
+
         };
     }
+
 
 }

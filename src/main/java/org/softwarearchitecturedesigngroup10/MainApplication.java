@@ -28,6 +28,7 @@ public class MainApplication extends Application {
         Parent parent = fxmlLoader.load();
         Controller controller = fxmlLoader.getController();
         controller.setStage(stage);
+        controller.addFocusListener();
         Scene scene = new Scene(parent);
         scene.setFill(Color.TRANSPARENT);
 

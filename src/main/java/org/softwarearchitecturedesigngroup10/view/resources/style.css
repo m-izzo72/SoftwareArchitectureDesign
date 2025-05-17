@@ -30,7 +30,8 @@
 
 #fileNavigation, #shapeNavigation, #clipboardNavigation,
 #lineButton, #rectangleButton, #ellipseButton,
-#openFileButton, #saveFileButton, #newCanvasButton {
+#openFileButton, #saveFileButton, #newCanvasButton,
+#deleteShapeButton {
 
     -fx-background-color: transparent;
     -fx-background-radius: 7;
@@ -56,19 +57,22 @@
 
 #fileNavigation:hover, #shapeNavigation:hover, #clipboardNavigation:hover,
 #lineButton:hover, #rectangleButton:hover, #ellipseButton:hover,
-#openFileButton:hover, #newCanvasButton:hover, #saveFileButton:hover {
+#openFileButton:hover, #newCanvasButton:hover, #saveFileButton:hover,
+#deleteShapeButton:hover {
     -fx-background-color: #e5e5e7;
 }
 
 #fileNavigation:selected, #shapeNavigation:selected, #clipboardNavigation:selected,
 #lineButton:selected, #rectangleButton:selected, #ellipseButton:selected,
-#openFileButton:selected, #saveFileButton:selected, #newCanvasButton:selected {
+#openFileButton:selected, #saveFileButton:selected, #newCanvasButton:selected,
+#deleteShapeButton:selected {
     -fx-background-color: #5874e6;
 
 }
 
 #lineButton:selected SVGPath, #rectangleButton:selected SVGPath, #ellipseButton:selected SVGPath,
-#openFileButton:selected SVGPath, #saveFileButton:selected SVGPath, #newCanvasButton:selected SVGPath {
+#openFileButton:selected SVGPath, #saveFileButton:selected SVGPath, #newCanvasButton:selected SVGPath,
+#deleteShapeButton:selected SVGPath {
     -fx-fill: #ffffff;
 }
 
