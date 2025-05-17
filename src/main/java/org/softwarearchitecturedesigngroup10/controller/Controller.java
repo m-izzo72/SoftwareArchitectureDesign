@@ -5,6 +5,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -186,6 +187,12 @@ public class Controller {
     public void setOnMouseClicked(MouseEvent event) {
         startX = event.getX();
         startY = event.getY();
+
+        /*if(selectToolButton.isSelected()) {
+            Object target = event.getTarget();
+            if()
+        }*/
+
         event.consume();
         System.out.println("Mouse clicked at: " + startX + ", " + startY);
     }
@@ -209,11 +216,11 @@ public class Controller {
             return;
         }
 
-        double thikness = 3;
+        double thickness = 3;
         // Crea e configura la forma utilizzando la factory con tutti i parametri necessari
         Shape shape = factory.createShape(
                 startX, startY, event.getX(), event.getY(),
-                fillColorPicker.getValue(), strokeColorPicker.getValue(), thikness
+                fillColorPicker.getValue(), strokeColorPicker.getValue(), thickness
         );
 
         // Aggiungi la forma al modello usando il pattern Command
