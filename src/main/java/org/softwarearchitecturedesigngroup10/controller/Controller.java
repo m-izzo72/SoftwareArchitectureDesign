@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -14,12 +15,17 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
 import org.softwarearchitecturedesigngroup10.model.factories.EllipseFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.LineFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.RectangleFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.ShapeFactory;
+import org.softwarearchitecturedesigngroup10.model.helper.Highlighter;
+
+import java.io.File;
+import java.util.ArrayList;
 
 public class Controller {
 
@@ -147,6 +153,18 @@ public class Controller {
 
     @FXML
     public void onSaveFileButtonClick(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save file");
+
+        fileChooser.setInitialFileName("canvas.pr");
+
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("File P.Ritrovato", "*.pr")
+        );
+
+        File fileToSave = fileChooser.showSaveDialog(stage);
+
+        canvasModel.save(fileToSave);
     }
 
     @FXML
@@ -156,6 +174,16 @@ public class Controller {
 
     @FXML
     public void onOpenFileButtonClick(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open File");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("File P.Ritrovato", "*.pr")
+        );
+        File selectedFile = fileChooser.showOpenDialog(stage);
+
+        canvasModel.load(selectedFile);
     }
 
 
@@ -163,18 +191,24 @@ public class Controller {
     public void onEllipseButtonClick(ActionEvent actionEvent) {
         rectangleButton.setSelected(false);
         lineButton.setSelected(false);
+
+        selectToolButton.setSelected(false);
     }
 
     @FXML
     public void onRectangleButtonClick(ActionEvent actionEvent) {
         ellipseButton.setSelected(false);
         lineButton.setSelected(false);
+
+        selectToolButton.setSelected(false);
     }
 
     @FXML
     public void onLineButtonClick(ActionEvent actionEvent) {
         rectangleButton.setSelected(false);
         ellipseButton.setSelected(false);
+
+        selectToolButton.setSelected(false);
     }
 
     @Deprecated
@@ -182,16 +216,40 @@ public class Controller {
     }
 
     double startX, startY, endX, endY;
+    ArrayList<Shape> selectedShapes = new ArrayList<>();
 
     @FXML
-    public void setOnMouseClicked(MouseEvent event) {
+    public void setOnMousePressed(MouseEvent event) {
         startX = event.getX();
         startY = event.getY();
 
-        /*if(selectToolButton.isSelected()) {
+        if(selectToolButton.isSelected()) {
             Object target = event.getTarget();
-            if()
-        }*/
+            Shape toSelectShape;
+
+            // Checks if target is a Shape and if it is painted on the canvas
+            if(target instanceof Node && canvas.getChildren().contains(target)) {
+                toSelectShape = (Shape) target;
+                if(selectedShapes.contains(toSelectShape)) {
+                    selectedShapes.remove(toSelectShape);
+                    Highlighter.unHighlightShape(toSelectShape);
+                    System.out.println("Unselected shape " + toSelectShape);
+                } else {
+                    Highlighter.highlightShape(toSelectShape);
+                    selectedShapes.add(toSelectShape);
+
+
+                    System.out.println("Selected shapes " + selectedShapes);
+                }
+
+            } else if(target == canvas) {
+                System.out.println("Canvas clicked");
+                Highlighter.unHighlightShapes(selectedShapes);
+                //Highlighter.unHighlightShape(toSelectShape);
+                selectedShapes.clear();
+
+            }
+        }
 
         event.consume();
         System.out.println("Mouse clicked at: " + startX + ", " + startY);
@@ -229,4 +287,15 @@ public class Controller {
     }
 
 
+    @FXML
+    public void onSelectToolButtonClick(ActionEvent actionEvent) {
+        rectangleButton.setSelected(false);
+        ellipseButton.setSelected(false);
+        lineButton.setSelected(false);
+    }
+
+    @FXML
+    public void onDeleteShapeButtonClick(ActionEvent actionEvent) {
+        canvasModel.deleteShapes(selectedShapes);
+    }
 }

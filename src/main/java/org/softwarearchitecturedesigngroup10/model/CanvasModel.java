@@ -3,18 +3,27 @@ package org.softwarearchitecturedesigngroup10.model;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import org.softwarearchitecturedesigngroup10.model.command.Command;
 import org.softwarearchitecturedesigngroup10.model.command.CommandManager;
 import org.softwarearchitecturedesigngroup10.model.command.PaintCommand;
 import org.softwarearchitecturedesigngroup10.model.command.DeleteShapeCommand;
+import org.softwarearchitecturedesigngroup10.model.converter.EllipseConverter;
+import org.softwarearchitecturedesigngroup10.model.converter.LineConverter;
+import org.softwarearchitecturedesigngroup10.model.converter.RectangleConverter;
+import org.softwarearchitecturedesigngroup10.model.converter.ShapeConverter;
+import org.softwarearchitecturedesigngroup10.model.helper.ShapeData;
 
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CanvasModel {
     private final Pane canvas;
@@ -38,8 +47,8 @@ public class CanvasModel {
 
     }
 
-    public void deleteShape(Shape shape) {
-        Command deleteCommand = new DeleteShapeCommand(canvas, shape);
+    public void deleteShapes(ArrayList<Shape> shapes) {
+        Command deleteCommand = new DeleteShapeCommand(canvas, shapes);
         commandManager.executeCommand(deleteCommand);
     }
 

@@ -3,22 +3,24 @@ package org.softwarearchitecturedesigngroup10.model.command;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DeleteShapeCommand implements Command {
-    private Pane canvas;
-    private Shape shapeToDelete;
-    private int originalIndex; // Indice originale per ripristinare la posizione
+    private final Pane canvas;
+    private final ArrayList<Shape> shapesToDelete;
+    private int originalIndex;
 
 
-    public DeleteShapeCommand(Pane canvas, Shape shapeToDelete) {
+    public DeleteShapeCommand(Pane canvas, ArrayList<Shape> shapesToDelete) {
         this.canvas = canvas;
-        this.shapeToDelete = shapeToDelete;
+        this.shapesToDelete = shapesToDelete;
     }
 
     @Override
     public void execute() {
-        // Rimuovi la forma sia dalla lista che dal canvas
-        //shapes.remove(shapeToDelete);
-        canvas.getChildren().remove(shapeToDelete);
+        // Removes shapes from canvas
+        for(Shape shape : shapesToDelete) canvas.getChildren().remove(shape);
     }
 
     @Override
@@ -29,6 +31,6 @@ public class DeleteShapeCommand implements Command {
 //        } else {
 //            shapes.add(shapeToDelete);
 //        }
-        canvas.getChildren().add(shapeToDelete);
+        //canvas.getChildren().add(shapesToDelete);
     }
 }
