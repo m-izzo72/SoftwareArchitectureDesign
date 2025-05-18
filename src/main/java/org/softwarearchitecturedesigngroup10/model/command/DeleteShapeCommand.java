@@ -6,6 +6,7 @@ import org.softwarearchitecturedesigngroup10.model.CanvasModel;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DeleteShapeCommand implements Command {
@@ -24,12 +25,5 @@ public class DeleteShapeCommand implements Command {
 
     @Override
     public void undo() {
-        // Aggiungi di nuovo la forma sia alla lista che al canvas
-//        if (originalIndex >= 0 && originalIndex <= shapes.size()) {
-//            shapes.add(originalIndex, shapeToDelete);
-//        } else {
-//            shapes.add(shapeToDelete);
-//        }
-        //canvas.getChildren().add(shapesToDelete);
     }
 }

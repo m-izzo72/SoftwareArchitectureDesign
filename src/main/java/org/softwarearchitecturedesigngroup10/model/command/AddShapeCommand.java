@@ -3,20 +3,19 @@ package org.softwarearchitecturedesigngroup10.model.command;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
 
-import javafx.scene.layout.Pane;
-import javafx.scene.shape.Shape;
-import org.softwarearchitecturedesigngroup10.model.CanvasModel;
+public class AddShapeCommand implements Command {
+    private CanvasModel receiver; // Il CanvasModel che eseguirà l'azione
+    private ShapeData shapeToAdd;      // La forma da aggiungere
 
-import java.util.List;
-
-public class PaintCommand implements Command {
-    private Pane canvas;
-    //private List<Shape> shapes;
-    private Shape shapeToPaint;
-
-    public PaintCommand(Pane canvas, Shape shapeToPaint) {
-        this.canvas = canvas;
-        this.shapeToPaint = shapeToPaint;
+    public AddShapeCommand(CanvasModel receiver, ShapeData shapeToAdd) {
+        if (receiver == null) {
+            throw new IllegalArgumentException("Il receiver (CanvasModelInterface) non può essere nullo.");
+        }
+        if (shapeToAdd == null) {
+            throw new IllegalArgumentException("ShapeData da aggiungere non può essere nullo.");
+        }
+        this.receiver = receiver;
+        this.shapeToAdd = shapeToAdd;
     }
 
     @Override

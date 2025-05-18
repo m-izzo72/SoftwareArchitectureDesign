@@ -7,7 +7,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -18,14 +17,20 @@ import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
-import org.softwarearchitecturedesigngroup10.model.factories.EllipseFactory;
-import org.softwarearchitecturedesigngroup10.model.factories.LineFactory;
-import org.softwarearchitecturedesigngroup10.model.factories.RectangleFactory;
-import org.softwarearchitecturedesigngroup10.model.factories.ShapeFactory;
+import org.softwarearchitecturedesigngroup10.model.command.CommandManager;
 import org.softwarearchitecturedesigngroup10.model.helper.Highlighter;
+import org.softwarearchitecturedesigngroup10.model.observer.ModelObserver;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.EllipseData;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.LineData;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.RectangleData;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
+import org.softwarearchitecturedesigngroup10.view.CanvasView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Controller implements ModelObserver{
 
@@ -93,13 +98,84 @@ public class Controller implements ModelObserver{
     }
 
     private CanvasModel canvasModel;
+    private CanvasView canvasView;
+    private CommandManager commandManager;
 
     private double xOffset = 0;
     private double yOffset = 0;
 
+    @Override
+    public void update() {
+        System.out.println("Controller: Ricevuta notifica di update dal Model.");
+        // 1. Ottieni lo stato aggiornato dal Model
+        LinkedHashMap<String, ShapeData> modelShapes = canvasModel.getShapes();
+        System.out.println("Controller: Numero di ShapeData dal model: " + modelShapes.size());
+
+        // 2. Converti ShapeData in oggetti JavaFX Shape (Logica di Mapping)
+        LinkedHashMap<String, Shape> viewShapes = new LinkedHashMap<>();
+        for (Map.Entry<String, ShapeData> entry : modelShapes.entrySet()) {
+            Shape fxShape = convertShapeDataToFxShape(entry.getValue());
+            if (fxShape != null) {
+                viewShapes.put(entry.getKey(), fxShape);
+            }
+        }
+        System.out.println("Controller: Numero di JavaFX Shapes convertite: " + viewShapes.size());
+
+        // 3. Istruisci la View ad aggiornarsi
+        canvasView.clear(); // Pulisce il canvas precedente
+        canvasView.repaintAll(viewShapes); // Ridisegna tutte le forme
+        System.out.println("Controller: CanvasView istruita a ridisegnare.");
+    }
+
+    private Shape convertShapeDataToFxShape(ShapeData data) {
+        Shape fxShape = null;
+        // Nota: i colori devono essere convertiti da String a javafx.scene.paint.Color
+        // e le coordinate/dimensioni devono essere usate correttamente.
+        try {
+            Color fillColor = data.getFillColor() != null ? Color.valueOf(data.getFillColor()) : null;
+            Color strokeColor = data.getStrokeColor() != null ? Color.valueOf(data.getStrokeColor()) : Color.BLACK; // Default a nero se null
+
+            if (data instanceof RectangleData rd) {
+                Rectangle rect = new Rectangle(rd.getX(), rd.getY(), rd.getWidth(), rd.getHeight());
+                rect.setFill(fillColor);
+                rect.setStroke(strokeColor);
+                rect.setStrokeWidth(rd.getStrokeWidth());
+                fxShape = rect;
+            } else if (data instanceof EllipseData ed) {
+                // Ellipse in JavaFX usa centerX, centerY, radiusX, radiusY
+                // Assumendo che x,y in EllipseData siano centerX, centerY
+                Ellipse ellipse = new Ellipse(ed.getX(), ed.getY(), ed.getRadiusX(), ed.getRadiusY());
+                ellipse.setFill(fillColor);
+                ellipse.setStroke(strokeColor);
+                ellipse.setStrokeWidth(ed.getStrokeWidth());
+                fxShape = ellipse;
+            } else if (data instanceof LineData ld) {
+                // Line in JavaFX usa startX, startY, endX, endY
+                // Assumendo che x,y in LineData siano startX, startY
+                Line line = new Line(ld.getX(), ld.getY(), ld.getEndX(), ld.getEndY());
+                // Le linee di solito non hanno un fill, ma lo stroke è importante
+                line.setStroke(strokeColor);
+                line.setStrokeWidth(ld.getStrokeWidth());
+                fxShape = line;
+            }
+
+
+
+        } catch (IllegalArgumentException e) {
+            System.err.println("Errore nella conversione del colore per la forma: " + e.getMessage());
+            // Gestisci l'errore, magari non aggiungendo la forma o usando colori di default
+        }
+        return fxShape;
+    }
+
+
     @FXML
     public void initialize() {
-        canvasModel = new CanvasModel(canvas);
+        canvasModel = new CanvasModel();
+        canvasView = new CanvasView(canvas);
+        commandManager = new CommandManager();
+
+        this.canvasModel.addObserver(this);
 
         canvasInfoLabel.textProperty().bind(Bindings.size(canvas.getChildren()).asString().concat(" shapes on the canvas."));
 
@@ -257,33 +333,33 @@ public class Controller implements ModelObserver{
 
     @FXML
     public void setOnMouseReleased(MouseEvent event) {
-        if (!shapesTab.isSelected()) {
-            return;
-        }
-
-        ShapeFactory factory;
-
-        // Seleziona la factory appropriata
-        if (lineButton.isSelected()) {
-            factory = new LineFactory();
-        } else if (rectangleButton.isSelected()) {
-            factory = new RectangleFactory();
-        } else if (ellipseButton.isSelected()) {
-            factory = new EllipseFactory();
-        } else {
-            return;
-        }
-
-        double thickness = 3;
-        // Crea e configura la forma utilizzando la factory con tutti i parametri necessari
-        Shape shape = factory.createShape(
-                startX, startY, event.getX(), event.getY(),
-                fillColorPicker.getValue(), strokeColorPicker.getValue(), thickness
-        );
-
-        // Aggiungi la forma al modello usando il pattern Command
-        canvas.getChildren().add(shape);
-        canvasModel.paint(shape);
+//        if (!shapesTab.isSelected()) {
+//            return;
+//        }
+//
+//        ShapeFactory factory;
+//
+//        // Seleziona la factory appropriata
+//        if (lineButton.isSelected()) {
+//            factory = new LineFactory();
+//        } else if (rectangleButton.isSelected()) {
+//            factory = new RectangleFactory();
+//        } else if (ellipseButton.isSelected()) {
+//            factory = new EllipseFactory();
+//        } else {
+//            return;
+//        }
+//
+//        double thickness = 3;
+//        // Crea e configura la forma utilizzando la factory con tutti i parametri necessari
+//        Shape shape = factory.createShape(
+//                startX, startY, event.getX(), event.getY(),
+//                fillColorPicker.getValue(), strokeColorPicker.getValue(), thickness
+//        );
+//
+//        // Aggiungi la forma al modello usando il pattern Command
+//        canvas.getChildren().add(shape);
+//        canvasModel.paint(shape);
     }
 
 
@@ -296,6 +372,6 @@ public class Controller implements ModelObserver{
 
     @FXML
     public void onDeleteShapeButtonClick(ActionEvent actionEvent) {
-        canvasModel.deleteShapes(selectedShapes);
+        //canvasModel.deleteShapes(selectedShapes);
     }
 }
