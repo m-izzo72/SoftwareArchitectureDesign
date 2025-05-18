@@ -27,7 +27,7 @@ import org.softwarearchitecturedesigngroup10.model.helper.Highlighter;
 import java.io.File;
 import java.util.ArrayList;
 
-public class Controller {
+public class Controller implements ModelObserver{
 
     private Stage stage;
     @FXML

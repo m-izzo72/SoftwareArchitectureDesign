@@ -2,25 +2,24 @@ package org.softwarearchitecturedesigngroup10.model.command;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
+import org.softwarearchitecturedesigngroup10.model.CanvasModel;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteShapeCommand implements Command {
-    private final Pane canvas;
-    private final ArrayList<Shape> shapesToDelete;
-    private int originalIndex;
+    private CanvasModel receiver;
+    private HashMap<String, ShapeData> shapesToDelete;
 
 
-    public DeleteShapeCommand(Pane canvas, ArrayList<Shape> shapesToDelete) {
-        this.canvas = canvas;
+    public DeleteShapeCommand(CanvasModel receiver, HashMap<String, ShapeData> shapeToDelete) {
+        this.receiver = receiver;
         this.shapesToDelete = shapesToDelete;
     }
 
     @Override
     public void execute() {
-        // Removes shapes from canvas
-        for(Shape shape : shapesToDelete) canvas.getChildren().remove(shape);
     }
 
     @Override
