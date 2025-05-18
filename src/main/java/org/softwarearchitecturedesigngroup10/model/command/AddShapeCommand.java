@@ -23,7 +23,7 @@ public class AddShapeCommand implements Command {
         receiver.addShape(shapeToAdd);
         // Il CanvasModel, dopo aver aggiunto la forma, dovrebbe chiamare notifyObservers()
         // per aggiornare la vista tramite il pattern Observer.
-        System.out.println("AddShapeCommand: Eseguito - Aggiunta forma ID: " + shapeToAdd.getId());
+        //System.out.println("AddShapeCommand: Eseguito - Aggiunta forma ID: " + shapeToAdd.getId());
     }
 
     @Override

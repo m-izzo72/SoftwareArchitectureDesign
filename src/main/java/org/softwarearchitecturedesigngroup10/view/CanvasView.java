@@ -5,6 +5,7 @@ import javafx.scene.shape.Shape;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class CanvasView implements CanvasViewInterface {
 
@@ -31,6 +32,10 @@ public class CanvasView implements CanvasViewInterface {
 
     @Override
     public void repaintAll(LinkedHashMap<String, Shape> shapes) {
+        for (Map.Entry<String, Shape> entry : shapes.entrySet()) {
+            entry.getValue().setId(entry.getKey());
+            canvas.getChildren().add(entry.getValue());
+        }
 
     }
 }

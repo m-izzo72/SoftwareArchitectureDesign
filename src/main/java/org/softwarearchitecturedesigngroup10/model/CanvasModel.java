@@ -14,12 +14,16 @@ import java.util.List;
 public class CanvasModel implements CanvasModelInterface {
     LinkedHashMap<String, ShapeData> shapes;
     FileManager fileManager;
-    List<ModelObserver> observers;
+    ArrayList<ModelObserver> observers;
 
     public CanvasModel() {
+        observers = new ArrayList<>();
+        shapes = new LinkedHashMap<>();
     }
 
     public void addShape(ShapeData shapeData) {
+        shapes.put("9", shapeData);
+        notifyObservers();
 
     }
 
@@ -32,7 +36,7 @@ public class CanvasModel implements CanvasModelInterface {
     }
 
     public void addObserver(ModelObserver observer) {
-        if (observer != null && !observers.contains(observer)) {
+        if (observer != null /* !observers.contains(observer) */) {
             observers.add(observer);
             System.out.println("Model: Observer aggiunto: " + observer.getClass().getSimpleName());
         }

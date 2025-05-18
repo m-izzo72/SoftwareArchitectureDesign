@@ -17,7 +17,10 @@ import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
+import org.softwarearchitecturedesigngroup10.model.command.AddShapeCommand;
 import org.softwarearchitecturedesigngroup10.model.command.CommandManager;
+import org.softwarearchitecturedesigngroup10.model.factories.LineDataFactory;
+import org.softwarearchitecturedesigngroup10.model.factories.ShapeDataFactory;
 import org.softwarearchitecturedesigngroup10.model.helper.Highlighter;
 import org.softwarearchitecturedesigngroup10.model.observer.ModelObserver;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.EllipseData;
@@ -109,17 +112,18 @@ public class Controller implements ModelObserver{
         System.out.println("Controller: Ricevuta notifica di update dal Model.");
         // 1. Ottieni lo stato aggiornato dal Model
         LinkedHashMap<String, ShapeData> modelShapes = canvasModel.getShapes();
-        System.out.println("Controller: Numero di ShapeData dal model: " + modelShapes.size());
+        System.out.println("Controller: Numero di ShapeData dal model: " + modelShapes.size() + "\n" + modelShapes.toString());
 
         // 2. Converti ShapeData in oggetti JavaFX Shape (Logica di Mapping)
         LinkedHashMap<String, Shape> viewShapes = new LinkedHashMap<>();
         for (Map.Entry<String, ShapeData> entry : modelShapes.entrySet()) {
             Shape fxShape = convertShapeDataToFxShape(entry.getValue());
-            if (fxShape != null) {
-                viewShapes.put(entry.getKey(), fxShape);
-            }
+            System.out.println("Controller: FXShape" + fxShape.toString());
+            viewShapes.put(entry.getKey(), fxShape);
+            //System.out.println(viewShapes.put(entry.getKey(), null));
         }
         System.out.println("Controller: Numero di JavaFX Shapes convertite: " + viewShapes.size());
+        System.out.println("Shapes in viewShapes" + viewShapes.toString());
 
         // 3. Istruisci la View ad aggiornarsi
         canvasView.clear(); // Pulisce il canvas precedente
@@ -304,27 +308,27 @@ public class Controller implements ModelObserver{
             Shape toSelectShape;
 
             // Checks if target is a Shape and if it is painted on the canvas
-            if(target instanceof Node && canvas.getChildren().contains(target)) {
-                toSelectShape = (Shape) target;
-                if(selectedShapes.contains(toSelectShape)) {
-                    selectedShapes.remove(toSelectShape);
-                    Highlighter.unHighlightShape(toSelectShape);
-                    System.out.println("Unselected shape " + toSelectShape);
-                } else {
-                    Highlighter.highlightShape(toSelectShape);
-                    selectedShapes.add(toSelectShape);
-
-
-                    System.out.println("Selected shapes " + selectedShapes);
-                }
-
-            } else if(target == canvas) {
-                System.out.println("Canvas clicked");
-                Highlighter.unHighlightShapes(selectedShapes);
-                //Highlighter.unHighlightShape(toSelectShape);
-                selectedShapes.clear();
-
-            }
+//            if(target instanceof Node && canvas.getChildren().contains(target)) {
+//                toSelectShape = (Shape) target;
+//                if(selectedShapes.contains(toSelectShape)) {
+//                    selectedShapes.remove(toSelectShape);
+//                    Highlighter.unHighlightShape(toSelectShape);
+//                    System.out.println("Unselected shape " + toSelectShape);
+//                } else {
+//                    Highlighter.highlightShape(toSelectShape);
+//                    selectedShapes.add(toSelectShape);
+//
+//
+//                    System.out.println("Selected shapes " + selectedShapes);
+//                }
+//
+//            } else if(target == canvas) {
+//                System.out.println("Canvas clicked");
+//                Highlighter.unHighlightShapes(selectedShapes);
+//                //Highlighter.unHighlightShape(toSelectShape);
+//                selectedShapes.clear();
+//
+//            }
         }
 
         event.consume();
@@ -333,6 +337,15 @@ public class Controller implements ModelObserver{
 
     @FXML
     public void setOnMouseReleased(MouseEvent event) {
+
+        ShapeDataFactory factory;
+        if(lineButton.isSelected()) {
+            factory = new LineDataFactory();
+
+            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), 3, 0));
+
+            commandManager.executeCommand(command);
+        }
 //        if (!shapesTab.isSelected()) {
 //            return;
 //        }
