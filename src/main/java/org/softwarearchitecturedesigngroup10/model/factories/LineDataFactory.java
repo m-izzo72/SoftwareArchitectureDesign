@@ -14,7 +14,6 @@ public class LineDataFactory implements ShapeDataFactory{
         lineData.setEndX(endX);
         lineData.setEndY(endY);
 
-        // Imposta lo stile
         lineData.setFillColor(fillColor);
         lineData.setStrokeColor(strokeColor);
         lineData.setStrokeWidth(strokeWidth);

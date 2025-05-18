@@ -1,21 +1,21 @@
 package org.softwarearchitecturedesigngroup10.model;
 
-import org.softwarearchitecturedesigngroup10.model.observer.ModelObserver;
+import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
 
 import java.io.File;
 import java.io.IOException;
 
 public interface CanvasModelInterface {
-    public void addObserver(ModelObserver observer);
+    void addObserver(ModelObserver observer);
 
-    public void removeObserver(ModelObserver observer);
+    void notifyObservers();
 
-    public void notifyObservers();
+    void clear();
 
-    public void addShape(ShapeData shapeToAdd);
+    void addShape(ShapeData shapeToAdd);
 
-    public void deleteShapes(HashMap<String, ShapeData> shapesToDelete);
+    void deleteShapes();
 
     void save(File file) throws IOException;
 

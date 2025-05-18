@@ -2,14 +2,11 @@ package org.softwarearchitecturedesigngroup10.model;
 
 import org.softwarearchitecturedesigngroup10.model.filesmanager.FileManager;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
-import org.softwarearchitecturedesigngroup10.model.observer.ModelObserver;
+import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
 
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 public class CanvasModel implements CanvasModelInterface {
     LinkedHashMap<String, ShapeData> shapes;
@@ -19,16 +16,30 @@ public class CanvasModel implements CanvasModelInterface {
     public CanvasModel() {
         observers = new ArrayList<>();
         shapes = new LinkedHashMap<>();
+        fileManager = new FileManager();
+    }
+
+    public void clear() {
+        shapes.clear();
+        notifyObservers();
     }
 
     public void addShape(ShapeData shapeData) {
-        shapes.put("9", shapeData);
+        shapes.put(UUID.randomUUID().toString(), shapeData);
         notifyObservers();
-
     }
 
-    public void deleteShapes(HashMap<String, ShapeData> shapes) {
+    public void selectShape(String shapeId) {
+        shapes.get(shapeId).setSelected(!shapes.get(shapeId).isSelected());
+    }
 
+    public void deselectAllShapes() {
+        shapes.forEach((key, value) -> value.setSelected(false));
+    }
+
+    public void deleteShapes() {
+        shapes.entrySet().removeIf(entry -> entry.getValue().isSelected());
+        notifyObservers();
     }
 
     public LinkedHashMap<String, ShapeData> getShapes() {
@@ -36,40 +47,28 @@ public class CanvasModel implements CanvasModelInterface {
     }
 
     public void addObserver(ModelObserver observer) {
-        if (observer != null /* !observers.contains(observer) */) {
+        if (observer != null && !observers.contains(observer)) {
             observers.add(observer);
-            System.out.println("Model: Observer aggiunto: " + observer.getClass().getSimpleName());
         }
-
-    }
-
-    public void removeObserver(ModelObserver observer) {
-        observers.remove(observer);
-        System.out.println("Model: Observer rimosso: " + observer.getClass().getSimpleName());
     }
 
     public void notifyObservers() {
         if (observers.isEmpty()) {
-            System.out.println("Model: Nessun observer da notificare.");
             return;
         }
-        // Crea una copia della lista per evitare ConcurrentModificationException
-        // se un observer prova a deregistrarsi durante la notifica.
         List<ModelObserver> observersCopy = new ArrayList<>(observers);
-        System.out.println("Model: Notifico " + observersCopy.size() + " observer(s).");
         for (ModelObserver observer : observersCopy) {
             observer.update();
         }
     }
 
-    public void save(File file) {
-
+    public void save(File file) throws IOException {
+        fileManager.save(this.shapes, file);
     }
 
-
-    public void load(File file) {
-
+    public void load(File file) throws IOException, ClassNotFoundException {
+        this.shapes = fileManager.load(file);
+        notifyObservers();
     }
-
 
 }

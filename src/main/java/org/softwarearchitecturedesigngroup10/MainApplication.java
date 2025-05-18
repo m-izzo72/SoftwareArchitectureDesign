@@ -1,8 +1,6 @@
 package org.softwarearchitecturedesigngroup10;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,10 +18,8 @@ public class MainApplication extends Application {
     public void start(Stage stage) throws IOException {
 
         System.setProperty("prism.lcdtext", "false"); // Fixes font rendering
-        FXMLLoader fxmlLoader = new FXMLLoader();//new FXMLLoader(Paths.get("src/main/java/org/softwarearchitecturedesigngroup10/view/view.fxml").toUri().toURL());
+        FXMLLoader fxmlLoader = new FXMLLoader();
 
-        /*Controller controller = new Controller();
-        fxmlLoader.setController(controller);*/
         fxmlLoader.setLocation(Paths.get("src/main/java/org/softwarearchitecturedesigngroup10/view/view.fxml").toUri().toURL());
         Parent parent = fxmlLoader.load();
         Controller controller = fxmlLoader.getController();

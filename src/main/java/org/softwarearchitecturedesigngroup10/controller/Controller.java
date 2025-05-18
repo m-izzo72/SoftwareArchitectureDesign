@@ -1,7 +1,6 @@
 package org.softwarearchitecturedesigngroup10.controller;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,14 +16,12 @@ import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
-import org.softwarearchitecturedesigngroup10.model.command.AddShapeCommand;
-import org.softwarearchitecturedesigngroup10.model.command.CommandManager;
+import org.softwarearchitecturedesigngroup10.model.commands.*;
 import org.softwarearchitecturedesigngroup10.model.factories.EllipseDataFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.LineDataFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.RectangleDataFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.ShapeDataFactory;
-import org.softwarearchitecturedesigngroup10.model.helper.Highlighter;
-import org.softwarearchitecturedesigngroup10.model.observer.ModelObserver;
+import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.EllipseData;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.LineData;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.RectangleData;
@@ -32,9 +29,8 @@ import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
 import org.softwarearchitecturedesigngroup10.view.CanvasView;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Controller implements ModelObserver{
@@ -98,7 +94,7 @@ public class Controller implements ModelObserver{
     private ToggleButton selectToolButton;
 
     @FXML
-    protected void onMinimizeButtonClick() {
+    private void onMinimizeButtonClick() {
         stage.setIconified(true);
     }
 
@@ -106,41 +102,30 @@ public class Controller implements ModelObserver{
     private CanvasView canvasView;
     private CommandManager commandManager;
 
-    private double xOffset = 0;
-    private double yOffset = 0;
+    private double xOffset = 0, yOffset = 0;
+    private double startX, startY;
+
+    //ArrayList<Shape> selectedShapes = new ArrayList<>();
 
     @Override
     public void update() {
-        System.out.println("Controller: Ricevuta notifica di update dal Model.");
-        // 1. Ottieni lo stato aggiornato dal Model
         LinkedHashMap<String, ShapeData> modelShapes = canvasModel.getShapes();
-        System.out.println("Controller: Numero di ShapeData dal model: " + modelShapes.size() + "\n" + modelShapes.toString());
 
-        // 2. Converti ShapeData in oggetti JavaFX Shape (Logica di Mapping)
         LinkedHashMap<String, Shape> viewShapes = new LinkedHashMap<>();
         for (Map.Entry<String, ShapeData> entry : modelShapes.entrySet()) {
             Shape fxShape = convertShapeDataToFxShape(entry.getValue());
-            System.out.println("Controller: FXShape" + fxShape.toString());
             viewShapes.put(entry.getKey(), fxShape);
-            //System.out.println(viewShapes.put(entry.getKey(), null));
         }
-        System.out.println("Controller: Numero di JavaFX Shapes convertite: " + viewShapes.size());
-        System.out.println("Shapes in viewShapes" + viewShapes.toString());
 
-        // 3. Istruisci la View ad aggiornarsi
-        canvasView.clear(); // Pulisce il canvas precedente
-        canvasView.repaintAll(viewShapes); // Ridisegna tutte le forme
-        System.out.println("Controller: CanvasView istruita a ridisegnare.");
+        canvasView.clear();
+        canvasView.repaintAll(viewShapes);
     }
 
     private Shape convertShapeDataToFxShape(ShapeData data) {
         Shape fxShape = null;
-        // Nota: i colori devono essere convertiti da String a javafx.scene.paint.Color
-        // e le coordinate/dimensioni devono essere usate correttamente.
         try {
             Color fillColor = data.getFillColor() != null ? Color.valueOf(data.getFillColor()) : null;
             Color strokeColor = data.getStrokeColor() != null ? Color.valueOf(data.getStrokeColor()) : Color.BLACK; // Default a nero se null
-
             if (data instanceof RectangleData rd) {
                 Rectangle rect = new Rectangle(rd.getX(), rd.getY(), rd.getWidth(), rd.getHeight());
                 rect.setFill(fillColor);
@@ -148,18 +133,13 @@ public class Controller implements ModelObserver{
                 rect.setStrokeWidth(rd.getStrokeWidth());
                 fxShape = rect;
             } else if (data instanceof EllipseData ed) {
-                // Ellipse in JavaFX usa centerX, centerY, radiusX, radiusY
-                // Assumendo che x,y in EllipseData siano centerX, centerY
                 Ellipse ellipse = new Ellipse(ed.getCenterX(), ed.getCenterY(), ed.getRadiusX(), ed.getRadiusY());
                 ellipse.setFill(fillColor);
                 ellipse.setStroke(strokeColor);
                 ellipse.setStrokeWidth(ed.getStrokeWidth());
                 fxShape = ellipse;
             } else if (data instanceof LineData ld) {
-                // Line in JavaFX usa startX, startY, endX, endY
-                // Assumendo che x,y in LineData siano startX, startY
                 Line line = new Line(ld.getX(), ld.getY(), ld.getEndX(), ld.getEndY());
-                // Le linee di solito non hanno un fill, ma lo stroke è importante
                 line.setStroke(strokeColor);
                 line.setStrokeWidth(ld.getStrokeWidth());
                 fxShape = line;
@@ -168,12 +148,10 @@ public class Controller implements ModelObserver{
 
 
         } catch (IllegalArgumentException e) {
-            System.err.println("Errore nella conversione del colore per la forma: " + e.getMessage());
-            // Gestisci l'errore, magari non aggiungendo la forma o usando colori di default
+            System.err.println();
         }
         return fxShape;
     }
-
 
     @FXML
     public void initialize() {
@@ -197,24 +175,21 @@ public class Controller implements ModelObserver{
     }
 
     public void addFocusListener() {
-        stage.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    rootPane.setStyle("-fx-background-color: #525355;");
-                    titleBar.getStyleClass().add("watercolorTitleBar");
-                    titleBar.getStyleClass().remove("unfocused");
-                    minimizeButton.getGraphic().setStyle("-fx-fill: #fffffe");
-                    closeButton.getGraphic().setStyle("-fx-fill: #fffffe");
-                    title.setTextFill(Color.valueOf("#fffffe"));
-                } else {
-                    rootPane.setStyle("-fx-background-color: #5a5b5e;");
-                    titleBar.getStyleClass().remove("watercolorTitleBar");
-                    titleBar.getStyleClass().add("unfocused");
-                    minimizeButton.getGraphic().setStyle("-fx-fill: #797979");
-                    closeButton.getGraphic().setStyle("-fx-fill: #797979");
-                    title.setTextFill(Color.valueOf("#797979"));
-                }
+        stage.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (newValue) {
+                rootPane.setStyle("-fx-background-color: #525355;");
+                titleBar.getStyleClass().add("watercolorTitleBar");
+                titleBar.getStyleClass().remove("unfocused");
+                minimizeButton.getGraphic().setStyle("-fx-fill: #fffffe");
+                closeButton.getGraphic().setStyle("-fx-fill: #fffffe");
+                title.setTextFill(Color.valueOf("#fffffe"));
+            } else {
+                rootPane.setStyle("-fx-background-color: #5a5b5e;");
+                titleBar.getStyleClass().remove("watercolorTitleBar");
+                titleBar.getStyleClass().add("unfocused");
+                minimizeButton.getGraphic().setStyle("-fx-fill: #797979");
+                closeButton.getGraphic().setStyle("-fx-fill: #797979");
+                title.setTextFill(Color.valueOf("#797979"));
             }
         });
 
@@ -230,16 +205,15 @@ public class Controller implements ModelObserver{
         stage.close();
     }
 
-
     @FXML
-    public void onSaveFileButtonClick(ActionEvent actionEvent) {
+    public void onSaveFileButtonClick(ActionEvent actionEvent) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save file");
 
         fileChooser.setInitialFileName("canvas.pr");
 
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("File P.Ritrovato", "*.pr")
+                new FileChooser.ExtensionFilter("File Canvas", "*.pr")
         );
 
         File fileToSave = fileChooser.showSaveDialog(stage);
@@ -249,23 +223,22 @@ public class Controller implements ModelObserver{
 
     @FXML
     public void onNewCanvasButtonClick(ActionEvent actionEvent) {
-        canvas.getChildren().clear();
+        canvasModel.clear();
     }
 
     @FXML
-    public void onOpenFileButtonClick(ActionEvent actionEvent) {
+    public void onOpenFileButtonClick(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open File");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("File P.Ritrovato", "*.pr")
+                new FileChooser.ExtensionFilter("File Canvas", "*.pr")
         );
         File selectedFile = fileChooser.showOpenDialog(stage);
 
         canvasModel.load(selectedFile);
     }
-
 
     @FXML
     public void onEllipseButtonClick(ActionEvent actionEvent) {
@@ -291,13 +264,6 @@ public class Controller implements ModelObserver{
         selectToolButton.setSelected(false);
     }
 
-    @Deprecated
-    public void onOpenFileClickButton(ActionEvent actionEvent) {
-    }
-
-    double startX, startY, endX, endY;
-    ArrayList<Shape> selectedShapes = new ArrayList<>();
-
     @FXML
     public void setOnMousePressed(MouseEvent event) {
         startX = event.getX();
@@ -305,58 +271,39 @@ public class Controller implements ModelObserver{
 
         if(selectToolButton.isSelected()) {
             Object target = event.getTarget();
-            Shape toSelectShape;
 
-            // Checks if target is a Shape and if it is painted on the canvas
-//            if(target instanceof Node && canvas.getChildren().contains(target)) {
-//                toSelectShape = (Shape) target;
-//                if(selectedShapes.contains(toSelectShape)) {
-//                    selectedShapes.remove(toSelectShape);
-//                    Highlighter.unHighlightShape(toSelectShape);
-//                    System.out.println("Unselected shape " + toSelectShape);
-//                } else {
-//                    Highlighter.highlightShape(toSelectShape);
-//                    selectedShapes.add(toSelectShape);
-//
-//
-//                    System.out.println("Selected shapes " + selectedShapes);
-//                }
-//
-//            } else if(target == canvas) {
-//                System.out.println("Canvas clicked");
-//                Highlighter.unHighlightShapes(selectedShapes);
-//                //Highlighter.unHighlightShape(toSelectShape);
-//                selectedShapes.clear();
-//
-//            }
+            if(target instanceof Node && canvas.getChildren().contains(target)) {
+                if (target instanceof Shape) {
+                    SelectShapeCommand command = new SelectShapeCommand(this.canvasModel, ((Shape) target).getId());
+                    command.execute();
+                    canvasView.highlight((Shape) target);
+                }
+            } else if(target == canvas) {
+                DeselectAllShapeCommand command = new DeselectAllShapeCommand(this.canvasModel);
+                command.execute();
+                canvasView.unHighlightAll();
+            }
         }
-
         event.consume();
-        System.out.println("Mouse clicked at: " + startX + ", " + startY);
     }
 
     @FXML
     public void setOnMouseReleased(MouseEvent event) {
-
         ShapeDataFactory factory;
-        if(lineButton.isSelected()) {
+        if(lineButton.isSelected() && shapesTab.isSelected()) {
             factory = new LineDataFactory();
-
             AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), 3, 0));
-
             commandManager.executeCommand(command);
-        } else if(ellipseButton.isSelected()) {
+        } else if(ellipseButton.isSelected() && shapesTab.isSelected()) {
             factory = new EllipseDataFactory();
             AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), 3, 0));
             commandManager.executeCommand(command);
-        } else if(rectangleButton.isSelected()) {
+        } else if(rectangleButton.isSelected() && shapesTab.isSelected()) {
             factory = new RectangleDataFactory();
             AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), 3, 0));
             commandManager.executeCommand(command);
-
         }
     }
-
 
     @FXML
     public void onSelectToolButtonClick(ActionEvent actionEvent) {
@@ -367,6 +314,7 @@ public class Controller implements ModelObserver{
 
     @FXML
     public void onDeleteShapeButtonClick(ActionEvent actionEvent) {
-        //canvasModel.deleteShapes(selectedShapes);
+        DeleteShapeCommand command = new DeleteShapeCommand(canvasModel);
+        command.execute();
     }
 }

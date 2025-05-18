@@ -10,7 +10,6 @@ public class EllipseDataFactory implements ShapeDataFactory{
 
         double centerX = (startX + endX) / 2;
         double centerY = (startY + endY) / 2;
-        System.out.println("ELLIPSE:" + startX + " " + startY + " " + endX + " " + endY + " " + centerX + " " + centerY);
         double radiusX = Math.abs(endX - startX) / 2;
         double radiusY = Math.abs(endY - startY) / 2;
 
@@ -19,7 +18,6 @@ public class EllipseDataFactory implements ShapeDataFactory{
         ellipseData.setRadiusX(radiusX);
         ellipseData.setRadiusY(radiusY);
 
-        // Imposta lo stile
         ellipseData.setFillColor(fillColor);
         ellipseData.setStrokeColor(strokeColor);
         ellipseData.setStrokeWidth(strokeWidth);

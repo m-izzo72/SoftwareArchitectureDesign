@@ -1,9 +1,10 @@
 package org.softwarearchitecturedesigngroup10.view;
 
+import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
+import org.softwarearchitecturedesigngroup10.view.helper.Highlighter;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -15,19 +16,19 @@ public class CanvasView implements CanvasViewInterface {
         this.canvas = canvas;
     }
 
-    @Override
-    public void paint(Shape shape) {
-
+    public void highlight(Shape shape) {
+        Highlighter.highlightShape(shape);
     }
 
-    @Override
-    public void deleteShapes(Shape shape) {
-
+    public void unHighlightAll() {
+        for (Node shape : canvas.getChildren()) {
+            Highlighter.unhighlightShape((Shape) shape);
+        }
     }
 
     @Override
     public void clear() {
-
+        canvas.getChildren().clear();
     }
 
     @Override
