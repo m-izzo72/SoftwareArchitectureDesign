@@ -194,8 +194,6 @@ public class Controller implements ModelObserver{
             stage.setX(event.getScreenX() - xOffset);
             stage.setY(event.getScreenY() - yOffset);
         });
-
-
     }
 
     public void addFocusListener() {
@@ -357,33 +355,6 @@ public class Controller implements ModelObserver{
             commandManager.executeCommand(command);
 
         }
-//        if (!shapesTab.isSelected()) {
-//            return;
-//        }
-//
-//        ShapeFactory factory;
-//
-//        // Seleziona la factory appropriata
-//        if (lineButton.isSelected()) {
-//            factory = new LineFactory();
-//        } else if (rectangleButton.isSelected()) {
-//            factory = new RectangleFactory();
-//        } else if (ellipseButton.isSelected()) {
-//            factory = new EllipseFactory();
-//        } else {
-//            return;
-//        }
-//
-//        double thickness = 3;
-//        // Crea e configura la forma utilizzando la factory con tutti i parametri necessari
-//        Shape shape = factory.createShape(
-//                startX, startY, event.getX(), event.getY(),
-//                fillColorPicker.getValue(), strokeColorPicker.getValue(), thickness
-//        );
-//
-//        // Aggiungi la forma al modello usando il pattern Command
-//        canvas.getChildren().add(shape);
-//        canvasModel.paint(shape);
     }
 
 

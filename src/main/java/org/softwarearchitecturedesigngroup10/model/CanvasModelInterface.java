@@ -4,7 +4,7 @@ import org.softwarearchitecturedesigngroup10.model.observer.ModelObserver;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
 
 import java.io.File;
-import java.util.HashMap;
+import java.io.IOException;
 
 public interface CanvasModelInterface {
     public void addObserver(ModelObserver observer);
@@ -17,7 +17,7 @@ public interface CanvasModelInterface {
 
     public void deleteShapes(HashMap<String, ShapeData> shapesToDelete);
 
-    public void save(File file);
+    void save(File file) throws IOException;
 
-    public void load(File file);
+    void load(File file) throws IOException, ClassNotFoundException;
 }
