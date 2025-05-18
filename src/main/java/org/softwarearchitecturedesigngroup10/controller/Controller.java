@@ -19,7 +19,9 @@ import javafx.stage.Stage;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
 import org.softwarearchitecturedesigngroup10.model.command.AddShapeCommand;
 import org.softwarearchitecturedesigngroup10.model.command.CommandManager;
+import org.softwarearchitecturedesigngroup10.model.factories.EllipseDataFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.LineDataFactory;
+import org.softwarearchitecturedesigngroup10.model.factories.RectangleDataFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.ShapeDataFactory;
 import org.softwarearchitecturedesigngroup10.model.helper.Highlighter;
 import org.softwarearchitecturedesigngroup10.model.observer.ModelObserver;
@@ -148,7 +150,7 @@ public class Controller implements ModelObserver{
             } else if (data instanceof EllipseData ed) {
                 // Ellipse in JavaFX usa centerX, centerY, radiusX, radiusY
                 // Assumendo che x,y in EllipseData siano centerX, centerY
-                Ellipse ellipse = new Ellipse(ed.getX(), ed.getY(), ed.getRadiusX(), ed.getRadiusY());
+                Ellipse ellipse = new Ellipse(ed.getCenterX(), ed.getCenterY(), ed.getRadiusX(), ed.getRadiusY());
                 ellipse.setFill(fillColor);
                 ellipse.setStroke(strokeColor);
                 ellipse.setStrokeWidth(ed.getStrokeWidth());
@@ -345,6 +347,15 @@ public class Controller implements ModelObserver{
             AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), 3, 0));
 
             commandManager.executeCommand(command);
+        } else if(ellipseButton.isSelected()) {
+            factory = new EllipseDataFactory();
+            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), 3, 0));
+            commandManager.executeCommand(command);
+        } else if(rectangleButton.isSelected()) {
+            factory = new RectangleDataFactory();
+            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), 3, 0));
+            commandManager.executeCommand(command);
+
         }
 //        if (!shapesTab.isSelected()) {
 //            return;
