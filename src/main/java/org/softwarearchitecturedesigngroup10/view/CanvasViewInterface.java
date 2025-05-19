@@ -8,5 +8,9 @@ public interface CanvasViewInterface {
 
     void clear();
 
-    void repaintAll(LinkedHashMap<String, Shape> shapes);
+    void paint(Shape shape);
+
+    void erase(Shape shape);
+
+    void paintAllFromScratch(LinkedHashMap<String, Shape> shapes);
 }

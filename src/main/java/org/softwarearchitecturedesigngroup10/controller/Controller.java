@@ -89,7 +89,7 @@ public class Controller implements ModelObserver{
     @FXML
     private Label canvasInfoLabel;
     @FXML
-    private Button deleteShapeButton;
+    private Button eraseShapeButton;
     @FXML
     private ToggleButton selectToolButton;
 
@@ -120,7 +120,7 @@ public class Controller implements ModelObserver{
         }
 
         canvasView.clear();
-        canvasView.repaintAll(viewShapes);
+        canvasView.paintAllFromScratch(viewShapes);
     }
 
     private Shape convertShapeDataToFxShape(ShapeData data) {
@@ -203,12 +203,12 @@ public class Controller implements ModelObserver{
     }
 
     @FXML
-    public void onCloseButtonClick(ActionEvent actionEvent) {
+    public void onCloseButtonAction(ActionEvent actionEvent) {
         stage.close();
     }
 
     @FXML
-    public void onSaveFileButtonClick(ActionEvent actionEvent) throws IOException {
+    public void onSaveFileButtonAction(ActionEvent actionEvent) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save file");
 
@@ -224,12 +224,12 @@ public class Controller implements ModelObserver{
     }
 
     @FXML
-    public void onNewCanvasButtonClick(ActionEvent actionEvent) {
+    public void onNewCanvasButtonAction(ActionEvent actionEvent) {
         canvasModel.clear();
     }
 
     @FXML
-    public void onOpenFileButtonClick(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
+    public void onOpenFileButtonAction(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open File");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
@@ -240,10 +240,11 @@ public class Controller implements ModelObserver{
         File selectedFile = fileChooser.showOpenDialog(stage);
 
         canvasModel.load(selectedFile);
+        title.setText(selectedFile.getName());
     }
 
     @FXML
-    public void onEllipseButtonClick(ActionEvent actionEvent) {
+    public void onEllipseButtonSelected(ActionEvent actionEvent) {
         rectangleButton.setSelected(false);
         lineButton.setSelected(false);
 
@@ -251,7 +252,7 @@ public class Controller implements ModelObserver{
     }
 
     @FXML
-    public void onRectangleButtonClick(ActionEvent actionEvent) {
+    public void onRectangleButtonSelected(ActionEvent actionEvent) {
         ellipseButton.setSelected(false);
         lineButton.setSelected(false);
 
@@ -259,7 +260,7 @@ public class Controller implements ModelObserver{
     }
 
     @FXML
-    public void onLineButtonClick(ActionEvent actionEvent) {
+    public void onLineButtonSelected(ActionEvent actionEvent) {
         rectangleButton.setSelected(false);
         ellipseButton.setSelected(false);
 
@@ -295,7 +296,7 @@ public class Controller implements ModelObserver{
             startY = event.getY();
 
             if (previewShape != null) {
-                canvasView.remove(previewShape);
+                canvasView.erase(previewShape);
                 previewShape = null;
             }
 
@@ -335,14 +336,14 @@ public class Controller implements ModelObserver{
     }
 
     @FXML
-    public void onSelectToolButtonClick(ActionEvent actionEvent) {
+    public void onSelectToolButtonSelected(ActionEvent actionEvent) {
         rectangleButton.setSelected(false);
         ellipseButton.setSelected(false);
         lineButton.setSelected(false);
     }
 
     @FXML
-    public void onDeleteShapeButtonClick(ActionEvent actionEvent) {
+    public void onEraseShapeButtonAction(ActionEvent actionEvent) {
         DeleteShapeCommand command = new DeleteShapeCommand(canvasModel);
         command.execute();
     }
@@ -360,4 +361,8 @@ public class Controller implements ModelObserver{
 //        }
     }
 
+    @FXML
+    public void onMinimizeButtonAction(ActionEvent actionEvent) {
+        stage.setIconified(true);
+    }
 }
