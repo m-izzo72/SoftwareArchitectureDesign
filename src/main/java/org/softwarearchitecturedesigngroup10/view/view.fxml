@@ -160,7 +160,7 @@
                         <Pane fx:id="quickToolbar" prefHeight="36.0" prefWidth="781.0" />
                         <ScrollPane prefHeight="556.0" prefWidth="793.0">
                            <content>
-                              <Pane fx:id="canvas" onMouseDragReleased="#setOnMouseReleased" onMousePressed="#setOnMousePressed" onMouseReleased="#setOnMouseReleased" prefHeight="550.0" prefWidth="791.0">
+                              <Pane fx:id="canvas" onMouseDragReleased="#setOnMouseReleased" onMouseDragged="#setOnMouseDragged" onMousePressed="#setOnMousePressed" onMouseReleased="#setOnMouseReleased" prefHeight="550.0" prefWidth="791.0">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>

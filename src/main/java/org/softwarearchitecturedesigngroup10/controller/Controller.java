@@ -105,6 +105,8 @@ public class Controller implements ModelObserver{
     private double xOffset = 0, yOffset = 0;
     private double startX, startY;
 
+    private Shape previewShape = null;
+
     //ArrayList<Shape> selectedShapes = new ArrayList<>();
 
     @Override
@@ -283,8 +285,35 @@ public class Controller implements ModelObserver{
                 command.execute();
                 canvasView.unHighlightAll();
             }
+            event.consume(); return;
         }
-        event.consume();
+
+        boolean isDrawingToolActive = (lineButton.isSelected() || ellipseButton.isSelected() || rectangleButton.isSelected()) && shapesTab.isSelected();
+
+        if (isDrawingToolActive) {
+            startX = event.getX();
+            startY = event.getY();
+
+            if (previewShape != null) {
+                canvasView.remove(previewShape);
+                previewShape = null;
+            }
+
+            if (lineButton.isSelected()) {
+                previewShape = new Line(startX, startY, startX, startY);
+            } else if (ellipseButton.isSelected()) {
+                previewShape = new Ellipse(startX, startY, 0, 0);
+            } else if (rectangleButton.isSelected()) {
+                previewShape = new Rectangle(startX, startY, 0, 0);
+            }
+
+            if (previewShape != null) {
+                canvasView.stylePreviewShape(previewShape);
+                canvasView.paint(previewShape);
+            }
+            event.consume();
+        }
+
     }
 
     @FXML
@@ -317,4 +346,18 @@ public class Controller implements ModelObserver{
         DeleteShapeCommand command = new DeleteShapeCommand(canvasModel);
         command.execute();
     }
+
+    @FXML
+    public void setOnMouseDragged(MouseEvent event) {
+        boolean isDrawingToolActive = (lineButton.isSelected() || ellipseButton.isSelected() || rectangleButton.isSelected()) && shapesTab.isSelected();
+
+        if (previewShape != null && isDrawingToolActive) {
+            canvasView.updatePreviewShapeGeometry(previewShape, event.getX(), event.getY(), startX, startY);
+            event.consume();
+        }
+        // Might be used later for moving a shape
+//        else if (selectToolButton.isSelected() && canvas.getChildren().contains(previewShape)) {
+//        }
+    }
+
 }

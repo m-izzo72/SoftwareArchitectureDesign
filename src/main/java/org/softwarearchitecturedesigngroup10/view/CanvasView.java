@@ -2,6 +2,10 @@ package org.softwarearchitecturedesigngroup10.view;
 
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import org.softwarearchitecturedesigngroup10.view.helper.Highlighter;
 
@@ -23,6 +27,53 @@ public class CanvasView implements CanvasViewInterface {
     public void unHighlightAll() {
         for (Node shape : canvas.getChildren()) {
             Highlighter.unhighlightShape((Shape) shape);
+        }
+    }
+
+    public void paint(Shape shape) {
+        canvas.getChildren().add(shape);
+    }
+
+    public void remove(Shape shape) {
+        canvas.getChildren().remove(shape);
+    }
+
+    public void stylePreviewShape(Shape shape) {
+        shape.setStroke(Color.DARKGRAY);
+        shape.getStrokeDashArray().setAll(5.0, 5.0);
+        if (shape instanceof Rectangle || shape instanceof Ellipse) {
+            ((Shape)shape).setFill(Color.TRANSPARENT);
+        }
+        shape.setMouseTransparent(true);
+    }
+
+    public void updatePreviewShapeGeometry(Shape previewShape, double currentX, double currentY, double startX, double startY) {
+        if (previewShape == null) return;
+
+        if (previewShape instanceof Rectangle) {
+            Rectangle rect = (Rectangle) previewShape;
+            double x = Math.min(startX, currentX);
+            double y = Math.min(startY, currentY);
+            double width = Math.abs(currentX - startX);
+            double height = Math.abs(currentY - startY);
+            rect.setX(x);
+            rect.setY(y);
+            rect.setWidth(width);
+            rect.setHeight(height);
+        } else if (previewShape instanceof Ellipse) {
+            Ellipse ellipse = (Ellipse) previewShape;
+            double x = Math.min(startX, currentX);
+            double y = Math.min(startY, currentY);
+            double width = Math.abs(currentX - startX);
+            double height = Math.abs(currentY - startY);
+            ellipse.setCenterX(x + width / 2.0);
+            ellipse.setCenterY(y + height / 2.0);
+            ellipse.setRadiusX(width / 2.0);
+            ellipse.setRadiusY(height / 2.0);
+        } else if (previewShape instanceof Line) {
+            Line line = (Line) previewShape;
+            line.setEndX(currentX);
+            line.setEndY(currentY);
         }
     }
 
