@@ -18,7 +18,7 @@ class AddShapeCommandTest {
 
         @Override
         public void addShape(ShapeData shape) {
-            shapes.put("shape" + counter++, shape); // usa chiavi dummy per test
+            shapes.put("shape" + counter++, shape);
         }
 
         @Override
