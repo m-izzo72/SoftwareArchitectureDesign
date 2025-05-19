@@ -1,0 +1,214 @@
+@startuml
+
+class controller.Controller implements model.ModelObserver {
+  - canvasModel: model.CanvasModelInterface
+  - canvasView: view.CanvasViewInterface
+  - commandManager: model.CommandManager
+
+  + Controller(canvasModel: model.CanvasModelInterface, canvasView: view.CanvasViewInterface, commandManager: model.CommandManager)
+  + setOnMousePressed(event: MouseEvent): void
+  + setOnMouseReleased(event: MouseEvent): void
+  + update(): void
+}
+
+interface view.CanvasViewInterface {
+  + paint(shape: javafx.scene.shape.Shape): void
+  + delete(shape: javafx.scene.shape.Shape): void
+  + clear(): void
+  + redrawAll(shapes: java.util.List<javafx.scene.shape.Shape>): void
+}
+
+class view.CanvasView implements view.CanvasViewInterface {
+  - canvas: javafx.scene.layout.Pane
+  + paint(shape: javafx.scene.shape.Shape): void
+  + delete(shape: javafx.scene.shape.Shape): void
+  + clear(): void
+  + redrawAll(shapes: java.util.List<javafx.scene.shape.Shape>): void
+}
+
+abstract class view.javafx.scene.shape.Shape {
+  + setFill(paint: javafx.scene.paint.Paint): void
+  + setStroke(paint: javafx.scene.paint.Paint): void
+  + setStrokeWidth(width: double): void
+}
+
+class view.javafx.scene.shape.Rectangle extends view.javafx.scene.shape.Shape {
+  - x: double
+  - y: double
+  - width: double
+  - height: double
+  + Rectangle()
+  + getX(): double
+  + getY(): double
+  + getWidth(): double
+  + getHeight(): double
+}
+
+class view.javafx.scene.shape.Ellipse extends view.javafx.scene.shape.Shape {
+  - centerX: double
+  - centerY: double
+  - radiusX: double
+  - radiusY: double
+  + Ellipse()
+  + getCenterX(): double
+  + getCenterY(): double
+  + getRadiusX(): double
+  + getRadiusY(): double
+}
+
+class view.javafx.scene.shape.Line extends view.javafx.scene.shape.Shape {
+  - startX: double
+  - startY: double
+  - endX: double
+  - endY: double
+  + Line()
+  + getStartX(): double
+  + getStartY(): double
+  + getEndX(): double
+  + getEndY(): double
+}
+
+class view.javafx.scene.layout.Pane {
+  + getChildren(): javafx.collections.ObservableList<javafx.scene.Node>
+}
+
+interface model.ModelObserver {
+  + update(): void
+}
+
+interface model.CanvasModelInterface {
+  + addShape(shapeToAdd: model.ShapeData): void
+  + deleteShape(shapeToDelete: model.ShapeData): void
+  + save(f: java.io.File): void
+  + load(f: java.io.File): void
+  + getShapes(): java.util.List<model.ShapeData>
+  + addObserver(observer: model.ModelObserver): void
+  + removeObserver(observer: model.ModelObserver): void
+  + notifyObservers(): void
+}
+
+class model.CanvasModel implements model.CanvasModelInterface {
+  - shapes: java.util.List<model.ShapeData>
+  - fileManager: model.FileManager
+  - observers: java.util.List<model.ModelObserver>
+
+  + CanvasModel()
+  + addShape(shapeToAdd: model.ShapeData): void
+  + deleteShape(shapeToDelete: model.ShapeData): void
+  + save(f: java.io.File): void
+  + load(f: java.io.File): void
+  + getShapes(): java.util.List<model.ShapeData>
+  + addObserver(observer: model.ModelObserver): void
+  + removeObserver(observer: model.ModelObserver): void
+  + notifyObservers(): void
+}
+
+interface model.FileManagerInterface{
+ +save(f: java.io.File, shapes: List<Shape>): void
+ +load(f: java.io.File): void
+
+}
+
+class model.FileManager implements model.FileManagerInterface{
+ +save(f: java.io.File, shapes: List<Shape>): void
+ +load(f: java.io.File): void
+}
+
+abstract class model.ShapeData {
+  # id: String
+  # type: String
+  # x: double
+  # y: double
+  # fillColor: String
+  # strokeColor: String
+  # strokeWidth: double
+  # rotationAngle: double
+
+  + ShapeData(id: String, type: String, x: double, y: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double)
+}
+
+class model.LineData extends model.ShapeData {
+  - endX: double
+  - endY: double
+  + LineData(id: String, startX: double, startY: double, endX: double, endY: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double)
+}
+
+class model.RectangleData extends model.ShapeData {
+  - width: double
+  - height: double
+  + RectangleData(id: String, x: double, y: double, width: double, height: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double)
+}
+
+class model.EllipseData extends model.ShapeData {
+  - radiusX: double
+  - radiusY: double
+  + EllipseData(id: String, centerX: double, centerY: double, radiusX: double, radiusY: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double)
+}
+
+interface model.ShapeDataFactory{
+	+createShape(startX: double, startY: double, endX: double, endY: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double): model.ShapeData
+}
+
+class model.RectangleDataFactory implements model.ShapeDataFactory{
+	+createShape(startX: double, startY: double, endX: double, endY: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double): model.ShapeData
+}
+
+class model.LineDataFactory implements model.ShapeDataFactory{
+	+createShape(startX: double, startY: double, endX: double, endY: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double): model.ShapeData
+}
+
+class model.EllipseDataFactory implements model.ShapeDataFactory{
+	+createShape(startX: double, startY: double, endX: double, endY: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double): model.ShapeData
+}
+
+class model.CommandManager{
+  -undoStack: java.util.Stack<model.Command>
+  -redoStack: java.util.Stack<model.Command>
+
+  + executeCommand (command: model.Command): void
+  + undo(): void
+  + redo(): void
+}
+
+interface model.Command{
+  + execute(): void
+  + undo(): void
+}
+
+class model.AddShapeCommand implements model.Command{
+  - receiver: model.CanvasModelInterface
+  - shapeToAdd: model.ShapeData
+
+  + AddShapeCommand(receiver: model.CanvasModelInterface, shapeToAdd: model.ShapeData)
+  + execute(): void
+  + undo(): void
+}
+
+class model.DeleteShapeCommand implements model.Command{
+  - receiver: model.CanvasModelInterface
+  - shapeToDelete: model.ShapeData
+
+  + DeleteShapeCommand(receiver: model.CanvasModelInterface, shapeToDelete: model.ShapeData)
+  + execute(): void
+  + undo(): void
+}
+
+controller.Controller o-> model.CanvasModelInterface
+controller.Controller o-> view.CanvasViewInterface
+model.CanvasModelInterface --o model.ModelObserver : observes >
+
+view.CanvasView ..> view.javafx.scene.layout.Pane : uses >
+view.CanvasView ..> view.javafx.scene.shape.Shape
+model.CanvasModel o--> "*" model.ShapeData
+model.CanvasModel ..> model.FileManagerInterface : uses >
+
+model.LineDataFactory ..> model.LineData: creates >
+model.RectangleDataFactory ..> model.RectangleData: creates >
+model.EllipseDataFactory ..> model.EllipseData: creates >
+
+model.AddShapeCommand ..> model.CanvasModelInterface : uses >
+model.DeleteShapeCommand ..> model.CanvasModelInterface : uses >
+controller.Controller --> model.CommandManager : uses >
+model.CommandManager o--> "*" model.Command : manage
+
+@enduml
