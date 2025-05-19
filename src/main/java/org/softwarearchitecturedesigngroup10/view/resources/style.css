@@ -1,8 +1,8 @@
 @font-face {
     font-family: 'Inter';
     src: url('./fonts/Inter.ttf');
-    font-weight: normal;
-    font-style: normal;
+    /*font-weight: normal;*/
+    /*font-style: normal;*/
 }
 
 #rootPane {
@@ -71,7 +71,8 @@
     -fx-fill: #ffffff;
 }
 
-#lineButton:selected:hover, #rectangleButton:selected:hover, #ellipseButton:selected:hover {
+#lineButton:selected:hover, #rectangleButton:selected:hover, #ellipseButton:selected:hover,
+#selectToolButton:selected:hover {
     -fx-background-color: #4366f6;
 }
 
