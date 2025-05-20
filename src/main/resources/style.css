@@ -1,0 +1,232 @@
+@font-face {
+    font-family: 'Inter';
+    src: url('org/softwarearchitecturedesigngroup10/view/resources/fonts/Inter.ttf');
+    /*font-weight: normal;*/
+    /*font-style: normal;*/
+}
+
+#rootPane {
+    -fx-font-family: 'Inter';
+    -fx-font-smoothing-type: lcd;
+    -fx-font-size: 10pt;
+    -fx-background-radius: 9 9 9 9;
+}
+
+#titleBar {
+    -fx-background-radius: 8 8 0 0;
+}
+
+#bottomPane {
+    -fx-background-radius: 0 0 8 8;
+}
+
+#backgroundPane {
+    -fx-background-color: transparent;
+}
+
+#fileNavigation, #shapeNavigation, #clipboardNavigation,
+#lineButton, #rectangleButton, #ellipseButton,
+#openFileButton, #saveFileButton, #newCanvasButton,
+#eraseShapeButton, #selectToolButton {
+
+    -fx-background-color: transparent;
+    -fx-background-radius: 7;
+}
+
+#closeButton, #minimizeButton, #maximizeButton {
+    -fx-background-color: transparent;
+}
+
+#minimizeButton:hover, #maximizeButton:hover {
+    -fx-background-color: #3c3d45;
+    -fx-background-radius: 0;
+}
+
+#closeButton:hover {
+    -fx-background-color: #dd4242;
+    -fx-background-radius: 0 8 0 0;
+}
+
+#fileNavigation:hover, #shapeNavigation:hover, #clipboardNavigation:hover,
+#lineButton:hover, #rectangleButton:hover, #ellipseButton:hover,
+#openFileButton:hover, #newCanvasButton:hover, #saveFileButton:hover,
+#eraseShapeButton:hover,
+#selectToolButton:hover {
+    -fx-background-color: #e5e5e7;
+}
+
+#fileNavigation:selected, #shapeNavigation:selected, #clipboardNavigation:selected,
+#lineButton:selected, #rectangleButton:selected, #ellipseButton:selected,
+#openFileButton:selected, #saveFileButton:selected, #newCanvasButton:selected,
+#eraseShapeButton:selected,
+#selectToolButton:selected {
+    -fx-background-color: #5874e6;
+
+}
+
+#lineButton:selected SVGPath, #rectangleButton:selected SVGPath, #ellipseButton:selected SVGPath,
+#openFileButton:selected SVGPath, #saveFileButton:selected SVGPath, #newCanvasButton:selected SVGPath,
+#eraseShapeButton:selected SVGPath,
+#selectToolButton:selected SVGPath {
+    -fx-fill: #ffffff;
+}
+
+#lineButton:selected:hover, #rectangleButton:selected:hover, #ellipseButton:selected:hover,
+#selectToolButton:selected:hover {
+    -fx-background-color: #4366f6;
+}
+
+#fileNavigation:pressed, #shapeNavigation:pressed, #clipboardNavigation:pressed {
+    -fx-background-color: #e5e5e7;
+}
+
+#navigationPanel, #toolbarPanel {
+    -fx-background-color: #f7f7f9;
+    -fx-border-style: solid solid hidden hidden;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
+}
+
+#toolbar {
+    -fx-border-style: hidden solid hidden hidden;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
+}
+
+#bottomPane {
+    -fx-background-color: #f7f7f9;
+    -fx-border-style: solid hidden hidden hidden;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
+}
+
+#canvasToolbar {
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
+}
+
+
+
+
+#fileTab, #shapesTab, #clipboardTab {
+    -fx-pref-width: 42; -fx-pref-height: 32;
+    -fx-max-width: 32; -fx-max-height: 32;
+    -fx-min-width: 32; -fx-min-height: 32;
+    /*-fx-padding: 0 300 0 0;*/
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-style: solid solid solid solid;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+}
+
+.tab-header-background {
+    -fx-background-color: #f7f7f9;
+    -fx-border-style: hidden solid solid hidden;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
+}
+
+#fileTab:selected .focus-indicator, #shapesTab:selected .focus-indicator, #clipboardTab:selected .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+#fileTab:selected SVGPath, #shapesTab:selected SVGPath, #clipboardTab:selected SVGPath {
+    -fx-fill: #696b77;
+}
+
+#fileTab SVGPath, #shapesTab SVGPath, #clipboardTab SVGPath {
+    -fx-fill: #b6b6bc;
+}
+
+#rootPane {
+    -fx-background-color: #464646;
+}
+
+/*#fileTab .tab-label {
+    -fx-graphic: url("/icons/files.svg");
+}*/
+
+#fileTabContainer, #shapesTabContainer, #clipboardTabContainer {
+    -fx-background-color: #f7f7f9;
+    -fx-border-style: solid solid hidden hidden;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
+}
+
+#quickToolbar {
+    -fx-background-color: #fffffe;
+    -fx-border-style: solid hidden solid hidden;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
+}
+
+#canvas {
+    -fx-background-color: transparent;
+}
+
+#operatingArea {
+    -fx-background-color: #fffffe;
+}
+
+#titleBar {
+    /*-fx-background-color: #242525;*/
+    -fx-background-color: linear-gradient(to right, rgba(255, 105, 180, 0.11), rgba(255, 165, 0, 0.07), rgba(255, 255, 0, 0.08),
+    rgba(0, 128, 0, 0.07), rgba(0, 191, 255, 0.1), rgba(138, 43, 226, 0.09));
+
+    -fx-background-repeat: no-repeat; /* o 'stretch' o 'round' a seconda dell'effetto desiderato */
+    -fx-background-size: cover;
+}
+
+.watercolorTitleBar {
+    -fx-background-color: linear-gradient(to right, rgba(255, 105, 180, 0.11), rgba(255, 165, 0, 0.07), rgba(255, 255, 0, 0.08),
+    rgba(0, 128, 0, 0.07), rgba(0, 191, 255, 0.1), rgba(138, 43, 226, 0.09));
+}
+
+.unfocused {
+    -fx-background-color: linear-gradient(to right, rgba(255, 105, 180, 0.02), rgba(255, 165, 0, 0.02), rgba(255, 255, 0, 0.02),
+    rgba(0, 128, 0, 0.02), rgba(0, 191, 255, 0.02), rgba(138, 43, 226, 0.02));
+}
+
+.separator .line {
+    -fx-background-color: #eaebef;
+    -fx-pref-height: 1;
+    -fx-border-color: null;
+}
+
+#fillColorPicker, #strokeColorPicker {
+    -fx-color-rect-width: 24;
+    -fx-color-rect-height: 24;
+    -fx-padding: 0 0 0 0;
+    -fx-font-size: 1;
+    -fx-background-color: transparent;
+
+}
+
+#fillColorPicker .large-rect-picker, #strokeColorPicker .large-rect-picker {
+    -fx-border-color: #eaebef;
+}
+
+#fillColorPicker .focus-indicator, #strokeColorPicker .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.scroll-pane:focused {
+    -fx-background-insets: 0;
+}
+
+.scroll-pane .corner {
+    -fx-background-insets: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+

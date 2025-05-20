@@ -10,7 +10,6 @@ import javafx.stage.StageStyle;
 import org.softwarearchitecturedesigngroup10.controller.Controller;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 
 public class MainApplication extends Application {
 
@@ -18,9 +17,9 @@ public class MainApplication extends Application {
     public void start(Stage stage) throws IOException {
 
         System.setProperty("prism.lcdtext", "false"); // Fixes font rendering
-        FXMLLoader fxmlLoader = new FXMLLoader();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view.fxml"));
 
-        fxmlLoader.setLocation(Paths.get("src/main/java/org/softwarearchitecturedesigngroup10/view/view.fxml").toUri().toURL());
+        //fxmlLoader.setLocation(Paths.get("src/main/java/org/softwarearchitecturedesigngroup10/view/view.fxml").toUri().toURL());
         Parent parent = fxmlLoader.load();
         Controller controller = fxmlLoader.getController();
         controller.setStage(stage);
