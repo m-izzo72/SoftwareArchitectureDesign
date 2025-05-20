@@ -92,6 +92,7 @@ class CanvasModelTest {
         LineData shape = new LineData();
         shape.setX(1);
         shape.setY(2);
+
         shape.setEndX(3);
         shape.setEndY(4);
 
