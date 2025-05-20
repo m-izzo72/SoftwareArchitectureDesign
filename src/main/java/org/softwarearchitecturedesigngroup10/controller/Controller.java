@@ -105,7 +105,7 @@ public class Controller implements ModelObserver{
     private double xOffset = 0, yOffset = 0;
     private double startX, startY;
 
-    private Shape previewShape = null;
+    //private Shape previewShape = null;
 
     //ArrayList<Shape> selectedShapes = new ArrayList<>();
 
@@ -289,7 +289,7 @@ public class Controller implements ModelObserver{
             event.consume(); return;
         }
 
-        boolean isDrawingToolActive = (lineButton.isSelected() || ellipseButton.isSelected() || rectangleButton.isSelected()) && shapesTab.isSelected();
+        /*boolean isDrawingToolActive = (lineButton.isSelected() || ellipseButton.isSelected() || rectangleButton.isSelected()) && shapesTab.isSelected();
 
         if (isDrawingToolActive) {
             startX = event.getX();
@@ -313,7 +313,7 @@ public class Controller implements ModelObserver{
                 canvasView.paint(previewShape);
             }
             event.consume();
-        }
+        }*/
 
     }
 
@@ -350,12 +350,12 @@ public class Controller implements ModelObserver{
 
     @FXML
     public void setOnMouseDragged(MouseEvent event) {
-        boolean isDrawingToolActive = (lineButton.isSelected() || ellipseButton.isSelected() || rectangleButton.isSelected()) && shapesTab.isSelected();
+        /*boolean isDrawingToolActive = (lineButton.isSelected() || ellipseButton.isSelected() || rectangleButton.isSelected()) && shapesTab.isSelected();
 
         if (previewShape != null && isDrawingToolActive) {
             canvasView.updatePreviewShapeGeometry(previewShape, event.getX(), event.getY(), startX, startY);
             event.consume();
-        }
+        }*/
         // Might be used later for moving a shape
 //        else if (selectToolButton.isSelected() && canvas.getChildren().contains(previewShape)) {
 //        }
