@@ -9,15 +9,15 @@
     -fx-font-family: 'Inter';
     -fx-font-smoothing-type: lcd;
     -fx-font-size: 10pt;
-    -fx-background-radius: 9 9 9 9;
+    -fx-background-radius: 7 7 7 7;
 }
 
 #titleBar {
-    -fx-background-radius: 8 8 0 0;
+    -fx-background-radius: 6 6 0 0;
 }
 
 #bottomPane {
-    -fx-background-radius: 0 0 8 8;
+    -fx-background-radius: 0 0 6 0;
 }
 
 #backgroundPane {
@@ -27,6 +27,7 @@
 #fileNavigation, #shapeNavigation, #clipboardNavigation,
 #lineButton, #rectangleButton, #ellipseButton,
 #openFileButton, #saveFileButton, #newCanvasButton,
+#cutShapeButton, #copyShapeButton, #pasteShapeButton,
 #eraseShapeButton, #selectToolButton {
 
     -fx-background-color: transparent;
@@ -50,6 +51,7 @@
 #fileNavigation:hover, #shapeNavigation:hover, #clipboardNavigation:hover,
 #lineButton:hover, #rectangleButton:hover, #ellipseButton:hover,
 #openFileButton:hover, #newCanvasButton:hover, #saveFileButton:hover,
+#cutShapeButton:hover, #copyShapeButton:hover, #pasteShapeButton:hover,
 #eraseShapeButton:hover,
 #selectToolButton:hover {
     -fx-background-color: #e5e5e7;
@@ -110,7 +112,7 @@
 
 
 #fileTab, #shapesTab, #clipboardTab {
-    -fx-pref-width: 42; -fx-pref-height: 32;
+    -fx-pref-width: 45; -fx-pref-height: 32;
     -fx-max-width: 32; -fx-max-height: 32;
     -fx-min-width: 32; -fx-min-height: 32;
     /*-fx-padding: 0 300 0 0;*/
@@ -122,8 +124,8 @@
 }
 
 .tab-header-background {
-    -fx-background-color: #f7f7f9;
-    -fx-border-style: hidden solid solid hidden;
+    -fx-background-color: transparent /*#f7f7f9;*/;
+    -fx-border-style: hidden hidden hidden hidden;
     -fx-border-width: 1;
     -fx-border-color: #eaebef;
 }
@@ -133,15 +135,19 @@
 }
 
 #fileTab:selected SVGPath, #shapesTab:selected SVGPath, #clipboardTab:selected SVGPath {
-    -fx-fill: #696b77;
+    -fx-fill: #fffffe;/*#696b77;*/
 }
 
 #fileTab SVGPath, #shapesTab SVGPath, #clipboardTab SVGPath {
-    -fx-fill: #b6b6bc;
+    -fx-fill: #797979; /*#b6b6bc;*/
 }
 
 #rootPane {
     -fx-background-color: #464646;
+}
+
+#tab {
+    -fx-background-color: rgba(255, 105, 180, 0.11);
 }
 
 /*#fileTab .tab-label {
@@ -153,6 +159,8 @@
     -fx-border-style: solid solid hidden hidden;
     -fx-border-width: 1;
     -fx-border-color: #eaebef;
+    -fx-background-radius: 9 0 0 0;
+    -fx-border-radius: 9 0 0 0;
 }
 
 #quickToolbar {
@@ -175,7 +183,7 @@
     -fx-background-color: linear-gradient(to right, rgba(255, 105, 180, 0.11), rgba(255, 165, 0, 0.07), rgba(255, 255, 0, 0.08),
     rgba(0, 128, 0, 0.07), rgba(0, 191, 255, 0.1), rgba(138, 43, 226, 0.09));
 
-    -fx-background-repeat: no-repeat; /* o 'stretch' o 'round' a seconda dell'effetto desiderato */
+    -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
 }
 
@@ -192,16 +200,16 @@
 .separator .line {
     -fx-background-color: #eaebef;
     -fx-pref-height: 1;
+    -fx-pref-width: 1;
     -fx-border-color: null;
 }
 
-#fillColorPicker, #strokeColorPicker {
+#fillColorPicker, #strokeColorPicker, #fillColorToChangePicker, #strokeColorToChangePicker {
     -fx-color-rect-width: 24;
     -fx-color-rect-height: 24;
     -fx-padding: 0 0 0 0;
     -fx-font-size: 1;
     -fx-background-color: transparent;
-
 }
 
 #fillColorPicker .large-rect-picker, #strokeColorPicker .large-rect-picker {
@@ -229,4 +237,29 @@
 .scroll-pane > .viewport {
     -fx-background-color: transparent;
 }
+
+.tab-pane .tab-header-area {
+    -fx-padding: 0;
+    -fx-min-height: 35px;
+    -fx-max-height: 35px;
+    -fx-pref-height: 35px;
+}
+#quickToolbar .button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 5;
+}
+
+#quickToolbar .button:hover {
+    -fx-background-color: #e5e5e7;
+}
+
+#bottomLeftCorner {
+    -fx-background-color: rgba(255, 105, 180, 0.11);
+    -fx-background-radius: 0 0 0 6;
+    /*-fx-border-width: 0 1 0 0;*/
+    /*-fx-border-color: white*/
+}
+
+
+
 

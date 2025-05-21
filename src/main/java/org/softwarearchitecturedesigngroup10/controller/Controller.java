@@ -1,6 +1,8 @@
 package org.softwarearchitecturedesigngroup10.controller;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,6 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
 import org.softwarearchitecturedesigngroup10.model.commands.*;
 import org.softwarearchitecturedesigngroup10.model.factories.EllipseDataFactory;
@@ -92,6 +95,32 @@ public class Controller implements ModelObserver{
     private Button eraseShapeButton;
     @FXML
     private ToggleButton selectToolButton;
+    @FXML
+    private Button bringToFrontButton;
+    @FXML
+    private TextField canvasWidthInput;
+    @FXML
+    private Button copyShapeButton;
+    @FXML
+    private Button pasteShapeButton;
+    @FXML
+    private ColorPicker fillColorToChangePicker;
+    @FXML
+    private ColorPicker strokeColorToChangePicker;
+    @FXML
+    private Slider strokeSlider;
+    @FXML
+    private Button cutShapeButton;
+    @FXML
+    private Button undoButton;
+    @FXML
+    private TextField canvasHeightInput;
+    @FXML
+    private Button sendToBackButton;
+    @FXML
+    private ScrollPane scrollableCanvasContainer;
+    @FXML
+    private Pane bottomLeftCorner;
 
     @FXML
     private void onMinimizeButtonClick() {
@@ -174,6 +203,40 @@ public class Controller implements ModelObserver{
             stage.setX(event.getScreenX() - xOffset);
             stage.setY(event.getScreenY() - yOffset);
         });
+
+//        canvasWidthInput.textProperty().bind(Bindings.stringValueAt(canvas.widthProperty()));
+//        canvasWidthInput.setText(Double.toString(canvas.getWidth()));
+//        canvasHeightInput.setText(Double.toString(canvas.getHeight()));
+
+        StringConverter<Number> doubleConverter = new StringConverter<>() {
+            @Override
+            public String toString(Number object) {
+                return String.format("%.2f", object.doubleValue());
+            }
+
+            @Override
+            public Number fromString(String string) {
+                try {
+                    return Double.parseDouble(string);
+                } catch (NumberFormatException e) {
+                    return 0.0;
+                }
+            }
+        };
+
+        Rectangle clipRect = new Rectangle();
+        clipRect.widthProperty().bind(canvas.widthProperty());
+        clipRect.heightProperty().bind(canvas.heightProperty());
+        canvas.setClip(clipRect);
+
+        DoubleProperty customWidthProperty = new SimpleDoubleProperty(canvas.getPrefWidth());
+        DoubleProperty customHeightProperty = new SimpleDoubleProperty(canvas.getPrefHeight());
+        canvas.prefWidthProperty().bind(customWidthProperty);
+        canvas.prefHeightProperty().bind(customHeightProperty);
+        Bindings.bindBidirectional(canvasWidthInput.textProperty(), customWidthProperty, doubleConverter);
+        Bindings.bindBidirectional(canvasHeightInput.textProperty(), customHeightProperty, doubleConverter);
+
+        System.out.println(canvas.widthProperty().toString());
     }
 
     public void addFocusListener() {

@@ -128,6 +128,8 @@
     -fx-border-color: #eaebef;
 }
 
+
+
 #fileTab:selected .focus-indicator, #shapesTab:selected .focus-indicator, #clipboardTab:selected .focus-indicator {
     -fx-border-color: transparent;
 }
@@ -228,5 +230,17 @@
 
 .scroll-pane > .viewport {
     -fx-background-color: transparent;
+}
+
+.tab-pane .tab-header-area {
+    -fx-padding: 0;
+    -fx-min-height: 25px;
+    -fx-max-height: 25px;
+    -fx-pref-height: 25px;
+}
+
+.tab-pane .tab-header-background {
+    -fx-background-color: blue;
+    -fx-padding: 0;
 }
 
