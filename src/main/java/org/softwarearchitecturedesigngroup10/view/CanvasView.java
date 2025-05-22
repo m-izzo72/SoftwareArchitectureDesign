@@ -86,6 +86,8 @@ public class CanvasView implements CanvasViewInterface {
             canvas.getChildren().add(entry.getValue());
         }
 
+
+
     }
 
     public double getCanvasWidth() {

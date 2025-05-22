@@ -345,11 +345,16 @@ public class Controller implements ModelObserver {
                     canvasView.highlight((Shape) target);
 
                     // Checks if color pickers are disabled and then enables/disables them if a shape is selected
-                    boolean isDisabled = fillColorToChangePicker.isDisabled();
+                    fillColorToChangePicker.setDisable(canvasModel.getSelectedShapes().isEmpty());
+                    fillColorToChangeIcon.setDisable(canvasModel.getSelectedShapes().isEmpty());
+                    strokeColorToChangePicker.setDisable(canvasModel.getSelectedShapes().isEmpty());
+                    strokeColorToChangeIcon.setDisable(canvasModel.getSelectedShapes().isEmpty());
+
+                    /*boolean isDisabled = fillColorToChangePicker.isDisabled();
                     fillColorToChangePicker.setDisable(!isDisabled);
                     fillColorToChangeIcon.setDisable(!isDisabled);
                     strokeColorToChangePicker.setDisable(!isDisabled);
-                    strokeColorToChangeIcon.setDisable(!isDisabled);
+                    strokeColorToChangeIcon.setDisable(!isDisabled);*/
 
                     // Changes color pickers displayed colors
                     fillColorToChangePicker.setValue(Color.valueOf(((Shape) target).getFill().toString()));
@@ -456,5 +461,9 @@ public class Controller implements ModelObserver {
 
     @FXML
     public void onStrokeColorToChangePickerAction(ActionEvent actionEvent) {
+        ChangeShapeFillColorCommand command = new ChangeShapeFillColorCommand(
+                canvasModel, fillColorToChangePicker.getValue().toString(), strokeColorToChangePicker.getValue().toString()
+        );
+        commandManager.executeCommand(command);
     }
 }
