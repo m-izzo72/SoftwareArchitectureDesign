@@ -7,6 +7,7 @@ import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CanvasModel implements CanvasModelInterface {
     LinkedHashMap<String, ShapeData> shapes;
@@ -39,6 +40,23 @@ public class CanvasModel implements CanvasModelInterface {
 
     public void deleteShapes() {
         shapes.entrySet().removeIf(entry -> entry.getValue().isSelected());
+        notifyObservers();
+    }
+
+    public HashMap<String, ShapeData> getSelectedShapes() {
+        return new HashMap<String, ShapeData>(shapes.entrySet().stream()
+                .filter(entry -> entry.getValue().isSelected())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+    }
+
+    public void changeShapesColours(String newFillColour, String newStrokeColour) {
+        shapes.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().isSelected())
+                .forEach(entry -> {
+                    entry.getValue().setFillColor(newFillColour);
+                    entry.getValue().setStrokeColor(newStrokeColour);
+                });
         notifyObservers();
     }
 

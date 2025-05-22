@@ -9,12 +9,12 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Controller implements ModelObserver{
+public class Controller implements ModelObserver {
 
     private Stage stage;
     @FXML
@@ -121,18 +121,20 @@ public class Controller implements ModelObserver{
     private ScrollPane scrollableCanvasContainer;
     @FXML
     private Pane bottomLeftCorner;
+    private CanvasModel canvasModel;
+    private CanvasView canvasView;
+    private CommandManager commandManager;
+    private double xOffset = 0, yOffset = 0;
+    private double startX, startY;
+    @FXML
+    private SVGPath fillColorToChangeIcon;
+    @FXML
+    private SVGPath strokeColorToChangeIcon;
 
     @FXML
     private void onMinimizeButtonClick() {
         stage.setIconified(true);
     }
-
-    private CanvasModel canvasModel;
-    private CanvasView canvasView;
-    private CommandManager commandManager;
-
-    private double xOffset = 0, yOffset = 0;
-    private double startX, startY;
 
     //private Shape previewShape = null;
 
@@ -177,7 +179,6 @@ public class Controller implements ModelObserver{
             }
 
 
-
         } catch (IllegalArgumentException e) {
             System.err.println();
         }
@@ -204,14 +205,11 @@ public class Controller implements ModelObserver{
             stage.setY(event.getScreenY() - yOffset);
         });
 
-//        canvasWidthInput.textProperty().bind(Bindings.stringValueAt(canvas.widthProperty()));
-//        canvasWidthInput.setText(Double.toString(canvas.getWidth()));
-//        canvasHeightInput.setText(Double.toString(canvas.getHeight()));
 
         StringConverter<Number> doubleConverter = new StringConverter<>() {
             @Override
             public String toString(Number object) {
-                return String.format("%.2f", object.doubleValue());
+                return String.format("%.0f", object.doubleValue());
             }
 
             @Override
@@ -219,10 +217,12 @@ public class Controller implements ModelObserver{
                 try {
                     return Double.parseDouble(string);
                 } catch (NumberFormatException e) {
-                    return 0.0;
+                    return 0;
                 }
             }
         };
+
+        //fillColorToChangePicker.disableProperty().bind(Bindings.isEmpty(canvasModel.getSelectedShapes());
 
         Rectangle clipRect = new Rectangle();
         clipRect.widthProperty().bind(canvas.widthProperty());
@@ -335,21 +335,38 @@ public class Controller implements ModelObserver{
         startX = event.getX();
         startY = event.getY();
 
-        if(selectToolButton.isSelected()) {
+        if (selectToolButton.isSelected()) {
             Object target = event.getTarget();
 
-            if(target instanceof Node && canvas.getChildren().contains(target)) {
+            if (target instanceof Node && canvas.getChildren().contains(target)) {
                 if (target instanceof Shape) {
                     SelectShapeCommand command = new SelectShapeCommand(this.canvasModel, ((Shape) target).getId());
                     command.execute();
                     canvasView.highlight((Shape) target);
+
+                    // Checks if color pickers are disabled and then enables/disables them if a shape is selected
+                    boolean isDisabled = fillColorToChangePicker.isDisabled();
+                    fillColorToChangePicker.setDisable(!isDisabled);
+                    fillColorToChangeIcon.setDisable(!isDisabled);
+                    strokeColorToChangePicker.setDisable(!isDisabled);
+                    strokeColorToChangeIcon.setDisable(!isDisabled);
+
+                    // Changes color pickers displayed colors
+                    fillColorToChangePicker.setValue(Color.valueOf(((Shape) target).getFill().toString()));
+                    strokeColorToChangePicker.setValue(Color.valueOf(((Shape) target).getStroke().toString()));
                 }
-            } else if(target == canvas) {
+            } else if (target == canvas) {
                 DeselectAllShapeCommand command = new DeselectAllShapeCommand(this.canvasModel);
                 command.execute();
                 canvasView.unHighlightAll();
+
+                // Disable shape fill and stroke color pickers
+                fillColorToChangePicker.setDisable(true);
+                fillColorToChangeIcon.setDisable(true);
+                strokeColorToChangePicker.setDisable(true);
+                strokeColorToChangeIcon.setDisable(true);
             }
-            event.consume(); return;
+            event.consume();
         }
 
         /*boolean isDrawingToolActive = (lineButton.isSelected() || ellipseButton.isSelected() || rectangleButton.isSelected()) && shapesTab.isSelected();
@@ -383,15 +400,15 @@ public class Controller implements ModelObserver{
     @FXML
     public void setOnMouseReleased(MouseEvent event) {
         ShapeDataFactory factory;
-        if(lineButton.isSelected() && shapesTab.isSelected()) {
+        if (lineButton.isSelected() && shapesTab.isSelected()) {
             factory = new LineDataFactory();
             AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), 3, 0));
             commandManager.executeCommand(command);
-        } else if(ellipseButton.isSelected() && shapesTab.isSelected()) {
+        } else if (ellipseButton.isSelected() && shapesTab.isSelected()) {
             factory = new EllipseDataFactory();
             AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), 3, 0));
             commandManager.executeCommand(command);
-        } else if(rectangleButton.isSelected() && shapesTab.isSelected()) {
+        } else if (rectangleButton.isSelected() && shapesTab.isSelected()) {
             factory = new RectangleDataFactory();
             AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), 3, 0));
             commandManager.executeCommand(command);
@@ -427,5 +444,17 @@ public class Controller implements ModelObserver{
     @FXML
     public void onMinimizeButtonAction(ActionEvent actionEvent) {
         stage.setIconified(true);
+    }
+
+    @FXML
+    public void onFillColorToChangePickerAction(ActionEvent actionEvent) {
+        ChangeShapeFillColorCommand command = new ChangeShapeFillColorCommand(
+                canvasModel, fillColorToChangePicker.getValue().toString(), strokeColorToChangePicker.getValue().toString()
+        );
+        commandManager.executeCommand(command);
+    }
+
+    @FXML
+    public void onStrokeColorToChangePickerAction(ActionEvent actionEvent) {
     }
 }
