@@ -81,13 +81,17 @@ public class CanvasView implements CanvasViewInterface {
 
     @Override
     public void paintAllFromScratch(LinkedHashMap<String, Shape> shapes) {
-        for (Map.Entry<String, Shape> entry : shapes.entrySet()) {
-            entry.getValue().setId(entry.getKey());
-            canvas.getChildren().add(entry.getValue());
-        }
+        canvas.getChildren().clear();
 
+        shapes.forEach((key, value) -> {
+            value.setId(key);
+            canvas.getChildren().add(value);
+        });
 
-
+//        for (Map.Entry<String, Shape> entry : shapes.entrySet()) {
+//            entry.getValue().setId(entry.getKey());
+//            canvas.getChildren().add(entry.getValue());
+//        }
     }
 
     public double getCanvasWidth() {

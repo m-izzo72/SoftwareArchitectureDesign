@@ -138,27 +138,33 @@ public class Controller implements ModelObserver {
 
     //private Shape previewShape = null;
 
-    //ArrayList<Shape> selectedShapes = new ArrayList<>();
 
     @Override
     public void update() {
-        LinkedHashMap<String, ShapeData> modelShapes = canvasModel.getShapes();
-
         LinkedHashMap<String, Shape> viewShapes = new LinkedHashMap<>();
-        for (Map.Entry<String, ShapeData> entry : modelShapes.entrySet()) {
-            Shape fxShape = convertShapeDataToFxShape(entry.getValue());
-            viewShapes.put(entry.getKey(), fxShape);
-        }
+        canvasModel.getShapes()
+                .forEach((key, value) -> {
+                    viewShapes.put(key, toFXShape(value));
+                });
 
-        canvasView.clear();
         canvasView.paintAllFromScratch(viewShapes);
+
+//        LinkedHashMap<String, ShapeData> modelShapes = canvasModel.getShapes();
+//
+//        LinkedHashMap<String, Shape> viewShapes = new LinkedHashMap<>();
+//        for (Map.Entry<String, ShapeData> entry : modelShapes.entrySet()) {
+//            Shape fxShape = toFXShape(entry.getValue());
+//            viewShapes.put(entry.getKey(), fxShape);
+//        }
+//
+//        canvasView.paintAllFromScratch(viewShapes);
     }
 
-    private Shape convertShapeDataToFxShape(ShapeData data) {
+    private Shape toFXShape(ShapeData data) {
         Shape fxShape = null;
         try {
             Color fillColor = data.getFillColor() != null ? Color.valueOf(data.getFillColor()) : null;
-            Color strokeColor = data.getStrokeColor() != null ? Color.valueOf(data.getStrokeColor()) : Color.BLACK; // Default a nero se null
+            Color strokeColor = data.getStrokeColor() != null ? Color.valueOf(data.getStrokeColor()) : Color.BLACK;
             if (data instanceof RectangleData rd) {
                 Rectangle rect = new Rectangle(rd.getX(), rd.getY(), rd.getWidth(), rd.getHeight());
                 rect.setFill(fillColor);
@@ -178,10 +184,12 @@ public class Controller implements ModelObserver {
                 fxShape = line;
             }
 
+            if(data.isSelected()) canvasView.highlight(fxShape);
 
         } catch (IllegalArgumentException e) {
             System.err.println();
         }
+
         return fxShape;
     }
 
@@ -357,7 +365,7 @@ public class Controller implements ModelObserver {
                     strokeColorToChangeIcon.setDisable(!isDisabled);*/
 
                     // Changes color pickers displayed colors
-                    fillColorToChangePicker.setValue(Color.valueOf(((Shape) target).getFill().toString()));
+                    fillColorToChangePicker.setValue(Color.valueOf( ((Shape) target).getFill().toString() ));
                     strokeColorToChangePicker.setValue(Color.valueOf(((Shape) target).getStroke().toString()));
                 }
             } else if (target == canvas) {
@@ -407,15 +415,15 @@ public class Controller implements ModelObserver {
         ShapeDataFactory factory;
         if (lineButton.isSelected() && shapesTab.isSelected()) {
             factory = new LineDataFactory();
-            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), 3, 0));
+            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), strokeSlider.getValue(), 0));
             commandManager.executeCommand(command);
         } else if (ellipseButton.isSelected() && shapesTab.isSelected()) {
             factory = new EllipseDataFactory();
-            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), 3, 0));
+            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), strokeSlider.getValue(), 0));
             commandManager.executeCommand(command);
         } else if (rectangleButton.isSelected() && shapesTab.isSelected()) {
             factory = new RectangleDataFactory();
-            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), 3, 0));
+            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), strokeSlider.getValue(), 0));
             commandManager.executeCommand(command);
         }
     }
