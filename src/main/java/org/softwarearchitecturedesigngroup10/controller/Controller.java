@@ -18,6 +18,7 @@ import javafx.scene.shape.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import org.softwarearchitecturedesigngroup10.controller.adapters.ShapeConverter;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
 import org.softwarearchitecturedesigngroup10.model.commands.*;
 import org.softwarearchitecturedesigngroup10.model.factories.EllipseDataFactory;
@@ -121,9 +122,17 @@ public class Controller implements ModelObserver {
     private ScrollPane scrollableCanvasContainer;
     @FXML
     private Pane bottomLeftCorner;
+
+
     private CanvasModel canvasModel;
+
     private CanvasView canvasView;
+
     private CommandManager commandManager;
+
+    private ShapeConverter shapeConverter;
+
+
     private double xOffset = 0, yOffset = 0;
     private double startX, startY;
     @FXML
@@ -144,7 +153,8 @@ public class Controller implements ModelObserver {
         LinkedHashMap<String, Shape> viewShapes = new LinkedHashMap<>();
         canvasModel.getShapes()
                 .forEach((key, value) -> {
-                    viewShapes.put(key, toFXShape(value));
+                    viewShapes.put(key, shapeConverter.convert(value));
+                    if(value.isSelected()) canvasView.highlight(viewShapes.get(key));
                 });
 
         canvasView.paintAllFromScratch(viewShapes);
@@ -160,7 +170,7 @@ public class Controller implements ModelObserver {
 //        canvasView.paintAllFromScratch(viewShapes);
     }
 
-    private Shape toFXShape(ShapeData data) {
+    /*private Shape toFXShape(ShapeData data) {
         Shape fxShape = null;
         try {
             Color fillColor = data.getFillColor() != null ? Color.valueOf(data.getFillColor()) : null;
@@ -191,13 +201,14 @@ public class Controller implements ModelObserver {
         }
 
         return fxShape;
-    }
+    }*/
 
     @FXML
     public void initialize() {
         canvasModel = new CanvasModel();
         canvasView = new CanvasView(canvas);
         commandManager = new CommandManager();
+        shapeConverter = new ShapeConverter();
 
         this.canvasModel.addObserver(this);
 
