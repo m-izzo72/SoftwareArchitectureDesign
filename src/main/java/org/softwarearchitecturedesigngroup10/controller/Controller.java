@@ -19,6 +19,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.softwarearchitecturedesigngroup10.controller.adapters.ShapeConverter;
+import org.softwarearchitecturedesigngroup10.controller.states.IdleState;
+import org.softwarearchitecturedesigngroup10.controller.states.PaintingState;
+import org.softwarearchitecturedesigngroup10.controller.states.SelectionState;
+import org.softwarearchitecturedesigngroup10.controller.states.State;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
 import org.softwarearchitecturedesigngroup10.model.commands.*;
 import org.softwarearchitecturedesigngroup10.model.factories.EllipseDataFactory;
@@ -33,6 +37,8 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 
 public class Controller implements ModelObserver {
+
+    /****************** FXML COMPONENTS ***********/
 
     private Stage stage;
     @FXML
@@ -117,6 +123,11 @@ public class Controller implements ModelObserver {
     private ScrollPane scrollableCanvasContainer;
     @FXML
     private Pane bottomLeftCorner;
+    @FXML
+    private SVGPath fillColorToChangeIcon;
+    @FXML
+    private SVGPath strokeColorToChangeIcon;
+
 
 
     private CanvasModel canvasModel;
@@ -129,21 +140,23 @@ public class Controller implements ModelObserver {
 
     private ShapeDataFactory factory;
 
-
     private double xOffset = 0, yOffset = 0;
     private double startX, startY;
-    @FXML
-    private SVGPath fillColorToChangeIcon;
-    @FXML
-    private SVGPath strokeColorToChangeIcon;
+
+
+    /* CLOSE AND MINIMIZE WINDOW */
 
     @FXML
-    private void onMinimizeButtonClick() {
+    public void onMinimizeButtonAction(ActionEvent actionEvent) {
         stage.setIconified(true);
     }
 
-    //private Shape previewShape = null;
+    @FXML
+    public void onCloseButtonAction(ActionEvent actionEvent) {
+        stage.close();
+    }
 
+    /* UPDATE METHOD CALLED BY OBSERVER */
 
     @Override
     public void update() {
@@ -155,50 +168,16 @@ public class Controller implements ModelObserver {
                 });
 
         canvasView.paintAllFromScratch(viewShapes);
-
-//        LinkedHashMap<String, ShapeData> modelShapes = canvasModel.getShapes();
-//
-//        LinkedHashMap<String, Shape> viewShapes = new LinkedHashMap<>();
-//        for (Map.Entry<String, ShapeData> entry : modelShapes.entrySet()) {
-//            Shape fxShape = toFXShape(entry.getValue());
-//            viewShapes.put(entry.getKey(), fxShape);
-//        }
-//
-//        canvasView.paintAllFromScratch(viewShapes);
     }
 
-    /*private Shape toFXShape(ShapeData data) {
-        Shape fxShape = null;
-        try {
-            Color fillColor = data.getFillColor() != null ? Color.valueOf(data.getFillColor()) : null;
-            Color strokeColor = data.getStrokeColor() != null ? Color.valueOf(data.getStrokeColor()) : Color.BLACK;
-            if (data instanceof RectangleData rd) {
-                Rectangle rect = new Rectangle(rd.getX(), rd.getY(), rd.getWidth(), rd.getHeight());
-                rect.setFill(fillColor);
-                rect.setStroke(strokeColor);
-                rect.setStrokeWidth(rd.getStrokeWidth());
-                fxShape = rect;
-            } else if (data instanceof EllipseData ed) {
-                Ellipse ellipse = new Ellipse(ed.getCenterX(), ed.getCenterY(), ed.getRadiusX(), ed.getRadiusY());
-                ellipse.setFill(fillColor);
-                ellipse.setStroke(strokeColor);
-                ellipse.setStrokeWidth(ed.getStrokeWidth());
-                fxShape = ellipse;
-            } else if (data instanceof LineData ld) {
-                Line line = new Line(ld.getX(), ld.getY(), ld.getEndX(), ld.getEndY());
-                line.setStroke(strokeColor);
-                line.setStrokeWidth(ld.getStrokeWidth());
-                fxShape = line;
-            }
+    /* STATES */
 
-            if(data.isSelected()) canvasView.highlight(fxShape);
+    private State currentState;
+    private final State idleState = new IdleState();
+    private final State selectionState = new SelectionState();
+    private final State drawingState = new PaintingState();
 
-        } catch (IllegalArgumentException e) {
-            System.err.println();
-        }
 
-        return fxShape;
-    }*/
 
     @FXML
     public void initialize() {
@@ -206,6 +185,9 @@ public class Controller implements ModelObserver {
         canvasView = new CanvasView(canvas);
         commandManager = new CommandManager();
         shapeConverter = new ShapeConverter();
+
+        // Initial state
+        setCurrentState(idleState);
 
         this.canvasModel.addObserver(this);
 
@@ -238,7 +220,6 @@ public class Controller implements ModelObserver {
             }
         };
 
-        //fillColorToChangePicker.disableProperty().bind(Bindings.isEmpty(canvasModel.getSelectedShapes());
 
         Rectangle clipRect = new Rectangle();
         clipRect.widthProperty().bind(canvas.widthProperty());
@@ -252,7 +233,6 @@ public class Controller implements ModelObserver {
         Bindings.bindBidirectional(canvasWidthInput.textProperty(), customWidthProperty, doubleConverter);
         Bindings.bindBidirectional(canvasHeightInput.textProperty(), customHeightProperty, doubleConverter);
 
-       // System.out.println(canvas.widthProperty().toString());
     }
 
     public void addFocusListener() {
@@ -276,14 +256,11 @@ public class Controller implements ModelObserver {
 
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-
-    }
+    /* FILES TAB METHODS */
 
     @FXML
-    public void onCloseButtonAction(ActionEvent actionEvent) {
-        stage.close();
+    public void onNewCanvasButtonAction(ActionEvent actionEvent) {
+        canvasModel.clear();
     }
 
     @FXML
@@ -303,11 +280,6 @@ public class Controller implements ModelObserver {
     }
 
     @FXML
-    public void onNewCanvasButtonAction(ActionEvent actionEvent) {
-        canvasModel.clear();
-    }
-
-    @FXML
     public void onOpenFileButtonAction(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open File");
@@ -322,15 +294,18 @@ public class Controller implements ModelObserver {
         title.setText(selectedFile.getName());
     }
 
+    /* SHAPES TAB METHODS */
+
     @FXML
     public void onEllipseButtonSelected(ActionEvent actionEvent) {
         if(ellipseButton.isSelected()) {
             rectangleButton.setSelected(false);
             lineButton.setSelected(false);
             selectToolButton.setSelected(false);
-            factory = new EllipseDataFactory();
+            setFactory(new EllipseDataFactory());
+            setCurrentState(drawingState);
         } else {
-            factory = null;
+            setCurrentState(idleState);
         }
     }
 
@@ -340,9 +315,10 @@ public class Controller implements ModelObserver {
             ellipseButton.setSelected(false);
             lineButton.setSelected(false);
             selectToolButton.setSelected(false);
-            factory = new RectangleDataFactory();
+            setFactory(new RectangleDataFactory());
+            setCurrentState(drawingState);
         } else {
-            factory = null;
+            setCurrentState(idleState);
         }
     }
 
@@ -352,143 +328,48 @@ public class Controller implements ModelObserver {
             rectangleButton.setSelected(false);
             ellipseButton.setSelected(false);
             selectToolButton.setSelected(false);
-            factory = new LineDataFactory();
+            setFactory(new LineDataFactory());
+            setCurrentState(drawingState);
         } else {
-            factory = null;
+            setCurrentState(idleState);
         }
     }
 
     @FXML
     public void onSelectToolButtonSelected(ActionEvent actionEvent) {
-        rectangleButton.setSelected(false);
-        ellipseButton.setSelected(false);
-        lineButton.setSelected(false);
-        factory = null;
+        if(selectToolButton.isSelected()) {
+            rectangleButton.setSelected(false);
+            ellipseButton.setSelected(false);
+            lineButton.setSelected(false);
+            setCurrentState(selectionState);
+        } else {
+            setCurrentState(idleState);
+        }
     }
+
+    /* CANVAS HANDLER METHODS */
 
     @FXML
     public void setOnMousePressed(MouseEvent event) {
-        startX = event.getX();
-        startY = event.getY();
+        currentState.handleMousePressed(event, this);
+    }
 
-        if (selectToolButton.isSelected()) {
-            Object target = event.getTarget();
-
-            if (target instanceof Node && canvas.getChildren().contains(target)) {
-                if (target instanceof Shape) {
-                    SelectShapeCommand command = new SelectShapeCommand(this.canvasModel, ((Shape) target).getId());
-                    command.execute();
-                    canvasView.highlight((Shape) target);
-
-                    // Checks if color pickers are disabled and then enables/disables them if a shape is selected
-                    fillColorToChangePicker.setDisable(canvasModel.getSelectedShapes().isEmpty());
-                    fillColorToChangeIcon.setDisable(canvasModel.getSelectedShapes().isEmpty());
-                    strokeColorToChangePicker.setDisable(canvasModel.getSelectedShapes().isEmpty());
-                    strokeColorToChangeIcon.setDisable(canvasModel.getSelectedShapes().isEmpty());
-
-                    /*boolean isDisabled = fillColorToChangePicker.isDisabled();
-                    fillColorToChangePicker.setDisable(!isDisabled);
-                    fillColorToChangeIcon.setDisable(!isDisabled);
-                    strokeColorToChangePicker.setDisable(!isDisabled);
-                    strokeColorToChangeIcon.setDisable(!isDisabled);*/
-
-                    // Changes color pickers displayed colors
-                    fillColorToChangePicker.setValue(Color.valueOf( ((Shape) target).getFill().toString() ));
-                    strokeColorToChangePicker.setValue(Color.valueOf(((Shape) target).getStroke().toString()));
-                }
-            } else if (target == canvas) {
-                DeselectAllShapeCommand command = new DeselectAllShapeCommand(this.canvasModel);
-                command.execute();
-                canvasView.unHighlightAll();
-
-                // Disable shape fill and stroke color pickers
-                fillColorToChangePicker.setDisable(true);
-                fillColorToChangeIcon.setDisable(true);
-                strokeColorToChangePicker.setDisable(true);
-                strokeColorToChangeIcon.setDisable(true);
-            }
-            event.consume();
-        }
-
-        /*boolean isDrawingToolActive = (lineButton.isSelected() || ellipseButton.isSelected() || rectangleButton.isSelected()) && shapesTab.isSelected();
-
-        if (isDrawingToolActive) {
-            startX = event.getX();
-            startY = event.getY();
-
-            if (previewShape != null) {
-                canvasView.erase(previewShape);
-                previewShape = null;
-            }
-
-            if (lineButton.isSelected()) {
-                previewShape = new Line(startX, startY, startX, startY);
-            } else if (ellipseButton.isSelected()) {
-                previewShape = new Ellipse(startX, startY, 0, 0);
-            } else if (rectangleButton.isSelected()) {
-                previewShape = new Rectangle(startX, startY, 0, 0);
-            }
-
-            if (previewShape != null) {
-                canvasView.stylePreviewShape(previewShape);
-                canvasView.paint(previewShape);
-            }
-            event.consume();
-        }*/
-
+    @FXML
+    public void setOnMouseDragged(MouseEvent event) {
+        currentState.handleMouseDragged(event, this);
     }
 
     @FXML
     public void setOnMouseReleased(MouseEvent event) {
-        if(factory != null && shapesTab.isSelected()) {
-            commandManager.executeCommand(
-                    new AddShapeCommand(
-                            canvasModel,
-                            factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), strokeSlider.getValue(), 0)
-                    )
-            );
-        }
-
-//        ShapeDataFactory factory;
-//        if (lineButton.isSelected() && shapesTab.isSelected()) {
-//            factory = new LineDataFactory();
-//            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), strokeSlider.getValue(), 0));
-//            commandManager.executeCommand(command);
-//        } else if (ellipseButton.isSelected() && shapesTab.isSelected()) {
-//            factory = new EllipseDataFactory();
-//            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), strokeSlider.getValue(), 0));
-//            commandManager.executeCommand(command);
-//        } else if (rectangleButton.isSelected() && shapesTab.isSelected()) {
-//            factory = new RectangleDataFactory();
-//            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), strokeSlider.getValue(), 0));
-//            commandManager.executeCommand(command);
-//        }
+        currentState.handleMouseReleased(event, this);
     }
 
-
+    /* CLIPBOARD TAB METHODS */
 
     @FXML
     public void onEraseShapeButtonAction(ActionEvent actionEvent) {
         DeleteShapeCommand command = new DeleteShapeCommand(canvasModel);
         command.execute();
-    }
-
-    @FXML
-    public void setOnMouseDragged(MouseEvent event) {
-        /*boolean isDrawingToolActive = (lineButton.isSelected() || ellipseButton.isSelected() || rectangleButton.isSelected()) && shapesTab.isSelected();
-
-        if (previewShape != null && isDrawingToolActive) {
-            canvasView.updatePreviewShapeGeometry(previewShape, event.getX(), event.getY(), startX, startY);
-            event.consume();
-        }*/
-        // Might be used later for moving a shape
-//        else if (selectToolButton.isSelected() && canvas.getChildren().contains(previewShape)) {
-//        }
-    }
-
-    @FXML
-    public void onMinimizeButtonAction(ActionEvent actionEvent) {
-        stage.setIconified(true);
     }
 
     @FXML
@@ -505,5 +386,98 @@ public class Controller implements ModelObserver {
                 canvasModel, fillColorToChangePicker.getValue().toString(), strokeColorToChangePicker.getValue().toString()
         );
         commandManager.executeCommand(command);
+    }
+
+    @FXML
+    public void onBringToFrontAction(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void onSendToBackAction(ActionEvent actionEvent) {
+    }
+
+    /************** GETTERS *****************/
+
+    public Pane getCanvas() {
+        return canvas;
+    }
+
+    public ColorPicker getStrokeColorPicker() {
+        return strokeColorPicker;
+    }
+
+    public ColorPicker getFillColorPicker() {
+        return fillColorPicker;
+    }
+
+    public Slider getStrokeSlider() {
+        return strokeSlider;
+    }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
+    }
+
+    public CanvasModel getCanvasModel() {
+        return canvasModel;
+    }
+
+    public CanvasView getCanvasView() {
+        return canvasView;
+    }
+
+    public ShapeDataFactory getFactory() {
+        return factory;
+    }
+
+    public double getStartX() {
+        return startX;
+    }
+
+    public double getStartY() {
+        return startY;
+    }
+
+    public ToggleButton getSelectToolButton() {
+        return selectToolButton;
+    }
+
+    public ToggleButton getLineButton() {
+        return lineButton;
+    }
+
+    public ToggleButton getEllipseButton() {
+        return ellipseButton;
+    }
+
+    public ToggleButton getRectangleButton() {
+        return rectangleButton;
+    }
+
+    /********************* SETTERS ******************/
+
+    public void setCurrentState(State newState) {
+        if (currentState != null) {
+            currentState.exitState(this);
+        }
+        currentState = newState;
+        currentState.enterState(this);
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+
+    }
+
+    public void setFactory(ShapeDataFactory factory) {
+        this.factory = factory;
+    }
+
+    public void setStartX(double startX) {
+        this.startX = startX;
+    }
+
+    public void setStartY(double startY) {
+        this.startY = startY;
     }
 }

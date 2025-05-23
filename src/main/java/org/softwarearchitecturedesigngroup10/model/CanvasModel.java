@@ -32,10 +32,12 @@ public class CanvasModel implements CanvasModelInterface {
 
     public void selectShape(String shapeId) {
         shapes.get(shapeId).setSelected(!shapes.get(shapeId).isSelected());
+        notifyObservers();
     }
 
     public void deselectAllShapes() {
         shapes.forEach((key, value) -> value.setSelected(false));
+        notifyObservers();
     }
 
     public void deleteShapes() {
