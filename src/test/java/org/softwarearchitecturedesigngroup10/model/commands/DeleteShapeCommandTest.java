@@ -3,6 +3,7 @@ package org.softwarearchitecturedesigngroup10.model.commands;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
+import org.softwarearchitecturedesigngroup10.model.commands.clipboard.DeleteShapeCommand;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.LineData;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
 

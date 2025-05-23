@@ -3,8 +3,8 @@ package org.softwarearchitecturedesigngroup10.controller.states;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Shape;
 import org.softwarearchitecturedesigngroup10.controller.Controller;
-import org.softwarearchitecturedesigngroup10.model.commands.DeselectAllShapeCommand;
-import org.softwarearchitecturedesigngroup10.model.commands.SelectShapeCommand;
+import org.softwarearchitecturedesigngroup10.model.commands.selection.DeselectAllShapeCommand;
+import org.softwarearchitecturedesigngroup10.model.commands.selection.SelectShapeCommand;
 
 
 

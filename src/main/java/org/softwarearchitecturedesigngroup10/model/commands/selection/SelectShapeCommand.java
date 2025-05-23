@@ -1,6 +1,7 @@
-package org.softwarearchitecturedesigngroup10.model.commands;
+package org.softwarearchitecturedesigngroup10.model.commands.selection;
 
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
+import org.softwarearchitecturedesigngroup10.model.commands.Command;
 
 public class SelectShapeCommand implements Command {
 
