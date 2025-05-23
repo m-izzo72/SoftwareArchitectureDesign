@@ -135,7 +135,7 @@
                      <items>
                         <CustomMenuItem mnemonicParsing="false">
                            <content>
-                              <Slider fx:id="strokeSlider" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="1" showTickLabels="true" snapToTicks="true" value="3.0" />
+                              <Slider fx:id="strokeSlider" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="1" snapToTicks="true" value="3.0" />
                            </content>
                         </CustomMenuItem>
                      </items>

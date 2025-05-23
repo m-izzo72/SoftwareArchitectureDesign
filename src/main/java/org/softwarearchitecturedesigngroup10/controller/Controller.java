@@ -26,16 +26,11 @@ import org.softwarearchitecturedesigngroup10.model.factories.LineDataFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.RectangleDataFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.ShapeDataFactory;
 import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.EllipseData;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.LineData;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.RectangleData;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
 import org.softwarearchitecturedesigngroup10.view.CanvasView;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class Controller implements ModelObserver {
 
@@ -131,6 +126,8 @@ public class Controller implements ModelObserver {
     private CommandManager commandManager;
 
     private ShapeConverter shapeConverter;
+
+    private ShapeDataFactory factory;
 
 
     private double xOffset = 0, yOffset = 0;
@@ -255,7 +252,7 @@ public class Controller implements ModelObserver {
         Bindings.bindBidirectional(canvasWidthInput.textProperty(), customWidthProperty, doubleConverter);
         Bindings.bindBidirectional(canvasHeightInput.textProperty(), customHeightProperty, doubleConverter);
 
-        System.out.println(canvas.widthProperty().toString());
+       // System.out.println(canvas.widthProperty().toString());
     }
 
     public void addFocusListener() {
@@ -327,26 +324,46 @@ public class Controller implements ModelObserver {
 
     @FXML
     public void onEllipseButtonSelected(ActionEvent actionEvent) {
-        rectangleButton.setSelected(false);
-        lineButton.setSelected(false);
-
-        selectToolButton.setSelected(false);
+        if(ellipseButton.isSelected()) {
+            rectangleButton.setSelected(false);
+            lineButton.setSelected(false);
+            selectToolButton.setSelected(false);
+            factory = new EllipseDataFactory();
+        } else {
+            factory = null;
+        }
     }
 
     @FXML
     public void onRectangleButtonSelected(ActionEvent actionEvent) {
-        ellipseButton.setSelected(false);
-        lineButton.setSelected(false);
-
-        selectToolButton.setSelected(false);
+        if (rectangleButton.isSelected()) {
+            ellipseButton.setSelected(false);
+            lineButton.setSelected(false);
+            selectToolButton.setSelected(false);
+            factory = new RectangleDataFactory();
+        } else {
+            factory = null;
+        }
     }
 
     @FXML
     public void onLineButtonSelected(ActionEvent actionEvent) {
+        if(lineButton.isSelected()) {
+            rectangleButton.setSelected(false);
+            ellipseButton.setSelected(false);
+            selectToolButton.setSelected(false);
+            factory = new LineDataFactory();
+        } else {
+            factory = null;
+        }
+    }
+
+    @FXML
+    public void onSelectToolButtonSelected(ActionEvent actionEvent) {
         rectangleButton.setSelected(false);
         ellipseButton.setSelected(false);
-
-        selectToolButton.setSelected(false);
+        lineButton.setSelected(false);
+        factory = null;
     }
 
     @FXML
@@ -423,28 +440,32 @@ public class Controller implements ModelObserver {
 
     @FXML
     public void setOnMouseReleased(MouseEvent event) {
-        ShapeDataFactory factory;
-        if (lineButton.isSelected() && shapesTab.isSelected()) {
-            factory = new LineDataFactory();
-            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), strokeSlider.getValue(), 0));
-            commandManager.executeCommand(command);
-        } else if (ellipseButton.isSelected() && shapesTab.isSelected()) {
-            factory = new EllipseDataFactory();
-            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), strokeSlider.getValue(), 0));
-            commandManager.executeCommand(command);
-        } else if (rectangleButton.isSelected() && shapesTab.isSelected()) {
-            factory = new RectangleDataFactory();
-            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), strokeSlider.getValue(), 0));
-            commandManager.executeCommand(command);
+        if(factory != null && shapesTab.isSelected()) {
+            commandManager.executeCommand(
+                    new AddShapeCommand(
+                            canvasModel,
+                            factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), strokeSlider.getValue(), 0)
+                    )
+            );
         }
+
+//        ShapeDataFactory factory;
+//        if (lineButton.isSelected() && shapesTab.isSelected()) {
+//            factory = new LineDataFactory();
+//            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), strokeSlider.getValue(), 0));
+//            commandManager.executeCommand(command);
+//        } else if (ellipseButton.isSelected() && shapesTab.isSelected()) {
+//            factory = new EllipseDataFactory();
+//            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), strokeSlider.getValue(), 0));
+//            commandManager.executeCommand(command);
+//        } else if (rectangleButton.isSelected() && shapesTab.isSelected()) {
+//            factory = new RectangleDataFactory();
+//            AddShapeCommand command = new AddShapeCommand(canvasModel, factory.createShapeData(startX, startY, event.getX(), event.getY(), fillColorPicker.getValue().toString(), strokeColorPicker.getValue().toString(), strokeSlider.getValue(), 0));
+//            commandManager.executeCommand(command);
+//        }
     }
 
-    @FXML
-    public void onSelectToolButtonSelected(ActionEvent actionEvent) {
-        rectangleButton.setSelected(false);
-        ellipseButton.setSelected(false);
-        lineButton.setSelected(false);
-    }
+
 
     @FXML
     public void onEraseShapeButtonAction(ActionEvent actionEvent) {
