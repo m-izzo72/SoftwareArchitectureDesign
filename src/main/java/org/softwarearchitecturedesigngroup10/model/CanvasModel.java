@@ -25,6 +25,14 @@ public class CanvasModel implements CanvasModelInterface {
         notifyObservers();
     }
 
+    public void bringToFront() {
+        LinkedHashMap<String, ShapeData> selectedShapes = getSelectedShapes();
+        selectedShapes.forEach((key, value) -> { shapes.remove(key); });
+        //selectedShapes.putAll(shapes);
+        shapes.putAll(selectedShapes); //selectedShapes;
+        notifyObservers();
+    }
+
     public void addShape(ShapeData shapeData) {
         shapes.put(UUID.randomUUID().toString(), shapeData);
         notifyObservers();
@@ -45,8 +53,8 @@ public class CanvasModel implements CanvasModelInterface {
         notifyObservers();
     }
 
-    public HashMap<String, ShapeData> getSelectedShapes() {
-        return new HashMap<String, ShapeData>(shapes.entrySet().stream()
+    public LinkedHashMap<String, ShapeData> getSelectedShapes() {
+        return new LinkedHashMap<String, ShapeData>(shapes.entrySet().stream()
                 .filter(entry -> entry.getValue().isSelected())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }

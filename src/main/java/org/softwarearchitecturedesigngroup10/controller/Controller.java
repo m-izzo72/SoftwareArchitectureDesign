@@ -390,6 +390,7 @@ public class Controller implements ModelObserver {
 
     @FXML
     public void onBringToFrontAction(ActionEvent actionEvent) {
+        commandManager.executeCommand(new BringToFrontCommand(canvasModel));
     }
 
     @FXML
