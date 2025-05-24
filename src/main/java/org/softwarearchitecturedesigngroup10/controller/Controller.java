@@ -177,7 +177,17 @@ public class Controller implements ModelObserver {
         canvasModel.getShapes()
                 .forEach((key, value) -> {
                     viewShapes.put(key, shapeConverter.convert(value));
-                    if(value.isSelected()) canvasView.highlight(viewShapes.get(key));
+//                    if(value.isSelected()) canvasView.highlight(viewShapes.get(key));
+
+                    if (!canvasModel.getSelectedShapes().isEmpty()) {
+                        if (value.isSelected()) {
+                            canvasView.undimShape(viewShapes.get(key));
+                        } else {
+                            canvasView.dimShape(viewShapes.get(key));
+                        }
+                    } else {
+                        canvasView.undimShape(viewShapes.get(key));
+                    }
                 });
 
         canvasView.paintAllFromScratch(viewShapes);
@@ -229,17 +239,15 @@ public class Controller implements ModelObserver {
 
         canvasInfoLabel.textProperty().bind(Bindings.size(canvas.getChildren()).asString().concat(" shapes on the canvas."));
 
-        titleBar.setOnMousePressed(event -> {
-            xOffset = event.getSceneX();
-            yOffset = event.getSceneY();
-        });
+        titleBar.setOnMousePressed(this::setOnTitleBarPressed);
+        titleBar.setOnMouseDragged(this::setOnTitleBarDragged);
 
-        titleBar.setOnMouseDragged(event -> {
-            stage.setX(event.getScreenX() - xOffset);
-            stage.setY(event.getScreenY() - yOffset);
-        });
+        setCanvasScrollable();
+    }
 
+    /* SCROLLABLE CANVAS AND CLIPPING CANVAS LOGIC */
 
+    private void setCanvasScrollable() {
         StringConverter<Number> doubleConverter = new StringConverter<>() {
             @Override
             public String toString(Number object) {
@@ -268,7 +276,18 @@ public class Controller implements ModelObserver {
         canvas.prefHeightProperty().bind(customHeightProperty);
         Bindings.bindBidirectional(canvasWidthInput.textProperty(), customWidthProperty, doubleConverter);
         Bindings.bindBidirectional(canvasHeightInput.textProperty(), customHeightProperty, doubleConverter);
+    }
 
+    /* DRAGGABLE WINDOW */
+
+    private void setOnTitleBarPressed(MouseEvent event) {
+        xOffset = event.getSceneX();
+        yOffset = event.getSceneY();
+    }
+
+    private void setOnTitleBarDragged(MouseEvent event) {
+        stage.setX(event.getScreenX() - xOffset);
+        stage.setY(event.getScreenY() - yOffset);
     }
 
     public void addFocusListener() {

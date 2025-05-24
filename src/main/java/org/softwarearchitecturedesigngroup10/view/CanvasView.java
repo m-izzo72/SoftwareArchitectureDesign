@@ -15,6 +15,7 @@ import java.util.Map;
 public class CanvasView implements CanvasViewInterface {
 
     Pane canvas;
+    private static final double DIMMED_OPACITY = 0.3;
 
     public CanvasView(Pane canvas) {
         this.canvas = canvas;
@@ -27,6 +28,18 @@ public class CanvasView implements CanvasViewInterface {
     public void unHighlightAll() {
         for (Node shape : canvas.getChildren()) {
             Highlighter.unhighlightShape((Shape) shape);
+        }
+    }
+
+    public void dimShape(Shape shape) {
+        if (shape != null) {
+            shape.setOpacity(DIMMED_OPACITY);
+        }
+    }
+
+    public void undimShape(Shape shape) {
+        if (shape != null) {
+            shape.setOpacity(1.0);
         }
     }
 
