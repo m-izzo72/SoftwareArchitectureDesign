@@ -304,7 +304,7 @@
     /*-fx-border-color: white*/
 }
 
-#fillColorToChangeIcon:disabled, #strokeColorToChangeIcon:disabled, #strokeWidthToChangeIcon:disabled {
+#fillColorToChangeIcon:disabled, #strokeColorToChangeIcon:disabled, #editStrokeWidthIcon:disabled {
     -fx-opacity: 0.5;
 }
 

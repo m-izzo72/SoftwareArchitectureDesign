@@ -151,17 +151,15 @@ public class Controller implements ModelObserver {
 
     private SelectionPropertyObserver selectionPropertyObserver;
     @FXML
-    private Slider strokeWidthToChangeSlider;
-    @FXML
-    private SVGPath strokeWidthToChangeIcon;
-    @FXML
     private Slider zoomSlider;
     @FXML
     private MenuButton strokeWidthMenuButton;
 
     private double zoomFactor;
     @FXML
-    private MenuButton editStrokeWidthMenuButton;
+    private Slider editStrokeWidthSlider;
+    @FXML
+    private SVGPath editStrokeWidthIcon;
 
     /* CLOSE AND MINIMIZE WINDOW */
 
@@ -240,15 +238,15 @@ public class Controller implements ModelObserver {
                 cutShapeButton,
                 sendToBackButton,
                 bringToFrontButton,
-                editStrokeWidthMenuButton,
-                strokeWidthToChangeSlider
+                editStrokeWidthIcon,
+                editStrokeWidthSlider
         );
 
         selectionPropertyObserver = new SelectionPropertyObserver(canvasModel, nodesToBind);
 
-        strokeWidthToChangeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+        editStrokeWidthSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             final double roundedValue = Math.round(newValue.doubleValue());
-            strokeWidthToChangeSlider.valueProperty().set(roundedValue);
+            editStrokeWidthSlider.valueProperty().set(roundedValue);
             // The command is executed even if the value hasn't changed
             commandManager.executeCommand(new EditShapeStrokeWidthCommand(canvasModel, roundedValue));
         });
