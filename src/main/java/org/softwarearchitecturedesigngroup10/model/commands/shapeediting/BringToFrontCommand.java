@@ -1,6 +1,7 @@
-package org.softwarearchitecturedesigngroup10.model.commands;
+package org.softwarearchitecturedesigngroup10.model.commands.shapeediting;
 
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
+import org.softwarearchitecturedesigngroup10.model.commands.Command;
 
 public class BringToFrontCommand implements Command {
     private final CanvasModel receiver;

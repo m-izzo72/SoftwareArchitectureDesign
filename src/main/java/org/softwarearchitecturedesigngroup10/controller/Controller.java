@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -25,15 +26,22 @@ import org.softwarearchitecturedesigngroup10.controller.states.State;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
 import org.softwarearchitecturedesigngroup10.model.commands.*;
 import org.softwarearchitecturedesigngroup10.model.commands.clipboard.DeleteShapeCommand;
+import org.softwarearchitecturedesigngroup10.model.commands.shapeediting.BringToFrontCommand;
+import org.softwarearchitecturedesigngroup10.model.commands.shapeediting.EditShapeColoursCommand;
+import org.softwarearchitecturedesigngroup10.model.commands.shapeediting.EditShapeStrokeWidthCommand;
+import org.softwarearchitecturedesigngroup10.model.commands.shapeediting.SendToBackCommand;
 import org.softwarearchitecturedesigngroup10.model.factories.EllipseDataFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.LineDataFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.RectangleDataFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.ShapeDataFactory;
 import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
+import org.softwarearchitecturedesigngroup10.model.observers.observed.SelectionPropertyObserver;
 import org.softwarearchitecturedesigngroup10.view.CanvasView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 
 public class Controller implements ModelObserver {
@@ -143,6 +151,11 @@ public class Controller implements ModelObserver {
     private double xOffset = 0, yOffset = 0;
     private double startX, startY;
 
+    private SelectionPropertyObserver selectionPropertyObserver;
+    @FXML
+    private Slider strokeWidthToChangeSlider;
+    @FXML
+    private SVGPath strokeWidthToChangeIcon;
 
     /* CLOSE AND MINIMIZE WINDOW */
 
@@ -189,7 +202,30 @@ public class Controller implements ModelObserver {
         // Initial state
         setCurrentState(idleState);
 
-        this.canvasModel.addObserver(this);
+        canvasModel.addObserver(this);
+        ArrayList<Node> nodesToBind = new ArrayList<>();
+        Collections.addAll(nodesToBind, fillColorToChangeIcon,
+                fillColorToChangePicker,
+                strokeColorToChangeIcon,
+                strokeColorToChangePicker,
+                copyShapeButton,
+                eraseShapeButton,
+                cutShapeButton,
+                sendToBackButton,
+                bringToFrontButton,
+                strokeWidthToChangeIcon,
+                strokeWidthToChangeSlider);
+
+        selectionPropertyObserver = new SelectionPropertyObserver(canvasModel, nodesToBind);
+
+        strokeWidthToChangeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            final double roundedValue = Math.round(newValue.doubleValue());
+            strokeWidthToChangeSlider.valueProperty().set(roundedValue);
+            // The command is executed even if the value hasn't changed
+            commandManager.executeCommand(new EditShapeStrokeWidthCommand(canvasModel, roundedValue));
+        });
+
+        canvasModel.addObserver(selectionPropertyObserver);
 
         canvasInfoLabel.textProperty().bind(Bindings.size(canvas.getChildren()).asString().concat(" shapes on the canvas."));
 
@@ -374,7 +410,7 @@ public class Controller implements ModelObserver {
 
     @FXML
     public void onFillColorToChangePickerAction(ActionEvent actionEvent) {
-        ChangeShapeFillColorCommand command = new ChangeShapeFillColorCommand(
+        EditShapeColoursCommand command = new EditShapeColoursCommand(
                 canvasModel, fillColorToChangePicker.getValue().toString(), strokeColorToChangePicker.getValue().toString()
         );
         commandManager.executeCommand(command);
@@ -382,7 +418,7 @@ public class Controller implements ModelObserver {
 
     @FXML
     public void onStrokeColorToChangePickerAction(ActionEvent actionEvent) {
-        ChangeShapeFillColorCommand command = new ChangeShapeFillColorCommand(
+        EditShapeColoursCommand command = new EditShapeColoursCommand(
                 canvasModel, fillColorToChangePicker.getValue().toString(), strokeColorToChangePicker.getValue().toString()
         );
         commandManager.executeCommand(command);
@@ -395,6 +431,7 @@ public class Controller implements ModelObserver {
 
     @FXML
     public void onSendToBackAction(ActionEvent actionEvent) {
+        commandManager.executeCommand(new SendToBackCommand(canvasModel));
     }
 
     /************** GETTERS *****************/

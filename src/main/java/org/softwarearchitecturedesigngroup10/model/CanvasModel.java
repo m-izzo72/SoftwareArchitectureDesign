@@ -27,9 +27,20 @@ public class CanvasModel implements CanvasModelInterface {
 
     public void bringToFront() {
         LinkedHashMap<String, ShapeData> selectedShapes = getSelectedShapes();
-        selectedShapes.forEach((key, value) -> { shapes.remove(key); });
-        //selectedShapes.putAll(shapes);
-        shapes.putAll(selectedShapes); //selectedShapes;
+        selectedShapes.forEach( (key, value) -> { shapes.remove(key); });
+        shapes.putAll(selectedShapes);
+        notifyObservers();
+    }
+
+    public void sendToBack() {
+        LinkedHashMap<String, ShapeData> selectedShapes = getSelectedShapes();
+        selectedShapes.forEach( (key, value) -> { shapes.remove(key); });
+        selectedShapes.putAll(shapes);
+        shapes = selectedShapes;
+
+//        getSelectedShapes().forEach((key, value) -> { shapes.remove(key); });
+//        shapes = getSelectedShapes();
+//        shapes.putAll(getSelectedShapes());
         notifyObservers();
     }
 
@@ -66,6 +77,16 @@ public class CanvasModel implements CanvasModelInterface {
                 .forEach(entry -> {
                     entry.getValue().setFillColor(newFillColour);
                     entry.getValue().setStrokeColor(newStrokeColour);
+                });
+        notifyObservers();
+    }
+
+    public void editShapesStrokeWidth(double newStrokeWidth) {
+        shapes.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().isSelected())
+                .forEach(entry -> {
+                    entry.getValue().setStrokeWidth(newStrokeWidth);
                 });
         notifyObservers();
     }
