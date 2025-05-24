@@ -2,6 +2,7 @@ package org.softwarearchitecturedesigngroup10.model.observers.observed;
 
 import javafx.scene.Node;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
 import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
@@ -27,6 +28,8 @@ public class SelectionPropertyObserver implements ModelObserver {
             selectionBoundNodes.forEach(node -> node.setDisable(false));
             ((ColorPicker) selectionBoundNodes.get(1)).setValue(Color.valueOf(Objects.requireNonNull(canvasModel.getSelectedShapes().entrySet().stream().skip(canvasModel.getSelectedShapes().size() - 1).findFirst().orElse(null)).getValue().getFillColor()));
             ((ColorPicker) selectionBoundNodes.get(3)).setValue(Color.valueOf(Objects.requireNonNull(canvasModel.getSelectedShapes().entrySet().stream().skip(canvasModel.getSelectedShapes().size() - 1).findFirst().orElse(null)).getValue().getStrokeColor()));
+            ((Slider) selectionBoundNodes.get(10)).setValue(Objects.requireNonNull(canvasModel.getSelectedShapes().entrySet().stream().skip(canvasModel.getSelectedShapes().size() - 1).findFirst().orElse(null)).getValue().getStrokeWidth());
+
         }
     }
 }

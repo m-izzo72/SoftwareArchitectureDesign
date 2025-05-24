@@ -19,10 +19,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.softwarearchitecturedesigngroup10.controller.adapters.ShapeConverter;
-import org.softwarearchitecturedesigngroup10.controller.states.IdleState;
-import org.softwarearchitecturedesigngroup10.controller.states.PaintingState;
-import org.softwarearchitecturedesigngroup10.controller.states.SelectionState;
-import org.softwarearchitecturedesigngroup10.controller.states.State;
+import org.softwarearchitecturedesigngroup10.controller.states.*;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
 import org.softwarearchitecturedesigngroup10.model.commands.*;
 import org.softwarearchitecturedesigngroup10.model.commands.clipboard.DeleteShapeCommand;
@@ -43,6 +40,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Controller implements ModelObserver {
 
@@ -173,6 +171,7 @@ public class Controller implements ModelObserver {
 
     @Override
     public void update() {
+        AtomicReference<String> selectedShapeLabelText = new AtomicReference<>("");
         LinkedHashMap<String, Shape> viewShapes = new LinkedHashMap<>();
         canvasModel.getShapes()
                 .forEach((key, value) -> {
@@ -180,17 +179,23 @@ public class Controller implements ModelObserver {
 //                    if(value.isSelected()) canvasView.highlight(viewShapes.get(key));
 
                     if (!canvasModel.getSelectedShapes().isEmpty()) {
+                        selectedShapeLabelText.set(" > " + canvasModel.getSelectedShapes().size() + " selected shape(s)");
+//                        canvasView.dimBackground();
                         if (value.isSelected()) {
                             canvasView.undimShape(viewShapes.get(key));
                         } else {
                             canvasView.dimShape(viewShapes.get(key));
+
                         }
                     } else {
+                        selectedShapeLabelText.set("");
                         canvasView.undimShape(viewShapes.get(key));
+//                      canvasView.undimBackground();
                     }
                 });
 
         canvasView.paintAllFromScratch(viewShapes);
+        canvasInfoLabel.setText(canvasModel.getShapes().size() + " shape(s) on the canvas" + selectedShapeLabelText);
     }
 
     /* STATES */
@@ -199,6 +204,7 @@ public class Controller implements ModelObserver {
     private final State idleState = new IdleState();
     private final State selectionState = new SelectionState();
     private final State drawingState = new PaintingState();
+    private final State movingState = new MovingState();
 
 
 
@@ -214,7 +220,8 @@ public class Controller implements ModelObserver {
 
         canvasModel.addObserver(this);
         ArrayList<Node> nodesToBind = new ArrayList<>();
-        Collections.addAll(nodesToBind, fillColorToChangeIcon,
+        Collections.addAll(nodesToBind,
+                fillColorToChangeIcon,
                 fillColorToChangePicker,
                 strokeColorToChangeIcon,
                 strokeColorToChangePicker,
@@ -224,7 +231,8 @@ public class Controller implements ModelObserver {
                 sendToBackButton,
                 bringToFrontButton,
                 strokeWidthToChangeIcon,
-                strokeWidthToChangeSlider);
+                strokeWidthToChangeSlider
+        );
 
         selectionPropertyObserver = new SelectionPropertyObserver(canvasModel, nodesToBind);
 
@@ -237,7 +245,7 @@ public class Controller implements ModelObserver {
 
         canvasModel.addObserver(selectionPropertyObserver);
 
-        canvasInfoLabel.textProperty().bind(Bindings.size(canvas.getChildren()).asString().concat(" shapes on the canvas."));
+        canvasInfoLabel.setText("No shapes on the canvas");
 
         titleBar.setOnMousePressed(this::setOnTitleBarPressed);
         titleBar.setOnMouseDragged(this::setOnTitleBarDragged);
@@ -511,6 +519,14 @@ public class Controller implements ModelObserver {
         return rectangleButton;
     }
 
+    public State getSelectionState() {
+        return selectionState;
+    }
+
+    public State getMovingState() {
+        return movingState;
+    }
+
     /********************* SETTERS ******************/
 
     public void setCurrentState(State newState) {
@@ -537,4 +553,6 @@ public class Controller implements ModelObserver {
     public void setStartY(double startY) {
         this.startY = startY;
     }
+
+
 }

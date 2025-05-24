@@ -109,7 +109,10 @@
     -fx-border-color: #eaebef;
 }
 
-
+#canvasInfoLabel {
+    -fx-text-fill: #797b86;
+    -fx-opacity: 1.0;
+}
 
 
 #fileTab, #shapesTab, #clipboardTab {

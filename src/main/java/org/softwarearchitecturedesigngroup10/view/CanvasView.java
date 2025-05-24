@@ -1,6 +1,8 @@
 package org.softwarearchitecturedesigngroup10.view;
 
+import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -21,6 +23,7 @@ public class CanvasView implements CanvasViewInterface {
         this.canvas = canvas;
     }
 
+
     public void highlight(Shape shape) {
         Highlighter.highlightShape(shape);
     }
@@ -37,10 +40,23 @@ public class CanvasView implements CanvasViewInterface {
         }
     }
 
+    public void dimBackground() {
+        canvas.setStyle("-fx-background-color: rgba(0, 0, 0, 0.1);");
+    }
+
+    public void undimBackground() {
+        canvas.setStyle("-fx-background-color: rgba(0, 0, 0, 0);");
+    }
+
     public void undimShape(Shape shape) {
         if (shape != null) {
             shape.setOpacity(1.0);
         }
+    }
+
+    public void moveShapePreview(Shape shape, double x, double y) {
+        shape.setLayoutX(shape.getLayoutX() + x);
+        shape.setLayoutY(shape.getLayoutY() + y);
     }
 
     public void paint(Shape shape) {
@@ -98,6 +114,7 @@ public class CanvasView implements CanvasViewInterface {
 
         shapes.forEach((key, value) -> {
             value.setId(key);
+            //value.setCursor(Cursor.HAND);
             canvas.getChildren().add(value);
         });
 
@@ -109,5 +126,13 @@ public class CanvasView implements CanvasViewInterface {
 
     public double getCanvasWidth() {
         return canvas.getWidth();
+    }
+
+    public void setHandCursorToShapes() {
+        canvas.getChildren().forEach(shape -> shape.setCursor(Cursor.HAND));
+    }
+
+    public void removeHandCursorToShapes() {
+        canvas.getChildren().forEach(shape -> shape.setCursor(Cursor.DEFAULT));
     }
 }

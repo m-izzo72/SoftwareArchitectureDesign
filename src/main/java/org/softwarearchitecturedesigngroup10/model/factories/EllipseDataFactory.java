@@ -18,6 +18,9 @@ public class EllipseDataFactory implements ShapeDataFactory{
         ellipseData.setRadiusX(radiusX);
         ellipseData.setRadiusY(radiusY);
 
+        ellipseData.setX(centerX - radiusX);
+        ellipseData.setY(centerY - radiusY);
+
         ellipseData.setFillColor(fillColor);
         ellipseData.setStrokeColor(strokeColor);
         ellipseData.setStrokeWidth(strokeWidth);

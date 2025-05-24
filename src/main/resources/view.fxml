@@ -229,7 +229,7 @@
             <ScrollPane fx:id="scrollableCanvasContainer" prefHeight="554.0" prefWidth="793.0">
                <Pane fx:id="canvas" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragReleased="#setOnMouseReleased" onMouseDragged="#setOnMouseDragged" onMousePressed="#setOnMousePressed" onMouseReleased="#setOnMouseReleased" prefHeight="554.0" prefWidth="790.0">
                   <cursor>
-                     <Cursor fx:constant="HAND" />
+                     <Cursor fx:constant="DEFAULT" />
                   </cursor>
                </Pane>
             </ScrollPane>
