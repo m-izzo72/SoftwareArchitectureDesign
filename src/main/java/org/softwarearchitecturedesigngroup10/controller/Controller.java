@@ -154,6 +154,14 @@ public class Controller implements ModelObserver {
     private Slider strokeWidthToChangeSlider;
     @FXML
     private SVGPath strokeWidthToChangeIcon;
+    @FXML
+    private Slider zoomSlider;
+    @FXML
+    private MenuButton strokeWidthMenuButton;
+
+    private double zoomFactor;
+    @FXML
+    private MenuButton editStrokeWidthMenuButton;
 
     /* CLOSE AND MINIMIZE WINDOW */
 
@@ -215,6 +223,8 @@ public class Controller implements ModelObserver {
         commandManager = new CommandManager();
         shapeConverter = new ShapeConverter();
 
+        zoomFactor = 1.0;
+
         // Initial state
         setCurrentState(idleState);
 
@@ -230,7 +240,7 @@ public class Controller implements ModelObserver {
                 cutShapeButton,
                 sendToBackButton,
                 bringToFrontButton,
-                strokeWidthToChangeIcon,
+                editStrokeWidthMenuButton,
                 strokeWidthToChangeSlider
         );
 
@@ -243,6 +253,8 @@ public class Controller implements ModelObserver {
             commandManager.executeCommand(new EditShapeStrokeWidthCommand(canvasModel, roundedValue));
         });
 
+        zoomSlider.valueProperty().addListener(this::zoomListener);
+
         canvasModel.addObserver(selectionPropertyObserver);
 
         canvasInfoLabel.setText("No shapes on the canvas");
@@ -251,6 +263,13 @@ public class Controller implements ModelObserver {
         titleBar.setOnMouseDragged(this::setOnTitleBarDragged);
 
         setCanvasScrollable();
+    }
+
+    /* ZOOM LOGIC */
+
+    public void zoomListener(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+        zoomFactor = ((double) 1 / 3) * newValue.doubleValue();
+        canvas.setScaleX(zoomFactor); canvas.setScaleY(zoomFactor);
     }
 
     /* SCROLLABLE CANVAS AND CLIPPING CANVAS LOGIC */

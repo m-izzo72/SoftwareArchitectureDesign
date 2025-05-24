@@ -1,37 +1,49 @@
 package org.softwarearchitecturedesigngroup10.view;
 
 import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import org.softwarearchitecturedesigngroup10.view.helper.Highlighter;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class CanvasView implements CanvasViewInterface {
 
     Pane canvas;
     private static final double DIMMED_OPACITY = 0.3;
 
+    private Shape previewShape;
+
     public CanvasView(Pane canvas) {
         this.canvas = canvas;
+        this.previewShape = null;
     }
 
-
-    public void highlight(Shape shape) {
-        Highlighter.highlightShape(shape);
-    }
-
-    public void unHighlightAll() {
-        for (Node shape : canvas.getChildren()) {
-            Highlighter.unhighlightShape((Shape) shape);
+    public void deletePreview() {
+        if (this.previewShape != null) {
+            canvas.getChildren().remove(this.previewShape);
         }
+    }
+
+    public boolean isPreviewShapeNotNull() {
+        return previewShape != null;
+    }
+
+//    public void highlight(Shape shape) {
+//        Highlighter.highlightShape(shape);
+//    }
+//
+//    public void unHighlightAll() {
+//        for (Node shape : canvas.getChildren()) {
+//            Highlighter.unhighlightShape((Shape) shape);
+//        }
+//    }
+
+    public void setPreviewShape(Shape previewShape) {
+        this.previewShape = previewShape;
     }
 
     public void dimShape(Shape shape) {
@@ -40,43 +52,34 @@ public class CanvasView implements CanvasViewInterface {
         }
     }
 
-    public void dimBackground() {
-        canvas.setStyle("-fx-background-color: rgba(0, 0, 0, 0.1);");
-    }
-
-    public void undimBackground() {
-        canvas.setStyle("-fx-background-color: rgba(0, 0, 0, 0);");
-    }
-
     public void undimShape(Shape shape) {
         if (shape != null) {
             shape.setOpacity(1.0);
         }
     }
 
-    public void moveShapePreview(Shape shape, double x, double y) {
-        shape.setLayoutX(shape.getLayoutX() + x);
-        shape.setLayoutY(shape.getLayoutY() + y);
-    }
-
     public void paint(Shape shape) {
         canvas.getChildren().add(shape);
+    }
+
+    public void paintPreview() {
+        canvas.getChildren().add(previewShape);
     }
 
     public void erase(Shape shape) {
         canvas.getChildren().remove(shape);
     }
 
-    public void stylePreviewShape(Shape shape) {
-        shape.setStroke(Color.DARKGRAY);
-        shape.getStrokeDashArray().setAll(5.0, 5.0);
-        if (shape instanceof Rectangle || shape instanceof Ellipse) {
-            shape.setFill(Color.TRANSPARENT);
+    public void stylePreviewShape() {
+        previewShape.setStroke(Color.DARKGRAY);
+        previewShape.getStrokeDashArray().setAll(5.0, 5.0);
+        if (previewShape instanceof Rectangle || previewShape instanceof Ellipse) {
+            previewShape.setFill(Color.TRANSPARENT);
         }
-        shape.setMouseTransparent(true);
+        previewShape.setMouseTransparent(true);
     }
 
-    public void updatePreviewShapeGeometry(Shape previewShape, double currentX, double currentY, double startX, double startY) {
+    public void updatePreviewShapeGeometry(double currentX, double currentY, double startX, double startY) {
         if (previewShape == null) return;
 
         if (previewShape instanceof Rectangle rect) {
@@ -98,9 +101,14 @@ public class CanvasView implements CanvasViewInterface {
             ellipse.setRadiusX(width / 2.0);
             ellipse.setRadiusY(height / 2.0);
         } else if (previewShape instanceof Line line) {
+            line.setStartX(startX);
+            line.setStartY(startY);
             line.setEndX(currentX);
             line.setEndY(currentY);
         }
+        // This is needed otherwise when drawing a shape preview there will be some artifacts and weird effects
+        canvas.getChildren().remove(this.previewShape);
+        canvas.getChildren().add(this.previewShape);
     }
 
     @Override
@@ -114,25 +122,8 @@ public class CanvasView implements CanvasViewInterface {
 
         shapes.forEach((key, value) -> {
             value.setId(key);
-            //value.setCursor(Cursor.HAND);
             canvas.getChildren().add(value);
         });
-
-//        for (Map.Entry<String, Shape> entry : shapes.entrySet()) {
-//            entry.getValue().setId(entry.getKey());
-//            canvas.getChildren().add(entry.getValue());
-//        }
     }
 
-    public double getCanvasWidth() {
-        return canvas.getWidth();
-    }
-
-    public void setHandCursorToShapes() {
-        canvas.getChildren().forEach(shape -> shape.setCursor(Cursor.HAND));
-    }
-
-    public void removeHandCursorToShapes() {
-        canvas.getChildren().forEach(shape -> shape.setCursor(Cursor.DEFAULT));
-    }
 }
