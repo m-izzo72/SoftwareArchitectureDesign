@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -263,7 +264,7 @@ public class Controller implements ModelObserver {
         titleBar.setOnMousePressed(this::setOnTitleBarPressed);
         titleBar.setOnMouseDragged(this::setOnTitleBarDragged);
 
-        setCanvasScrollable();
+        setCanvasScrollableAndResizable();
     }
 
     /* ZOOM LOGIC */
@@ -275,29 +276,19 @@ public class Controller implements ModelObserver {
 
     /* SCROLLABLE CANVAS AND CLIPPING CANVAS LOGIC */
 
-    private void setCanvasScrollable() {
-        StringConverter<Number> doubleConverter = new StringConverter<>() {
-            @Override
-            public String toString(Number object) {
-                return String.format("%.0f", object.doubleValue());
-            }
+    private void setCanvasScrollableAndResizable() {
+        setCanvasClippable(); // Clips the canvas so that shapes can't be drawn outside on the application GUI
+        bindTextFieldToCanvasSize();
+    }
 
-            @Override
-            public Number fromString(String string) {
-                try {
-                    return Double.parseDouble(string);
-                } catch (NumberFormatException e) {
-                    return 0;
-                }
-            }
-        };
-
-
+    private void setCanvasClippable() {
         Rectangle clipRect = new Rectangle();
         clipRect.widthProperty().bind(canvas.widthProperty());
         clipRect.heightProperty().bind(canvas.heightProperty());
         canvas.setClip(clipRect);
+    }
 
+    private void bindTextFieldToCanvasSize() {
         DoubleProperty customWidthProperty = new SimpleDoubleProperty(canvas.getPrefWidth());
         DoubleProperty customHeightProperty = new SimpleDoubleProperty(canvas.getPrefHeight());
         canvas.prefWidthProperty().bind(customWidthProperty);
@@ -305,6 +296,23 @@ public class Controller implements ModelObserver {
         Bindings.bindBidirectional(canvasWidthInput.textProperty(), customWidthProperty, doubleConverter);
         Bindings.bindBidirectional(canvasHeightInput.textProperty(), customHeightProperty, doubleConverter);
     }
+
+    StringConverter<Number> doubleConverter = new StringConverter<>() {
+        @Override
+        public String toString(Number object) {
+            return String.format("%.0f", object.doubleValue());
+        }
+
+        @Override
+        public Number fromString(String string) {
+            try {
+                return Double.parseDouble(string);
+            } catch (NumberFormatException e) {
+                return 0;
+            }
+        }
+
+    };
 
     /* DRAGGABLE WINDOW */
 
