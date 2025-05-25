@@ -206,6 +206,7 @@ public class Controller implements ModelObserver {
 
         canvasView.paintAllFromScratch(viewShapes);
         canvasInfoLabel.setText(canvasModel.getShapes().size() + " shape(s) on the canvas" + selectedShapeLabelText);
+        undoButton.setDisable(commandManager.isUndoStackEmpty());
     }
 
     /* STATES */
@@ -265,6 +266,13 @@ public class Controller implements ModelObserver {
         titleBar.setOnMouseDragged(this::setOnTitleBarDragged);
 
         setCanvasScrollableAndResizable();
+    }
+
+    /* UNDO */
+
+    @FXML
+    public void onUndoButtonAction(ActionEvent actionEvent) {
+        commandManager.undo();
     }
 
     /* ZOOM LOGIC */
@@ -599,5 +607,4 @@ public class Controller implements ModelObserver {
     public void setStartY(double startY) {
         this.startY = startY;
     }
-
 }

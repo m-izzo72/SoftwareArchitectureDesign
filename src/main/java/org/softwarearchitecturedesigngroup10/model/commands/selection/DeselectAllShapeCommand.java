@@ -16,8 +16,13 @@ public class DeselectAllShapeCommand implements Command {
         receiver.deselectAllShapes();
     }
 
-//    @Override
-//    public void undo() {
-//
-//    }
+    @Override
+    public void undo() {
+
+    }
+
+    @Override
+    public boolean isUndoable() {
+        return false;
+    }
 }

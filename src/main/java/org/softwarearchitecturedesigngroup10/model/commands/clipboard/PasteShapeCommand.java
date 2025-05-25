@@ -16,7 +16,12 @@ public class PasteShapeCommand implements Command {
         receiver.pasteShapes();
     }
 
-//    @Override
-//    public void undo() {
-//    }
+    @Override
+    public void undo() {
+    }
+
+    @Override
+    public boolean isUndoable() {
+        return false;
+    }
 }

@@ -59,10 +59,15 @@ public class MoveShapesCommand implements Command { // Implementa Command (con u
         // Per ora, assumiamo che lo stato del modello sia già corretto dopo il drag.
     }
 
-//    @Override
-//    public void undo() {
-        // Per annullare, sposta le forme del delta opposto
+    @Override
+    public void undo() {
+
 //        this.receiver.moveShapesByIds(this.shapeIds, -this.dx, -this.dy);
 //        System.out.println("MoveShapesCommand undo: dx=" + (-dx) + ", dy=" + (-dy) + " for shapes: " + shapeIds);
-//    }
+    }
+
+    @Override
+    public boolean isUndoable() {
+        return true;
+    }
 }

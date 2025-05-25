@@ -19,8 +19,13 @@ public class EditShapeStrokeWidthCommand implements Command {
         receiver.editShapesStrokeWidth(newStrokeWidth);
     }
 
-//    @Override
-//    public void undo() {
-//
-//    }
+    @Override
+    public void undo() {
+
+    }
+
+    @Override
+    public boolean isUndoable() {
+        return false;
+    }
 }

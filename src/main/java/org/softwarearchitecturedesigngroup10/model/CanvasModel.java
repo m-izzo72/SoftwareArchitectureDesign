@@ -97,6 +97,12 @@ public class CanvasModel implements CanvasModelInterface {
 
     /* CLIPBOARD */
 
+    // Used to UNDO AddShapeCommand
+    public void deleteShape(String shapeId) {
+        shapes.remove(shapeId);
+        notifyObservers();
+    }
+
     public void deleteShapes() {
         shapes.entrySet().removeIf(entry -> entry.getValue().isSelected());
         notifyObservers();

@@ -14,4 +14,14 @@ public class BringToFrontCommand implements Command {
     public void execute() {
         receiver.bringToFront();
     }
+
+    @Override
+    public void undo() {
+
+    }
+
+    @Override
+    public boolean isUndoable() {
+        return false;
+    }
 }

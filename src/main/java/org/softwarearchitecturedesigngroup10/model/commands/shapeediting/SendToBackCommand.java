@@ -14,4 +14,14 @@ public class SendToBackCommand implements Command {
     public void execute() {
         receiver.sendToBack();
     }
+
+    @Override
+    public void undo() {
+
+    }
+
+    @Override
+    public boolean isUndoable() {
+        return false;
+    }
 }

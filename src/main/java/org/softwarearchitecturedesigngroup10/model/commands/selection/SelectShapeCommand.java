@@ -18,8 +18,13 @@ public class SelectShapeCommand implements Command {
         receiver.selectShape(this.selectedShape);
     }
 
-//    @Override
-//    public void undo() {
-//
-//    }
+    @Override
+    public void undo() {
+        // COMMAND NOT UNDOABLE
+    }
+
+    @Override
+    public boolean isUndoable() {
+        return false;
+    }
 }

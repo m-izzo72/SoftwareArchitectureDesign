@@ -16,7 +16,12 @@ public class CutShapeCommand implements Command {
         receiver.cutShapes();
     }
 
-//    @Override
-//    public void undo() {
-//    }
+    @Override
+    public void undo() {
+    }
+
+    @Override
+    public boolean isUndoable() {
+        return false;
+    }
 }

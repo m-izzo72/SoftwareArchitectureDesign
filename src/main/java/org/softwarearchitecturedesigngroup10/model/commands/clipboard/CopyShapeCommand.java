@@ -16,7 +16,12 @@ public class CopyShapeCommand implements Command {
         receiver.copyShapes();
     }
 
-//    @Override
-//    public void undo() {
-//    }
+    @Override
+    public void undo() {
+    }
+
+    @Override
+    public boolean isUndoable() {
+        return false;
+    }
 }

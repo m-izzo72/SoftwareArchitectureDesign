@@ -20,8 +20,13 @@ public class EditShapeColoursCommand implements Command {
         receiver.changeShapesColours(newFillColor, newStrokeColor);
     }
 
-//    @Override
-//    public void undo() {
-//
-//    }
+    @Override
+    public void undo() {
+
+    }
+
+    @Override
+    public boolean isUndoable() {
+        return false;
+    }
 }
