@@ -1,5 +1,6 @@
 package org.softwarearchitecturedesigngroup10.model;
 
+import org.softwarearchitecturedesigngroup10.model.commands.clipboard.ShapesClipboard;
 import org.softwarearchitecturedesigngroup10.model.filesmanager.FileManager;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.EllipseData;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.LineData;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 public class CanvasModel implements CanvasModelInterface {
     LinkedHashMap<String, ShapeData> shapes;
+    private ShapesClipboard shapesClipboard;
     FileManager fileManager;
     ArrayList<ModelObserver> observers;
 
@@ -21,6 +23,7 @@ public class CanvasModel implements CanvasModelInterface {
         observers = new ArrayList<>();
         shapes = new LinkedHashMap<>();
         fileManager = new FileManager();
+        shapesClipboard = new ShapesClipboard(this);
     }
 
     public void clear() {
@@ -40,10 +43,6 @@ public class CanvasModel implements CanvasModelInterface {
         selectedShapes.forEach( (key, value) -> { shapes.remove(key); });
         selectedShapes.putAll(shapes);
         shapes = selectedShapes;
-
-//        getSelectedShapes().forEach((key, value) -> { shapes.remove(key); });
-//        shapes = getSelectedShapes();
-//        shapes.putAll(getSelectedShapes());
         notifyObservers();
     }
 
@@ -83,13 +82,9 @@ public class CanvasModel implements CanvasModelInterface {
         } else if (shapeData instanceof EllipseData ed) {
             ed.setCenterX(ed.getCenterX() + dx);
             ed.setCenterY(ed.getCenterY() + dy);
-            // Nota: EllipseData usa CenterX/Y. Se vuoi usare X/Y (angolo sup-sx)
-            // come Rectangle, dovresti ricalcolare il centro o cambiare
-            // come EllipseData memorizza la posizione. Per ora usiamo il centro.
-            ed.setX(ed.getCenterX() - ed.getRadiusX()); // Aggiorna X/Y se li usi
-            ed.setY(ed.getCenterY() - ed.getRadiusY()); // Aggiorna X/Y se li usi
+            ed.setX(ed.getCenterX() - ed.getRadiusX());
+            ed.setY(ed.getCenterY() - ed.getRadiusY());
         } else {
-            // Per ShapeData generico, sposta X e Y
             shapeData.setX(shapeData.getX() + dx);
             shapeData.setY(shapeData.getY() + dy);
         }
@@ -100,10 +95,32 @@ public class CanvasModel implements CanvasModelInterface {
         notifyObservers();
     }
 
+    /* CLIPBOARD */
+
     public void deleteShapes() {
         shapes.entrySet().removeIf(entry -> entry.getValue().isSelected());
         notifyObservers();
     }
+
+    public void copyShapes() {
+        shapesClipboard.copyToClipboard(getSelectedShapes());
+    }
+
+    public void cutShapes() {
+        shapesClipboard.copyToClipboard(getSelectedShapes());
+        deleteShapes();
+    }
+
+    public void pasteShapes() {
+        deselectAllShapes();
+        shapesClipboard.getClipboard().forEach(shapeData -> {
+            moveShapeData(shapeData, 50, 50); // Changes paste position so shapes aren't pasted onto the original ones
+            addShape(shapeData);
+        });
+
+    }
+
+    /* SELECTED SHAPES */
 
     public LinkedHashMap<String, ShapeData> getSelectedShapes() {
         return new LinkedHashMap<String, ShapeData>(shapes.entrySet().stream()

@@ -22,7 +22,10 @@ import org.softwarearchitecturedesigngroup10.controller.adapters.ShapeConverter;
 import org.softwarearchitecturedesigngroup10.controller.states.*;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
 import org.softwarearchitecturedesigngroup10.model.commands.*;
+import org.softwarearchitecturedesigngroup10.model.commands.clipboard.CopyShapeCommand;
+import org.softwarearchitecturedesigngroup10.model.commands.clipboard.CutShapeCommand;
 import org.softwarearchitecturedesigngroup10.model.commands.clipboard.DeleteShapeCommand;
+import org.softwarearchitecturedesigngroup10.model.commands.clipboard.PasteShapeCommand;
 import org.softwarearchitecturedesigngroup10.model.commands.shapeediting.BringToFrontCommand;
 import org.softwarearchitecturedesigngroup10.model.commands.shapeediting.EditShapeColoursCommand;
 import org.softwarearchitecturedesigngroup10.model.commands.shapeediting.EditShapeStrokeWidthCommand;
@@ -449,7 +452,25 @@ public class Controller implements ModelObserver {
     @FXML
     public void onEraseShapeButtonAction(ActionEvent actionEvent) {
         DeleteShapeCommand command = new DeleteShapeCommand(canvasModel);
-        command.execute();
+        commandManager.executeCommand(command);
+    }
+
+    @FXML
+    public void onCopyShapeButtonAction(ActionEvent actionEvent) {
+        CopyShapeCommand command = new CopyShapeCommand(canvasModel);
+        commandManager.executeCommand(command);
+    }
+
+    @FXML
+    public void onPasteButtonAction(ActionEvent actionEvent) {
+        PasteShapeCommand command = new PasteShapeCommand(canvasModel);
+        commandManager.executeCommand(command);
+    }
+
+    @FXML
+    public void onCutShapeButtonAction(ActionEvent actionEvent) {
+        CutShapeCommand command = new CutShapeCommand(canvasModel);
+        commandManager.executeCommand(command);
     }
 
     @FXML
@@ -570,6 +591,5 @@ public class Controller implements ModelObserver {
     public void setStartY(double startY) {
         this.startY = startY;
     }
-
 
 }

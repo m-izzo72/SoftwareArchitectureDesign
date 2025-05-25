@@ -34,7 +34,6 @@ public class MovingState implements State {
         this.dragOffsetX = pressX - primaryShape.getX();
         this.dragOffsetY = pressY - primaryShape.getY();
 
-        // Memorizza le informazioni per l'undo
         this.initialPressX_forUndo = pressX;
         this.initialPressY_forUndo = pressY;
         this.selectedShapeIds_atDragStart = new ArrayList<>(model.getSelectedShapes().keySet());
@@ -68,7 +67,6 @@ public class MovingState implements State {
         double dy = targetY - currentY;
 
         if (Math.abs(dx) > 0 || Math.abs(dy) > 0) {
-            // Aggiorniamo il modello direttamente per il feedback visivo
             model.moveSelectedShapes(dx, dy);
         }
         event.consume();

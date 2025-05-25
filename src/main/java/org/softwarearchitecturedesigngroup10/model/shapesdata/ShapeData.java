@@ -2,7 +2,7 @@ package org.softwarearchitecturedesigngroup10.model.shapesdata;
 
 import java.io.Serializable;
 
-public abstract class ShapeData implements Serializable {
+public abstract class ShapeData implements Serializable, Cloneable {
 
     private String type;
     private double x;
@@ -73,5 +73,15 @@ public abstract class ShapeData implements Serializable {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    @Override
+    public ShapeData clone() {
+        try {
+            // TODO: copy mutable state here, so the clone can't change the internals of the original
+            return (ShapeData) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }
