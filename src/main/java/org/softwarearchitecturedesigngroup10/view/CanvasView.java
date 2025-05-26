@@ -1,12 +1,12 @@
 package org.softwarearchitecturedesigngroup10.view;
 
-import javafx.scene.Cursor;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import org.softwarearchitecturedesigngroup10.view.helper.Highlighter;
 
 import java.util.LinkedHashMap;
 
@@ -46,16 +46,18 @@ public class CanvasView implements CanvasViewInterface {
         this.previewShape = previewShape;
     }
 
-    public void dimShape(Shape shape) {
+    public void setSelectedEffect(Shape shape) {
         if (shape != null) {
             shape.setOpacity(DIMMED_OPACITY);
         }
+
     }
 
-    public void undimShape(Shape shape) {
+    public void setUnselectedState(Shape shape) {
         if (shape != null) {
             shape.setOpacity(1.0);
         }
+
     }
 
     public void paint(Shape shape) {

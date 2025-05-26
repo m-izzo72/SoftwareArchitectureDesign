@@ -36,11 +36,11 @@
     -fx-background-radius: 7;
 }
 
-#closeButton, #minimizeButton, #maximizeButton {
+#closeButton, #minimizeButton, #undoButton {
     -fx-background-color: transparent;
 }
 
-#minimizeButton:hover, #maximizeButton:hover {
+#minimizeButton:hover, #undoButton:hover {
     -fx-background-color: #3c3d45;
     -fx-background-radius: 0;
 }
@@ -207,9 +207,15 @@
     -fx-border-radius: 8 0 0 0;
 }
 
-#quickToolbar {
+#quickToolbar, #canvasQuickToolbar {
     -fx-background-color: #fffffe;
     -fx-border-style: solid hidden solid hidden;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
+}
+
+#canvasQuickToolbar {
+    -fx-border-style: hidden hidden solid hidden;
     -fx-border-width: 1;
     -fx-border-color: #eaebef;
 }
@@ -288,12 +294,12 @@
     -fx-max-height: 40px;
     -fx-pref-height: 40px;
 }
-#quickToolbar .button {
+#quickToolbar .button, #canvasQuickToolbar .button {
     -fx-background-color: transparent;
     -fx-background-radius: 5;
 }
 
-#quickToolbar .button:hover {
+#quickToolbar .button:hover, #canvasQuickToolbar .button:hover {
     -fx-background-color: #e5e5e7;
 }
 

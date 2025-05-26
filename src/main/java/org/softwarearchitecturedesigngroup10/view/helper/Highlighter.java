@@ -4,10 +4,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.paint.Color;
+import javafx.scene.effect.Glow; // Modificato: Usiamo Glow invece di DropShadow
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
@@ -16,20 +13,21 @@ import java.util.Map;
 
 public class Highlighter {
 
-    // Static nested class that keeps information about a shape animation
     private static class AnimationContext {
         final Timeline timeline;
-        final DropShadow effect;
-        final DoubleProperty hueProperty;
+        final Glow effect;
 
-        AnimationContext(Timeline timeline, DropShadow effect, DoubleProperty hueProperty) {
+        AnimationContext(Timeline timeline, Glow effect) {
             this.timeline = timeline;
             this.effect = effect;
-            this.hueProperty = hueProperty;
         }
     }
 
     private static final Map<Shape, AnimationContext> activeAnimatedHighlights = new HashMap<>();
+
+    private static final double MIN_GLOW_LEVEL = 0.1;
+    private static final double MAX_GLOW_LEVEL = 0.7;
+    private static final double PULSE_DURATION_SECONDS = 1.5;
 
     public static void highlightShape(Shape shape) {
         if (shape == null) return;
@@ -37,52 +35,41 @@ public class Highlighter {
         if (activeAnimatedHighlights.containsKey(shape)) {
             unhighlightShape(shape);
         } else {
+            shape.setEffect(null);
 
-            shape.setEffect(null); // Removes any previous effect just to be sure
+            Glow animatedEffect = new Glow();
+            animatedEffect.setLevel(MIN_GLOW_LEVEL);
 
-            DropShadow animatedEffect = new DropShadow();
-            animatedEffect.setOffsetX(0);
-            animatedEffect.setOffsetY(0);
-            animatedEffect.setRadius(2);
-            animatedEffect.setSpread(1);
-
-            // Creates DoubleProperty (in order to add a listener) and a Timeline
-            DoubleProperty hue = new SimpleDoubleProperty(0);
             Timeline timeline = new Timeline();
 
-            KeyValue kvHueStart = new KeyValue(hue, 0.0);
-            KeyValue kvHueEnd = new KeyValue(hue, 360.0); // 360 completes the hue cycle
-            KeyFrame kfHue = new KeyFrame(Duration.seconds(10), kvHueStart, kvHueEnd);
+            KeyValue kvGlowMin = new KeyValue(animatedEffect.levelProperty(), MIN_GLOW_LEVEL);
+            KeyValue kvGlowMax = new KeyValue(animatedEffect.levelProperty(), MAX_GLOW_LEVEL);
 
-            timeline.getKeyFrames().add(kfHue);
+            KeyFrame kfStart = new KeyFrame(Duration.ZERO, kvGlowMin);
+            KeyFrame kfEnd = new KeyFrame(Duration.seconds(PULSE_DURATION_SECONDS), kvGlowMax);
+
+            timeline.getKeyFrames().addAll(kfStart, kfEnd);
+            timeline.setAutoReverse(true);
             timeline.setCycleCount(Animation.INDEFINITE);
 
-            hue.addListener((obs, oldVal, newVal) -> {
-                // Checks if the animation on the shape is the same that is being animated
-                if (shape.getEffect() == animatedEffect) {
-                    animatedEffect.setColor(Color.hsb(newVal.doubleValue() % 360, 1.0, 1.0));
-                }
-            });
-
-            // Sets start hue
-            animatedEffect.setColor(Color.hsb(hue.get() % 360, 1.0, 1.0));
-
             shape.setEffect(animatedEffect);
+
             timeline.play();
 
-            activeAnimatedHighlights.put(shape, new AnimationContext(timeline, animatedEffect, hue));
+            activeAnimatedHighlights.put(shape, new AnimationContext(timeline, animatedEffect));
         }
     }
 
     public static void unhighlightShape(Shape shape) {
         if (shape == null) return;
 
+
         if (activeAnimatedHighlights.containsKey(shape)) {
             AnimationContext context = activeAnimatedHighlights.get(shape);
-            context.timeline.stop(); // Stops animation
+            context.timeline.stop();
             activeAnimatedHighlights.remove(shape);
         }
-        // Removes any effect on the shape
+
         shape.setEffect(null);
     }
 }

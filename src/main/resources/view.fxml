@@ -27,10 +27,18 @@
    <VBox layoutX="1.0" layoutY="1.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="648.0" prefWidth="898.0">
       <Pane fx:id="titleBar" prefHeight="32.0" prefWidth="898.0">
          <HBox alignment="CENTER_RIGHT" layoutX="20.0" layoutY="-1.0" prefHeight="32.0" prefWidth="879.0">
-            <Label fx:id="title" prefHeight="21.0" prefWidth="751.0" text="New Canvas" textFill="WHITE">
+            <Label fx:id="title" prefHeight="21.0" prefWidth="706.0" text="New Canvas" textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font></Label>
+            <Button fx:id="undoButton" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onUndoButtonAction" prefHeight="32.0" prefWidth="45.0">
+               <graphic>
+                  <SVGPath content="M296.15-240v-40h290.16q62.23 0 106.04-42.69 43.8-42.69 43.8-104.23 0-61.54-43.8-103.85-43.81-42.31-106.04-42.31H276.62l118.61 118.62-28.31 28.31L200-593.08 366.92-760l28.31 28.31-118.61 118.61h309.69q78.54 0 134.19 54.16 55.65 54.15 55.65 132 0 77.84-55.65 132.38Q664.85-240 586.31-240H296.15Z" fill="#fffffe" scaleX="0.03" scaleY="0.03" translateY="-1.0" />
+               </graphic>
+               <tooltip>
+                  <Tooltip text="Undo action" />
+               </tooltip>
+            </Button>
             <Button fx:id="minimizeButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onMinimizeButtonAction" prefHeight="32.0" prefWidth="45.0">
                <graphic>
                   <SVGPath content="M260-160v-40h440v40H260Z" fill="#fffffe" scaleX="0.025" scaleY="0.025" />
@@ -50,7 +58,7 @@
                   <SVGPath content="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" scaleX="0.025" scaleY="0.025" translateX="-307.0" translateY="-4.0" />
                </graphic>
                <AnchorPane fx:id="fileTabContainer" minHeight="0.0" minWidth="0.0" prefHeight="585.0" prefWidth="70.0">
-                  <Button fx:id="newCanvasButton" layoutX="6.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onNewCanvasButtonAction" prefHeight="55.0" prefWidth="55.0">
+                  <Button fx:id="newCanvasButton" disable="true" layoutX="6.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onNewCanvasButtonAction" prefHeight="55.0" prefWidth="55.0">
                      <graphic>
                         <SVGPath content="M450-250h60v-120h120v-60H510v-120h-60v120H330v60h120v120ZM252.31-100Q222-100 201-121q-21-21-21-51.31v-615.38Q180-818 201-839q21-21 51.31-21H570l210 210v477.69Q780-142 759-121q-21 21-51.31 21H252.31ZM540-620v-180H252.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v615.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85h455.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46V-620H540ZM240-800v180-180V-160v-640Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
                      </graphic>
@@ -189,16 +197,7 @@
          <VBox fx:id="operatingArea" prefHeight="585.0" prefWidth="795.0">
             <Pane fx:id="quickToolbar" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" prefWidth="781.0">
                <children>
-                  <Button fx:id="undoButton" disable="true" layoutX="12.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onUndoButtonAction" prefHeight="26.0" prefWidth="26.0">
-                     <graphic>
-                        <SVGPath content="M296.15-240v-40h290.16q62.23 0 106.04-42.69 43.8-42.69 43.8-104.23 0-61.54-43.8-103.85-43.81-42.31-106.04-42.31H276.62l118.61 118.62-28.31 28.31L200-593.08 366.92-760l28.31 28.31-118.61 118.61h309.69q78.54 0 134.19 54.16 55.65 54.15 55.65 132 0 77.84-55.65 132.38Q664.85-240 586.31-240H296.15Z" fill="#797b86" scaleX="0.03" scaleY="0.03" />
-                     </graphic>
-                     <tooltip>
-                        <Tooltip text="Undo action" />
-                     </tooltip>
-                  </Button>
-                  <Separator layoutX="44.0" orientation="VERTICAL" prefHeight="32.0" prefWidth="1.0" />
-                  <Button fx:id="sendToBackButton" disable="true" layoutX="55.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSendToBackAction" prefHeight="26.0" prefWidth="26.0">
+                  <Button fx:id="sendToBackButton" disable="true" layoutX="202.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSendToBackAction" prefHeight="26.0" prefWidth="26.0">
                      <graphic>
                         <SVGPath content="M224.62-160q-26.66 0-45.64-18.98T160-224.62v-427.69h40v427.69q0 10.77 6.92 17.7 6.93 6.92 17.7 6.92h427.69v40H224.62Zm132.3-196.92v49.23q-20.3 0-34.77-14.46-14.46-14.47-14.46-34.77h49.23Zm-49.23-98.46v-49.24h49.23v49.24h-49.23Zm0-147.7v-49.23h49.23v49.23h-49.23Zm49.23-147.69h-49.23q0-20.31 14.46-34.77Q336.62-800 356.92-800v49.23Zm98.46 443.08v-49.23h49.24v49.23h-49.24Zm0-443.08V-800h49.24v49.23h-49.24Zm147.7 0V-800h49.23v49.23h-49.23Zm0 443.08v-49.23h49.23v49.23h-49.23Zm147.69-443.08V-800q20.31 0 34.77 14.46Q800-771.08 800-750.77h-49.23Zm0 393.85H800q0 20.3-14.46 34.77-14.46 14.46-34.77 14.46v-49.23Zm0-98.46v-49.24H800v49.24h-49.23Zm0-147.7v-49.23H800v49.23h-49.23Z" fill="#797b86" scaleX="0.03" scaleY="0.03" />
                      </graphic>
@@ -206,7 +205,7 @@
                         <Tooltip text="Send shape to back" />
                      </tooltip>
                   </Button>
-                  <Button fx:id="bringToFrontButton" disable="true" layoutX="87.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBringToFrontAction" prefHeight="26.0" prefWidth="26.0">
+                  <Button fx:id="bringToFrontButton" disable="true" layoutX="237.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBringToFrontAction" prefHeight="26.0" prefWidth="26.0">
                      <graphic>
                         <SVGPath content="M372.31-307.69q-27.62 0-46.12-18.5-18.5-18.5-18.5-46.12v-363.07q0-27.62 18.5-46.12 18.5-18.5 46.12-18.5h363.07q27.62 0 46.12 18.5Q800-763 800-735.38v363.07q0 27.62-18.5 46.12-18.5 18.5-46.12 18.5H372.31Zm0-40h363.07q9.24 0 16.93-7.69 7.69-7.7 7.69-16.93v-363.07q0-9.24-7.69-16.93-7.69-7.69-16.93-7.69H372.31q-9.23 0-16.93 7.69-7.69 7.69-7.69 16.93v363.07q0 9.23 7.69 16.93 7.7 7.69 16.93 7.69ZM209.23-209.23V-160q-20.69 0-34.96-14.27T160-209.23h49.23ZM160-307.69v-49.23h49.23v49.23H160Zm0-147.69v-49.24h49.23v49.24H160Zm0-147.7v-49.23h49.23v49.23H160ZM307.69-160v-49.23h49.23V-160h-49.23Zm147.69 0v-49.23h49.24V-160h-49.24Zm147.7 0v-49.23h49.23V-160h-49.23Z" fill="#797b86" scaleX="0.03" scaleY="0.03" />
                      </graphic>
@@ -214,32 +213,36 @@
                         <Tooltip text="Bring shape to front" />
                      </tooltip>
                   </Button>
-                  <Separator layoutX="123.0" orientation="VERTICAL" prefHeight="32.0" prefWidth="1.0" />
-                  <SVGPath fx:id="fillColorToChangeIcon" content="m255.46-880.54 42.39-42.53L632-588.92q21.08 21.08 21.08 51.61 0 30.54-21.08 51.62L458.92-311.85q-20.69 20.7-51.23 20.7-30.54 0-51.23-20.7L183.39-485.69q-21.08-21.08-21.08-51.62 0-30.53 21.08-51.61l181.92-181.77-109.85-109.85Zm152.62 152.62L224.77-545.38q-1.92 1.92-2.5 4.04-.58 2.11-.58 4.42h372q0-2.31-.57-4.42-.58-2.12-2.5-4.04L408.08-727.92Zm343.46 461.77q-29.16 0-49.58-20.43-20.42-20.42-20.42-49.57 0-19.46 10.96-40.19 10.96-20.73 23.65-39.04 8.23-11.23 17.08-22.69 8.85-11.47 18.31-22.7 9.46 11.23 18.31 22.7 8.84 11.46 17.07 22.69 12.69 18.31 23.66 39.04 10.96 20.73 10.96 40.19 0 29.15-20.43 49.57-20.42 20.43-49.57 20.43ZM80 0v-120h800V0H80Z" disable="true" fill="#797b86" layoutX="-336.0" layoutY="477.0" scaleX="0.025" scaleY="0.025" stroke="BLACK" strokeType="INSIDE" />
-                  <ColorPicker fx:id="fillColorToChangePicker" disable="true" layoutX="160.0" layoutY="4.0" onAction="#onFillColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
+                  <Separator layoutX="276.0" orientation="VERTICAL" prefHeight="32.0" prefWidth="1.0" />
+                  <SVGPath fx:id="fillColorToChangeIcon" content="m255.46-880.54 42.39-42.53L632-588.92q21.08 21.08 21.08 51.61 0 30.54-21.08 51.62L458.92-311.85q-20.69 20.7-51.23 20.7-30.54 0-51.23-20.7L183.39-485.69q-21.08-21.08-21.08-51.62 0-30.53 21.08-51.61l181.92-181.77-109.85-109.85Zm152.62 152.62L224.77-545.38q-1.92 1.92-2.5 4.04-.58 2.11-.58 4.42h372q0-2.31-.57-4.42-.58-2.12-2.5-4.04L408.08-727.92Zm343.46 461.77q-29.16 0-49.58-20.43-20.42-20.42-20.42-49.57 0-19.46 10.96-40.19 10.96-20.73 23.65-39.04 8.23-11.23 17.08-22.69 8.85-11.47 18.31-22.7 9.46 11.23 18.31 22.7 8.84 11.46 17.07 22.69 12.69 18.31 23.66 39.04 10.96 20.73 10.96 40.19 0 29.15-20.43 49.57-20.42 20.43-49.57 20.43ZM80 0v-120h800V0H80Z" disable="true" fill="#797b86" layoutX="-180.0" layoutY="477.0" scaleX="0.025" scaleY="0.025" stroke="BLACK" strokeType="INSIDE" />
+                  <ColorPicker fx:id="fillColorToChangePicker" disable="true" layoutX="316.0" layoutY="4.0" onAction="#onFillColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
                      <value>
                         <Color green="0.6000000238418579" blue="1.0" />
                      </value>
                   </ColorPicker>
-                  <ColorPicker fx:id="strokeColorToChangePicker" disable="true" layoutX="222.0" layoutY="4.0" onAction="#onStrokeColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
+                  <ColorPicker fx:id="strokeColorToChangePicker" disable="true" layoutX="381.0" layoutY="4.0" onAction="#onStrokeColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
                      <value>
                         <Color green="0.6000000238418579" blue="1.0" />
                      </value>
                   </ColorPicker>
-                  <SVGPath fx:id="strokeColorToChangeIcon" content="M80 0v-120h800V0H80Zm160-303.46h49.46l332-331.39-25.15-25.53-24.92-24.54-331.39 332v49.46Zm-60 60v-135l448.39-447.77q8.69-8.69 19.73-13.15 11.03-4.46 22.96-4.46 11.94 0 23.12 4.46 11.18 4.46 20.49 13.77l48.08 48.69q9.31 8.69 13.46 19.91 4.15 11.21 4.15 23.18 0 11.22-4.21 22.31-4.21 11.1-13.4 20.29L315-243.46H180Zm540.38-490.92-49.46-49.46 49.46 49.46Zm-98.92 99.53-25.15-25.53-24.92-24.54 50.07 50.07Z" disable="true" fill="#797b86" layoutX="-275.0" layoutY="478.0" scaleX="0.025" scaleY="0.025" stroke="BLACK" strokeType="INSIDE" translateY="-40.0" />
-                  <Separator layoutX="385.0" layoutY="1.0" orientation="VERTICAL" prefHeight="32.0" prefWidth="1.0" />
-                  <SVGPath content="M479.23-160 347.69-291.54l27.54-27.54 84 82.23v-487.07l-83.23 83-27.54-27.54L480-800l131.54 131.54-28.31 28.54-84-83.23v486.3l84-82.23 27.54 27.54L479.23-160Z" fill="#797b86" layoutX="13.0" layoutY="496.0" rotate="90.0" scaleX="0.03" scaleY="0.03" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                  <TextField fx:id="canvasWidthInput" layoutX="512.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="58.0" />
-                  <SVGPath content="M781.69-136.92 530.46-388.16q-30 24.77-69 38.77-39 14-80.69 14-102.55 0-173.58-71.01-71.03-71.01-71.03-173.54 0-102.52 71.01-173.6 71.01-71.07 173.54-71.07 102.52 0 173.6 71.03 71.07 71.03 71.07 173.58 0 42.85-14.38 81.85-14.39 39-38.39 67.84l251.23 251.23-42.15 42.16ZM380.77-395.38q77.31 0 130.96-53.66 53.66-53.65 53.66-130.96t-53.66-130.96q-53.65-53.66-130.96-53.66t-130.96 53.66Q196.15-657.31 196.15-580t53.66 130.96q53.65 53.66 130.96 53.66ZM285.39-550v-60h190.76v60H285.39Z" disable="true" fill="#797b86" layoutX="111.0" layoutY="496.0" scaleX="0.03" scaleY="0.03" stroke="BLACK" strokeType="INSIDE" />
-                  <Slider fx:id="zoomSlider" blockIncrement="1.0" layoutX="605.0" layoutY="7.0" max="5.0" min="1.0" prefHeight="16.0" prefWidth="76.0" value="3.0" />
-                  <SVGPath content="M787.64-137.33 530.87-394.1q-29.9 25.86-69.4 40.06-39.51 14.19-81.78 14.19-102.1 0-172.82-70.68-70.71-70.68-70.71-171.84 0-101.17 70.68-171.91t171.99-70.74q101.31 0 172.03 70.69 70.73 70.7 70.73 171.9 0 42.3-14.39 81.84-14.38 39.54-40.53 70.69l257.17 256.1-36.2 36.47ZM379.28-390.1q80.41 0 136.23-55.96 55.82-55.97 55.82-136.38t-55.82-136.37q-55.82-55.96-136.23-55.96-80.75 0-136.81 55.96t-56.06 136.37q0 80.41 56.06 136.38 56.06 55.96 136.81 55.96Zm-25.54-88.98v-78.77h-78.76v-50.25h78.76v-78.1H404v78.1h78.1v50.25H404v78.77h-50.26Z" disable="true" fill="#797b86" layoutX="215.0" layoutY="496.0" scaleX="0.03" scaleY="0.03" stroke="BLACK" strokeType="INSIDE" />
-                  <SVGPath content="M479.23-160 347.69-291.54l27.54-27.54 84 82.23v-487.07l-83.23 83-27.54-27.54L480-800l131.54 131.54-28.31 28.54-84-83.23v486.3l84-82.23 27.54 27.54L479.23-160Z" fill="#797b86" layoutX="-80.0" layoutY="1.0" scaleX="0.03" scaleY="0.03" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" translateY="494.0" />
-                  <SVGPath fx:id="editStrokeWidthIcon" content="M220-229.23v-20h520v20H220Zm0-100v-40h520v40H220Zm0-120v-58.46h520v58.46H220Zm0-140v-141.54h520v141.54H220Z" disable="true" fill="#797b86" layoutX="-4.0" scaleX="0.04" scaleY="0.04" translateX="-204.0" translateY="496.0" />
-                  <TextField fx:id="canvasHeightInput" layoutX="415.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="58.0" />
-                  <Slider fx:id="editStrokeWidthSlider" blockIncrement="1.0" disable="true" layoutX="291.0" layoutY="8.0" max="10.0" min="1.0" prefHeight="16.0" prefWidth="85.0" />
+                  <SVGPath fx:id="strokeColorToChangeIcon" content="M80 0v-120h800V0H80Zm160-303.46h49.46l332-331.39-25.15-25.53-24.92-24.54-331.39 332v49.46Zm-60 60v-135l448.39-447.77q8.69-8.69 19.73-13.15 11.03-4.46 22.96-4.46 11.94 0 23.12 4.46 11.18 4.46 20.49 13.77l48.08 48.69q9.31 8.69 13.46 19.91 4.15 11.21 4.15 23.18 0 11.22-4.21 22.31-4.21 11.1-13.4 20.29L315-243.46H180Zm540.38-490.92-49.46-49.46 49.46 49.46Zm-98.92 99.53-25.15-25.53-24.92-24.54 50.07 50.07Z" disable="true" fill="#797b86" layoutX="-116.0" layoutY="478.0" scaleX="0.025" scaleY="0.025" stroke="BLACK" strokeType="INSIDE" translateY="-40.0" />
+                  <SVGPath fx:id="editStrokeWidthIcon" content="M220-229.23v-20h520v20H220Zm0-100v-40h520v40H220Zm0-120v-58.46h520v58.46H220Zm0-140v-141.54h520v141.54H220Z" disable="true" fill="#797b86" layoutX="159.0" scaleX="0.04" scaleY="0.04" translateX="-204.0" translateY="496.0" />
+                  <Slider fx:id="editStrokeWidthSlider" blockIncrement="1.0" disable="true" layoutX="458.0" layoutY="9.0" max="10.0" min="1.0" prefHeight="16.0" prefWidth="85.0" />
                </children></Pane>
+            <Pane fx:id="canvasQuickToolbar" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" prefWidth="781.0">
+               <children>
+                  <SVGPath content="M479.23-160 347.69-291.54l27.54-27.54 84 82.23v-487.07l-83.23 83-27.54-27.54L480-800l131.54 131.54-28.31 28.54-84-83.23v486.3l84-82.23 27.54 27.54L479.23-160Z" fill="#797b86" layoutX="-205.0" layoutY="496.0" rotate="90.0" scaleX="0.03" scaleY="0.03" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                  <TextField fx:id="canvasWidthInput" layoutX="294.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="58.0" />
+                  <SVGPath content="M781.69-136.92 530.46-388.16q-30 24.77-69 38.77-39 14-80.69 14-102.55 0-173.58-71.01-71.03-71.01-71.03-173.54 0-102.52 71.01-173.6 71.01-71.07 173.54-71.07 102.52 0 173.6 71.03 71.07 71.03 71.07 173.58 0 42.85-14.38 81.85-14.39 39-38.39 67.84l251.23 251.23-42.15 42.16ZM380.77-395.38q77.31 0 130.96-53.66 53.66-53.65 53.66-130.96t-53.66-130.96q-53.65-53.66-130.96-53.66t-130.96 53.66Q196.15-657.31 196.15-580t53.66 130.96q53.65 53.66 130.96 53.66ZM285.39-550v-60h190.76v60H285.39Z" disable="true" fill="#797b86" layoutX="-86.0" layoutY="496.0" scaleX="0.03" scaleY="0.03" stroke="BLACK" strokeType="INSIDE" />
+                  <Slider fx:id="zoomSlider" blockIncrement="1.0" layoutX="408.0" layoutY="7.0" max="5.0" min="1.0" prefHeight="16.0" prefWidth="98.0" value="3.0" />
+                  <SVGPath content="M787.64-137.33 530.87-394.1q-29.9 25.86-69.4 40.06-39.51 14.19-81.78 14.19-102.1 0-172.82-70.68-70.71-70.68-70.71-171.84 0-101.17 70.68-171.91t171.99-70.74q101.31 0 172.03 70.69 70.73 70.7 70.73 171.9 0 42.3-14.39 81.84-14.38 39.54-40.53 70.69l257.17 256.1-36.2 36.47ZM379.28-390.1q80.41 0 136.23-55.96 55.82-55.97 55.82-136.38t-55.82-136.37q-55.82-55.96-136.23-55.96-80.75 0-136.81 55.96t-56.06 136.37q0 80.41 56.06 136.38 56.06 55.96 136.81 55.96Zm-25.54-88.98v-78.77h-78.76v-50.25h78.76v-78.1H404v78.1h78.1v50.25H404v78.77h-50.26Z" disable="true" fill="#797b86" layoutX="45.0" layoutY="496.0" scaleX="0.03" scaleY="0.03" stroke="BLACK" strokeType="INSIDE" />
+                  <SVGPath content="M479.23-160 347.69-291.54l27.54-27.54 84 82.23v-487.07l-83.23 83-27.54-27.54L480-800l131.54 131.54-28.31 28.54-84-83.23v486.3l84-82.23 27.54 27.54L479.23-160Z" fill="#797b86" layoutX="-298.0" layoutY="1.0" scaleX="0.03" scaleY="0.03" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" translateY="494.0" />
+                  <TextField fx:id="canvasHeightInput" layoutX="197.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="58.0" />
+                  <Separator layoutX="367.0" orientation="VERTICAL" prefHeight="32.0" prefWidth="1.0" />
+               </children>
+            </Pane>
             <ScrollPane fx:id="scrollableCanvasContainer" prefHeight="554.0" prefWidth="793.0">
-               <Pane fx:id="canvas" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragReleased="#setOnMouseReleased" onMouseDragged="#setOnMouseDragged" onMousePressed="#setOnMousePressed" onMouseReleased="#setOnMouseReleased" prefHeight="553.0" prefWidth="789.0">
+               <Pane fx:id="canvas" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragReleased="#setOnMouseReleased" onMouseDragged="#setOnMouseDragged" onMousePressed="#setOnMousePressed" onMouseReleased="#setOnMouseReleased" prefHeight="520.0" prefWidth="789.0">
                   <cursor>
                      <Cursor fx:constant="DEFAULT" />
                   </cursor>

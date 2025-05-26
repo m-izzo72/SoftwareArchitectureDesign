@@ -34,6 +34,7 @@ import org.softwarearchitecturedesigngroup10.model.factories.ShapeDataFactory;
 import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
 import org.softwarearchitecturedesigngroup10.model.observers.observed.SelectionPropertyObserver;
 import org.softwarearchitecturedesigngroup10.view.CanvasView;
+import org.softwarearchitecturedesigngroup10.view.helper.Highlighter;
 
 import java.io.File;
 import java.io.IOException;
@@ -160,6 +161,8 @@ public class Controller implements ModelObserver {
     private Slider editStrokeWidthSlider;
     @FXML
     private SVGPath editStrokeWidthIcon;
+    @FXML
+    private Pane canvasQuickToolbar;
 
     /* CLOSE AND MINIMIZE WINDOW */
 
@@ -188,20 +191,25 @@ public class Controller implements ModelObserver {
                         selectedShapeLabelText.set(" > " + canvasModel.getSelectedShapes().size() + " selected shape(s)");
 //                        canvasView.dimBackground();
                         if (value.isSelected()) {
-                            canvasView.undimShape(viewShapes.get(key));
+                            canvasView.setUnselectedState(viewShapes.get(key));
+                            Highlighter.highlightShape(viewShapes.get(key));
                         } else {
-                            canvasView.dimShape(viewShapes.get(key));
+                            canvasView.setSelectedEffect(viewShapes.get(key));
+                            Highlighter.unhighlightShape(viewShapes.get(key));
 
                         }
                     } else {
                         selectedShapeLabelText.set("");
-                        canvasView.undimShape(viewShapes.get(key));
+                        canvasView.setUnselectedState(viewShapes.get(key));
 //                      canvasView.undimBackground();
                     }
                 });
 
         canvasView.paintAllFromScratch(viewShapes);
+
         canvasInfoLabel.setText(canvasModel.getShapes().size() + " shape(s) on the canvas" + selectedShapeLabelText);
+        newCanvasButton.setDisable(canvasModel.getShapes().isEmpty());
+        //saveFileButton.setDisable(canvasModel.getShapes().isEmpty());
         undoButton.setDisable(commandManager.isUndoStackEmpty());
     }
 
@@ -342,6 +350,7 @@ public class Controller implements ModelObserver {
                 titleBar.getStyleClass().remove("unfocused");
                 minimizeButton.getGraphic().setStyle("-fx-fill: #fffffe");
                 closeButton.getGraphic().setStyle("-fx-fill: #fffffe");
+                undoButton.getGraphic().setStyle("-fx-fill: #fffffe");
                 title.setTextFill(Color.valueOf("#fffffe"));
             } else {
                 rootPane.setStyle("-fx-background-color: #5a5b5e;");
@@ -349,6 +358,7 @@ public class Controller implements ModelObserver {
                 titleBar.getStyleClass().add("unfocused");
                 minimizeButton.getGraphic().setStyle("-fx-fill: #797979");
                 closeButton.getGraphic().setStyle("-fx-fill: #797979");
+                undoButton.getGraphic().setStyle("-fx-fill: #797979");
                 title.setTextFill(Color.valueOf("#797979"));
             }
         });
@@ -367,10 +377,10 @@ public class Controller implements ModelObserver {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save file");
 
-        fileChooser.setInitialFileName("canvas.pr");
+        fileChooser.setInitialFileName("newproject.canvas");
 
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("File Canvas", "*.pr")
+                new FileChooser.ExtensionFilter("File Canvas", "*.canvas")
         );
 
         File fileToSave = fileChooser.showSaveDialog(stage);
@@ -385,7 +395,7 @@ public class Controller implements ModelObserver {
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("File Canvas", "*.pr")
+                new FileChooser.ExtensionFilter("File Canvas", "*.canvas")
         );
         File selectedFile = fileChooser.showOpenDialog(stage);
 
