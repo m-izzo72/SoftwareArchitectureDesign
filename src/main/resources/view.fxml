@@ -239,7 +239,7 @@
                   <Slider fx:id="editStrokeWidthSlider" blockIncrement="1.0" disable="true" layoutX="291.0" layoutY="8.0" max="10.0" min="1.0" prefHeight="16.0" prefWidth="85.0" />
                </children></Pane>
             <ScrollPane fx:id="scrollableCanvasContainer" prefHeight="554.0" prefWidth="793.0">
-               <Pane fx:id="canvas" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragReleased="#setOnMouseReleased" onMouseDragged="#setOnMouseDragged" onMousePressed="#setOnMousePressed" onMouseReleased="#setOnMouseReleased" prefHeight="554.0" prefWidth="790.0">
+               <Pane fx:id="canvas" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragReleased="#setOnMouseReleased" onMouseDragged="#setOnMouseDragged" onMousePressed="#setOnMousePressed" onMouseReleased="#setOnMouseReleased" prefHeight="553.0" prefWidth="789.0">
                   <cursor>
                      <Cursor fx:constant="DEFAULT" />
                   </cursor>

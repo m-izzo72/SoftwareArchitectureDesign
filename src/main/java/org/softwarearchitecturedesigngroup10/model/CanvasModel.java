@@ -145,12 +145,23 @@ public class CanvasModel implements CanvasModelInterface {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
-    public void changeShapesColours(String newFillColour, String newStrokeColour) {
+    public void editShapesFillColour(String newFillColour) {
         shapes.entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().isSelected())
                 .forEach(entry -> {
                     entry.getValue().setFillColor(newFillColour);
+                    //entry.getValue().setStrokeColor(newStrokeColour);
+                });
+        notifyObservers();
+    }
+
+    public void editShapesStrokeColour(String newStrokeColour) {
+        shapes.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().isSelected())
+                .forEach(entry -> {
+                    //entry.getValue().setFillColor(newFillColour);
                     entry.getValue().setStrokeColor(newStrokeColour);
                 });
         notifyObservers();

@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -27,10 +26,7 @@ import org.softwarearchitecturedesigngroup10.model.commands.clipboard.CopyShapeC
 import org.softwarearchitecturedesigngroup10.model.commands.clipboard.CutShapeCommand;
 import org.softwarearchitecturedesigngroup10.model.commands.clipboard.DeleteShapeCommand;
 import org.softwarearchitecturedesigngroup10.model.commands.clipboard.PasteShapeCommand;
-import org.softwarearchitecturedesigngroup10.model.commands.shapeediting.BringToFrontCommand;
-import org.softwarearchitecturedesigngroup10.model.commands.shapeediting.EditShapeColoursCommand;
-import org.softwarearchitecturedesigngroup10.model.commands.shapeediting.EditShapeStrokeWidthCommand;
-import org.softwarearchitecturedesigngroup10.model.commands.shapeediting.SendToBackCommand;
+import org.softwarearchitecturedesigngroup10.model.commands.shapeediting.*;
 import org.softwarearchitecturedesigngroup10.model.factories.EllipseDataFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.LineDataFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.RectangleDataFactory;
@@ -253,7 +249,11 @@ public class Controller implements ModelObserver {
             final double roundedValue = Math.round(newValue.doubleValue());
             editStrokeWidthSlider.valueProperty().set(roundedValue);
             // The command is executed even if the value hasn't changed
-            commandManager.executeCommand(new EditShapeStrokeWidthCommand(canvasModel, roundedValue));
+            // commandManager.executeCommand(new EditShapeStrokeWidthCommand(canvasModel, roundedValue));
+        });
+
+        editStrokeWidthSlider.setOnMouseReleased((MouseEvent event) -> {
+            commandManager.executeCommand(new EditShapeStrokeWidthCommand(canvasModel, editStrokeWidthSlider.getValue()));
         });
 
         zoomSlider.valueProperty().addListener(this::zoomListener);
@@ -491,16 +491,16 @@ public class Controller implements ModelObserver {
 
     @FXML
     public void onFillColorToChangePickerAction(ActionEvent actionEvent) {
-        EditShapeColoursCommand command = new EditShapeColoursCommand(
-                canvasModel, fillColorToChangePicker.getValue().toString(), strokeColorToChangePicker.getValue().toString()
+        EditShapesFillColourCommand command = new EditShapesFillColourCommand(
+                canvasModel, fillColorToChangePicker.getValue().toString()
         );
         commandManager.executeCommand(command);
     }
 
     @FXML
     public void onStrokeColorToChangePickerAction(ActionEvent actionEvent) {
-        EditShapeColoursCommand command = new EditShapeColoursCommand(
-                canvasModel, fillColorToChangePicker.getValue().toString(), strokeColorToChangePicker.getValue().toString()
+        EditShapesStrokeColourCommand command = new EditShapesStrokeColourCommand(
+                canvasModel, strokeColorToChangePicker.getValue().toString()
         );
         commandManager.executeCommand(command);
     }

@@ -6,12 +6,17 @@ import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
 
 import java.util.LinkedHashMap;
 
-public class SendToBackCommand implements Command {
+public class EditShapesStrokeColourCommand implements Command {
+
     private final CanvasModel receiver;
+    private final String newFillColor;
+    //private final String newStrokeColor;
     private final LinkedHashMap<String, ShapeData> previousState;
 
-    public SendToBackCommand(CanvasModel receiver) {
-        this.receiver = receiver;
+    public EditShapesStrokeColourCommand(CanvasModel canvasModel, String newFillColor) {
+        this.receiver = canvasModel;
+        this.newFillColor = newFillColor;
+        //this.newStrokeColor = newStrokeColor;
         this.previousState = new LinkedHashMap<>();
         getPreviousState();
     }
@@ -22,15 +27,14 @@ public class SendToBackCommand implements Command {
 
     @Override
     public void execute() {
-        receiver.sendToBack();
+        receiver.editShapesStrokeColour(newFillColor);
     }
-
-
 
     @Override
     public void undo() {
         receiver.clear();
         previousState.forEach((key, value) -> receiver.addShape(value));
+
     }
 
     @Override
