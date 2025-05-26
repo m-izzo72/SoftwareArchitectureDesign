@@ -3,9 +3,11 @@ package org.softwarearchitecturedesigngroup10.controller;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -149,6 +151,7 @@ public class Controller implements ModelObserver {
 
     private double xOffset = 0, yOffset = 0;
     private double startX, startY;
+    private double defaultCanvasWidth, defaultCanvasHeight;
 
     private SelectionPropertyObserver selectionPropertyObserver;
     @FXML
@@ -163,6 +166,8 @@ public class Controller implements ModelObserver {
     private SVGPath editStrokeWidthIcon;
     @FXML
     private Pane canvasQuickToolbar;
+    @FXML
+    private Group canvasGroup;
 
     /* CLOSE AND MINIMIZE WINDOW */
 
@@ -230,6 +235,8 @@ public class Controller implements ModelObserver {
         commandManager = new CommandManager();
         shapeConverter = new ShapeConverter();
 
+        defaultCanvasHeight = canvas.getPrefHeight();
+        defaultCanvasWidth = canvas.getPrefWidth();
         zoomFactor = 1.0;
 
         // Initial state
@@ -288,6 +295,8 @@ public class Controller implements ModelObserver {
     public void zoomListener(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         zoomFactor = ((double) 1 / 3) * newValue.doubleValue();
         canvas.setScaleX(zoomFactor); canvas.setScaleY(zoomFactor);
+
+        //canvas.setPrefWidth(defaultCanvasWidth * zoomFactor); canvas.setPrefHeight(defaultCanvasHeight * zoomFactor);
     }
 
     /* SCROLLABLE CANVAS AND CLIPPING CANVAS LOGIC */
@@ -309,8 +318,16 @@ public class Controller implements ModelObserver {
         DoubleProperty customHeightProperty = new SimpleDoubleProperty(canvas.getPrefHeight());
         canvas.prefWidthProperty().bind(customWidthProperty);
         canvas.prefHeightProperty().bind(customHeightProperty);
+        canvas.prefHeightProperty().addListener((observable, oldValue, newValue) -> {
+            canvasGroup.prefHeight(newValue.doubleValue());
+        });
+        canvas.prefWidthProperty().addListener((observable, oldValue, newValue) -> {
+            canvasGroup.prefWidth(newValue.doubleValue());
+        });
         Bindings.bindBidirectional(canvasWidthInput.textProperty(), customWidthProperty, doubleConverter);
         Bindings.bindBidirectional(canvasHeightInput.textProperty(), customHeightProperty, doubleConverter);
+
+
     }
 
     StringConverter<Number> doubleConverter = new StringConverter<>() {
