@@ -12,15 +12,17 @@ import java.util.UUID;
 public class ShapesClipboard {
     //private static Clipboard clipboard;
     private ArrayList<ShapeData> clipboard;
+    double offset;
     //private final CanvasModel canvasModel;
 
     public ShapesClipboard(CanvasModel canvasModel) {
         this.clipboard = new ArrayList<>();
+
         //this.canvasModel = canvasModel;
     }
 
     public void copyToClipboard(HashMap<String, ShapeData> shapesData) {
-        clipboard.clear();
+        clipboard.clear(); offset = 50;
         shapesData.forEach(
                 (key, value) -> {
                     clipboard.add(value.clone()); // Adds a cloned shapeData
@@ -33,6 +35,13 @@ public class ShapesClipboard {
         ArrayList<ShapeData> clonedClipboard = new ArrayList<>();
         clipboard.forEach(entry -> clonedClipboard.add(entry.clone()));
         return clonedClipboard;
+    }
+
+    public ArrayList<ShapeData> getActualShapesClipboard() {
+        // Clones the clipboard, otherwise a shape with the same reference will be added (resulting in bugs)
+        // ArrayList<ShapeData> clonedClipboard = new ArrayList<>();
+        // clipboard.forEach(entry -> clonedClipboard.add(entry.clone()));
+        return clipboard;
     }
 
 

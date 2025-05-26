@@ -90,6 +90,13 @@ public class CanvasModel implements CanvasModelInterface {
         }
     }
 
+    public void moveShapeDataByIDs(ArrayList<String> shapes, double dx, double dy) {
+        shapes.forEach(id -> {
+            moveShapeData(getShapes().get(id), dx, dy);
+            notifyObservers();
+        });
+    }
+
     public void deselectAllShapes() {
         shapes.forEach((key, value) -> value.setSelected(false));
         notifyObservers();
@@ -124,6 +131,10 @@ public class CanvasModel implements CanvasModelInterface {
             addShape(shapeData);
         });
 
+    }
+
+    public ArrayList<ShapeData> getShapesClipboard() {
+        return shapesClipboard.getActualShapesClipboard();
     }
 
     /* SELECTED SHAPES */
