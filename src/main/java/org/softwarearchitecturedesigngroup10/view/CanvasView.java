@@ -8,9 +8,9 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import org.softwarearchitecturedesigngroup10.view.helper.Highlighter;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class CanvasView implements CanvasViewInterface {
 
@@ -25,11 +25,12 @@ public class CanvasView implements CanvasViewInterface {
     public CanvasView(Pane canvas) {
         this.canvas = canvas;
         this.previewShape = null;
-        this.previewShape = null;
         this.resizeHandle = new Rectangle(HANDLE_SIZE, HANDLE_SIZE, Color.BLUE);
         this.resizeHandle.setStroke(Color.WHITE);
         this.resizeHandle.setId(RESIZE_HANDLE_ID);
         this.resizeHandle.setCursor(Cursor.SE_RESIZE);
+        this.resizeHandle.setVisible(false);
+        this.canvas.getChildren().add(resizeHandle);
     }
 
     public void deletePreview() {
@@ -41,16 +42,6 @@ public class CanvasView implements CanvasViewInterface {
     public boolean isPreviewShapeNotNull() {
         return previewShape != null;
     }
-
-//    public void highlight(Shape shape) {
-//        Highlighter.highlightShape(shape);
-//    }
-//
-//    public void unHighlightAll() {
-//        for (Node shape : canvas.getChildren()) {
-//            Highlighter.unhighlightShape((Shape) shape);
-//        }
-//    }
 
     public void setPreviewShape(Shape previewShape) {
         this.previewShape = previewShape;
@@ -91,7 +82,7 @@ public class CanvasView implements CanvasViewInterface {
         previewShape.setMouseTransparent(true);
     }
 
-    public void updatePreviewShapeGeometry(double currentX, double currentY, double startX, double startY) {
+    public void updatePreviewShapeGeometry(double startX, double startY, double currentX, double currentY) {
         if (previewShape == null) return;
 
         if (previewShape instanceof Rectangle rect) {
@@ -118,7 +109,6 @@ public class CanvasView implements CanvasViewInterface {
             line.setEndX(currentX);
             line.setEndY(currentY);
         }
-        // This is needed otherwise when drawing a shape preview there will be some artifacts and weird effects
         canvas.getChildren().remove(this.previewShape);
         canvas.getChildren().add(this.previewShape);
     }
@@ -126,6 +116,8 @@ public class CanvasView implements CanvasViewInterface {
     @Override
     public void clear() {
         canvas.getChildren().clear();
+        this.canvas.getChildren().add(resizeHandle);
+        hideResizeHandle();
     }
 
     @Override
@@ -136,24 +128,27 @@ public class CanvasView implements CanvasViewInterface {
             value.setId(key);
             canvas.getChildren().add(value);
         });
+        canvas.getChildren().add(resizeHandle);
+        resizeHandle.toFront();
     }
 
-    private void updateResizeHandle(Shape shape) {
+    public void updateResizeHandle(Shape shape) {
         if (shape != null) {
             Bounds bounds = shape.getBoundsInParent();
             resizeHandle.setX(bounds.getMaxX() - HANDLE_SIZE / 2);
             resizeHandle.setY(bounds.getMaxY() - HANDLE_SIZE / 2);
             resizeHandle.setUserData(shape.getId());
-            if (!canvas.getChildren().contains(resizeHandle)) {
-                canvas.getChildren().add(resizeHandle);
-            }
             resizeHandle.setVisible(true);
+            resizeHandle.toFront();
         } else {
-            if (canvas.getChildren().contains(resizeHandle)) {
-                resizeHandle.setVisible(false);
-            }
+            hideResizeHandle();
         }
     }
+
+    public void hideResizeHandle() {
+        resizeHandle.setVisible(false);
+    }
+
 
     public Rectangle getResizeHandle() {
         return resizeHandle;

@@ -15,9 +15,6 @@ public class ResizingState implements State {
     private double initialPressY;
     private double initialWidth;
     private double initialHeight;
-    private double initialX;
-    private double initialY;
-    private double aspectRatio;
     private boolean isInitialized = false;
 
     public boolean initializeResize(CanvasModel model, String shapeId, double pressX, double pressY) {
@@ -25,17 +22,14 @@ public class ResizingState implements State {
         this.resizingShapeId = shapeId;
         ShapeData shape = model.getShapes().get(shapeId);
 
-        if (shape == null || shape.getWidth() == 0 || shape.getHeight() == 0) {
+        if (shape == null) {
             return false;
         }
 
         this.initialPressX = pressX;
         this.initialPressY = pressY;
-        this.initialX = shape.getX();
-        this.initialY = shape.getY();
         this.initialWidth = shape.getWidth();
         this.initialHeight = shape.getHeight();
-        this.aspectRatio = this.initialWidth / this.initialHeight;
         this.isInitialized = true;
         return true;
     }
@@ -50,9 +44,12 @@ public class ResizingState implements State {
         if (!isInitialized) return;
 
         double currentX = event.getX();
+        double currentY = event.getY();
         double deltaX = currentX - initialPressX;
+        double deltaY = currentY - initialPressY;
+
         double newWidth = initialWidth + deltaX;
-        double newHeight = newWidth / aspectRatio;
+        double newHeight = initialHeight + deltaY;
 
         if (newWidth > 10 && newHeight > 10) {
             model.resizeShape(resizingShapeId, newWidth, newHeight);
@@ -72,15 +69,18 @@ public class ResizingState implements State {
         double finalWidth = finalShape.getWidth();
         double finalHeight = finalShape.getHeight();
 
-        ResizeShapeCommand resizeCommand = new ResizeShapeCommand(
-                model,
-                resizingShapeId,
-                initialWidth,
-                initialHeight,
-                finalWidth,
-                finalHeight
-        );
-        context.getCommandManager().executeCommand(resizeCommand);
+        if (Math.abs(finalWidth - initialWidth) > 0.1 || Math.abs(finalHeight - initialHeight) > 0.1) {
+            ResizeShapeCommand resizeCommand = new ResizeShapeCommand(
+                    model,
+                    resizingShapeId,
+                    initialWidth,
+                    initialHeight,
+                    finalWidth,
+                    finalHeight
+            );
+            context.getCommandManager().executeCommand(resizeCommand);
+        }
+
 
         context.setCurrentState(context.getSelectionState());
         event.consume();
@@ -98,5 +98,6 @@ public class ResizingState implements State {
         this.model = null;
         this.resizingShapeId = null;
         isInitialized = false;
+        context.getCanvasView().hideResizeHandle();
     }
 }

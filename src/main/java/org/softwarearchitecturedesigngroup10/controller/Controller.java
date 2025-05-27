@@ -35,6 +35,7 @@ import org.softwarearchitecturedesigngroup10.model.factories.RectangleDataFactor
 import org.softwarearchitecturedesigngroup10.model.factories.ShapeDataFactory;
 import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
 import org.softwarearchitecturedesigngroup10.model.observers.observed.SelectionPropertyObserver;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
 import org.softwarearchitecturedesigngroup10.view.CanvasView;
 import org.softwarearchitecturedesigngroup10.view.helper.Highlighter;
 
@@ -43,11 +44,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Controller implements ModelObserver {
-
-    /****************** FXML COMPONENTS ***********/
 
     private Stage stage;
     @FXML
@@ -137,28 +137,19 @@ public class Controller implements ModelObserver {
     @FXML
     private SVGPath strokeColorToChangeIcon;
 
-
-
     private CanvasModel canvasModel;
-
     private CanvasView canvasView;
-
     private CommandManager commandManager;
-
     private ShapeConverter shapeConverter;
-
     private ShapeDataFactory factory;
-
     private double xOffset = 0, yOffset = 0;
     private double startX, startY;
     private double defaultCanvasWidth, defaultCanvasHeight;
-
     private SelectionPropertyObserver selectionPropertyObserver;
     @FXML
     private Slider zoomSlider;
     @FXML
     private MenuButton strokeWidthMenuButton;
-
     private double zoomFactor;
     @FXML
     private Slider editStrokeWidthSlider;
@@ -173,8 +164,6 @@ public class Controller implements ModelObserver {
     @FXML
     private Slider resizeSlider;
 
-    /* CLOSE AND MINIMIZE WINDOW */
-
     @FXML
     public void onMinimizeButtonAction(ActionEvent actionEvent) {
         stage.setIconified(true);
@@ -185,44 +174,58 @@ public class Controller implements ModelObserver {
         stage.close();
     }
 
-    /* UPDATE METHOD CALLED BY OBSERVER */
-
     @Override
     public void update() {
         AtomicReference<String> selectedShapeLabelText = new AtomicReference<>("");
         LinkedHashMap<String, Shape> viewShapes = new LinkedHashMap<>();
-        canvasModel.getShapes()
-                .forEach((key, value) -> {
-                    viewShapes.put(key, shapeConverter.convert(value));
-//                    if(value.isSelected()) canvasView.highlight(viewShapes.get(key));
+        AtomicReference<Shape> singleSelectedShape = new AtomicReference<>(null);
+        AtomicReference<Integer> selectedCount = new AtomicReference<>(0);
 
-                    if (!canvasModel.getSelectedShapes().isEmpty()) {
-                        selectedShapeLabelText.set(" > " + canvasModel.getSelectedShapes().size() + " selected shape(s)");
-//                        canvasView.dimBackground();
-                        if (value.isSelected()) {
-                            canvasView.setUnselectedState(viewShapes.get(key));
-                            Highlighter.highlightShape(viewShapes.get(key));
-                        } else {
-                            canvasView.setSelectedEffect(viewShapes.get(key));
-                            Highlighter.unhighlightShape(viewShapes.get(key));
+        canvasModel.getShapes().forEach((key, value) -> {
+            Shape currentShape = shapeConverter.convert(value);
+            viewShapes.put(key, currentShape);
 
-                        }
-                    } else {
-                        selectedShapeLabelText.set("");
-                        canvasView.setUnselectedState(viewShapes.get(key));
-//                      canvasView.undimBackground();
-                    }
-                });
+            if (value.isSelected()) {
+                selectedCount.getAndSet(selectedCount.get() + 1);
+                singleSelectedShape.set(currentShape);
+            }
+        });
 
         canvasView.paintAllFromScratch(viewShapes);
 
+        viewShapes.forEach((key, shape) -> {
+            ShapeData data = canvasModel.getShapes().get(key);
+            if (data != null) {
+                if (!canvasModel.getSelectedShapes().isEmpty()) {
+                    selectedShapeLabelText.set(" > " + canvasModel.getSelectedShapes().size() + " selected shape(s)");
+                    if (data.isSelected()) {
+                        canvasView.setUnselectedState(shape);
+                        Highlighter.highlightShape(shape);
+                    } else {
+                        canvasView.setSelectedEffect(shape);
+                        Highlighter.unhighlightShape(shape);
+                    }
+                } else {
+                    selectedShapeLabelText.set("");
+                    canvasView.setUnselectedState(shape);
+                    Highlighter.unhighlightShape(shape);
+                }
+            }
+        });
+
+
+        if (selectedCount.get() == 1) {
+            canvasView.updateResizeHandle(singleSelectedShape.get());
+        } else {
+            canvasView.hideResizeHandle();
+        }
+
+
         canvasInfoLabel.setText(canvasModel.getShapes().size() + " shape(s) on the canvas" + selectedShapeLabelText);
         newCanvasButton.setDisable(canvasModel.getShapes().isEmpty());
-        //saveFileButton.setDisable(canvasModel.getShapes().isEmpty());
         undoButton.setDisable(commandManager.isUndoStackEmpty());
     }
 
-    /* STATES */
 
     private State currentState;
     private final State idleState = new IdleState();
@@ -230,8 +233,6 @@ public class Controller implements ModelObserver {
     private final State drawingState = new PaintingState();
     private final State movingState = new MovingState();
     private final State resizingState = new ResizingState();
-
-
 
     @FXML
     public void initialize() {
@@ -244,7 +245,6 @@ public class Controller implements ModelObserver {
         defaultCanvasWidth = canvas.getPrefWidth();
         zoomFactor = 1.0;
 
-        // Initial state
         setCurrentState(idleState);
 
         canvasModel.addObserver(this);
@@ -268,8 +268,6 @@ public class Controller implements ModelObserver {
         editStrokeWidthSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             final double roundedValue = Math.round(newValue.doubleValue());
             editStrokeWidthSlider.valueProperty().set(roundedValue);
-            // The command is executed even if the value hasn't changed
-            // commandManager.executeCommand(new EditShapeStrokeWidthCommand(canvasModel, roundedValue));
         });
 
         editStrokeWidthSlider.setOnMouseReleased((MouseEvent event) -> {
@@ -279,35 +277,24 @@ public class Controller implements ModelObserver {
         zoomSlider.valueProperty().addListener(this::zoomListener);
 
         canvasModel.addObserver(selectionPropertyObserver);
-
         canvasInfoLabel.setText("No shapes on the canvas");
-
         titleBar.setOnMousePressed(this::setOnTitleBarPressed);
         titleBar.setOnMouseDragged(this::setOnTitleBarDragged);
-
         setCanvasScrollableAndResizable();
     }
-
-    /* UNDO */
 
     @FXML
     public void onUndoButtonAction(ActionEvent actionEvent) {
         commandManager.undo();
     }
 
-    /* ZOOM LOGIC */
-
     public void zoomListener(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         zoomFactor = ((double) 1 / 3) * newValue.doubleValue();
         canvas.setScaleX(zoomFactor); canvas.setScaleY(zoomFactor);
-
-        //canvas.setPrefWidth(defaultCanvasWidth * zoomFactor); canvas.setPrefHeight(defaultCanvasHeight * zoomFactor);
     }
 
-    /* SCROLLABLE CANVAS AND CLIPPING CANVAS LOGIC */
-
     private void setCanvasScrollableAndResizable() {
-        setCanvasClippable(); // Clips the canvas so that shapes can't be drawn outside on the application GUI
+        setCanvasClippable();
         bindTextFieldToCanvasSize();
     }
 
@@ -352,8 +339,6 @@ public class Controller implements ModelObserver {
 
     };
 
-    /* DRAGGABLE WINDOW */
-
     private void setOnTitleBarPressed(MouseEvent event) {
         xOffset = event.getSceneX();
         yOffset = event.getSceneY();
@@ -386,8 +371,6 @@ public class Controller implements ModelObserver {
         });
 
     }
-
-    /* FILES TAB METHODS */
 
     @FXML
     public void onNewCanvasButtonAction(ActionEvent actionEvent) {
@@ -424,8 +407,6 @@ public class Controller implements ModelObserver {
         canvasModel.load(selectedFile);
         title.setText(selectedFile.getName());
     }
-
-    /* SHAPES TAB METHODS */
 
     @FXML
     public void onEllipseButtonSelected(ActionEvent actionEvent) {
@@ -478,8 +459,6 @@ public class Controller implements ModelObserver {
         }
     }
 
-    /* CANVAS HANDLER METHODS */
-
     @FXML
     public void setOnMousePressed(MouseEvent event) {
         currentState.handleMousePressed(event, this);
@@ -494,8 +473,6 @@ public class Controller implements ModelObserver {
     public void setOnMouseReleased(MouseEvent event) {
         currentState.handleMouseReleased(event, this);
     }
-
-    /* CLIPBOARD TAB METHODS */
 
     @FXML
     public void onEraseShapeButtonAction(ActionEvent actionEvent) {
@@ -546,8 +523,6 @@ public class Controller implements ModelObserver {
     public void onSendToBackAction(ActionEvent actionEvent) {
         commandManager.executeCommand(new SendToBackCommand(canvasModel));
     }
-
-    /************** GETTERS *****************/
 
     public Pane getCanvas() {
         return canvas;
@@ -616,8 +591,6 @@ public class Controller implements ModelObserver {
     public State getResizingState() {
         return resizingState;
     }
-
-    /********************* SETTERS ******************/
 
     public void setCurrentState(State newState) {
         if (currentState != null) {
