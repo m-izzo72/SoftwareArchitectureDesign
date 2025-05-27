@@ -22,7 +22,7 @@ public class ShapesClipboard {
     }
 
     public void copyToClipboard(HashMap<String, ShapeData> shapesData) {
-        clipboard.clear(); offset = 50;
+        clipboard.clear(); offset = 0;
         shapesData.forEach(
                 (key, value) -> {
                     clipboard.add(value.clone()); // Adds a cloned shapeData

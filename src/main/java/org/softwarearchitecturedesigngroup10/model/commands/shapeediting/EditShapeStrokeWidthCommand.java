@@ -31,7 +31,7 @@ public class EditShapeStrokeWidthCommand implements Command {
     @Override
     public void undo() {
         receiver.clear();
-        previousState.forEach((key, value) -> receiver.addShape(value));
+        previousState.forEach(receiver::addShapeByKeepingKeys);
 
     }
 

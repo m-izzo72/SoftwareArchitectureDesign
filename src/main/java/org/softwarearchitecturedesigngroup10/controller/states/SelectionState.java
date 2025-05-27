@@ -2,12 +2,14 @@ package org.softwarearchitecturedesigngroup10.controller.states;
 
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Rectangle;
 import org.softwarearchitecturedesigngroup10.controller.Controller;
 import javafx.scene.shape.Shape;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
 import org.softwarearchitecturedesigngroup10.model.commands.selection.DeselectAllShapeCommand;
 import org.softwarearchitecturedesigngroup10.model.commands.selection.SelectShapeCommand;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
+import org.softwarearchitecturedesigngroup10.view.CanvasView;
 
 public class SelectionState implements State {
 
@@ -25,7 +27,21 @@ public class SelectionState implements State {
         isPressOnSelectedShapes = false;
         clickedShapeId = null;
 
-        if (target instanceof Shape shape ) {
+        if (target instanceof Rectangle && ((Rectangle) target).getId() != null && ((Rectangle) target).getId().equals(CanvasView.RESIZE_HANDLE_ID)) {
+            Rectangle handle = (Rectangle) target;
+            String shapeId = (String) handle.getUserData();
+            if (shapeId != null) {
+                ResizingState resizingState = (ResizingState) context.getResizingState();
+                boolean initOk = resizingState.initializeResize(model, shapeId, pressX, pressY);
+                if (initOk) {
+                    context.setCurrentState(resizingState);
+                }
+            }
+            event.consume();
+            return;
+        }
+
+        if (target instanceof Shape shape && shape.getId() != null && !shape.getId().equals(CanvasView.RESIZE_HANDLE_ID)) {
             ShapeData data = model.getShapes().get(shape.getId());
             if (data != null) {
                 clickedShapeId = shape.getId();
@@ -33,6 +49,8 @@ public class SelectionState implements State {
             }
         } else if (target == context.getCanvas()) {
             new DeselectAllShapeCommand(model).execute();
+            event.consume();
+            return;
         }
 
         if (target instanceof Shape && !isPressOnSelectedShapes && clickedShapeId != null) {
@@ -40,11 +58,11 @@ public class SelectionState implements State {
                 new DeselectAllShapeCommand(model).execute();
             }
             new SelectShapeCommand(model, clickedShapeId).execute();
+            isPressOnSelectedShapes = true;
 
-            isPressOnSelectedShapes = true; //
-            clickedShapeId = null; //
-            isPressOnSelectedShapes = false; //
-
+        } else if (target instanceof Shape && isPressOnSelectedShapes && clickedShapeId != null) {
+            // Se clicco su una forma già selezionata, non faccio nulla qui,
+            // aspetto il drag o il release
         } else if (target == context.getCanvas()) {
             new DeselectAllShapeCommand(model).execute();
         }
@@ -62,10 +80,8 @@ public class SelectionState implements State {
             double totalDx = currentMouseX - pressX;
             double totalDy = currentMouseY - pressY;
 
-            // Checks if the shape has been dragged at least DRAG_THRESHOLD pixels
             if (Math.sqrt(totalDx * totalDx + totalDy * totalDy) > DRAG_THRESHOLD) {
 
-                System.out.println("Drag detected. Transitioning to MovingState.");
                 MovingState movingState = (MovingState) context.getMovingState();
                 boolean initOk = movingState.initializeMove(context.getCanvasModel(), clickedShapeId, pressX, pressY);
 
@@ -84,7 +100,6 @@ public class SelectionState implements State {
     @Override
     public void handleMouseReleased(MouseEvent event, Controller context) {
         if (isPressOnSelectedShapes && clickedShapeId != null) {
-            System.out.println("Click (no drag) on selected shape: " + clickedShapeId + ". Deselecting.");
             CanvasModel model = context.getCanvasModel();
             new SelectShapeCommand(model, clickedShapeId).execute();
         }
@@ -96,19 +111,17 @@ public class SelectionState implements State {
 
     @Override
     public void enterState(Controller context) {
-        System.out.println("Entering Selection State");
         context.setFactory(null);
         context.getSelectToolButton().setSelected(true);
         isPressOnSelectedShapes = false;
         clickedShapeId = null;
         context.getCanvas().setCursor(Cursor.DEFAULT);
-        //context.getCanvasView().setHandCursorToShapes();
+        context.getCanvasModel().notifyObservers();
     }
 
     @Override
     public void exitState(Controller context) {
-        System.out.println("Exiting Selection State");
         context.getSelectToolButton().setSelected(false);
-        //context.getCanvasView().removeHandCursorToShapes();
+        context.getCanvasView().getResizeHandle().setVisible(false);
     }
 }

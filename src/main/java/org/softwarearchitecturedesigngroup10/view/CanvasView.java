@@ -1,5 +1,7 @@
 package org.softwarearchitecturedesigngroup10.view;
 
+import javafx.geometry.Bounds;
+import javafx.scene.Cursor;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -14,12 +16,20 @@ public class CanvasView implements CanvasViewInterface {
 
     Pane canvas;
     private static final double DIMMED_OPACITY = 0.3;
+    private Rectangle resizeHandle;
+    private static final double HANDLE_SIZE = 8.0;
+    public static final String RESIZE_HANDLE_ID = "resizeHandle";
 
     private Shape previewShape;
 
     public CanvasView(Pane canvas) {
         this.canvas = canvas;
         this.previewShape = null;
+        this.previewShape = null;
+        this.resizeHandle = new Rectangle(HANDLE_SIZE, HANDLE_SIZE, Color.BLUE);
+        this.resizeHandle.setStroke(Color.WHITE);
+        this.resizeHandle.setId(RESIZE_HANDLE_ID);
+        this.resizeHandle.setCursor(Cursor.SE_RESIZE);
     }
 
     public void deletePreview() {
@@ -126,6 +136,27 @@ public class CanvasView implements CanvasViewInterface {
             value.setId(key);
             canvas.getChildren().add(value);
         });
+    }
+
+    private void updateResizeHandle(Shape shape) {
+        if (shape != null) {
+            Bounds bounds = shape.getBoundsInParent();
+            resizeHandle.setX(bounds.getMaxX() - HANDLE_SIZE / 2);
+            resizeHandle.setY(bounds.getMaxY() - HANDLE_SIZE / 2);
+            resizeHandle.setUserData(shape.getId());
+            if (!canvas.getChildren().contains(resizeHandle)) {
+                canvas.getChildren().add(resizeHandle);
+            }
+            resizeHandle.setVisible(true);
+        } else {
+            if (canvas.getChildren().contains(resizeHandle)) {
+                resizeHandle.setVisible(false);
+            }
+        }
+    }
+
+    public Rectangle getResizeHandle() {
+        return resizeHandle;
     }
 
 }

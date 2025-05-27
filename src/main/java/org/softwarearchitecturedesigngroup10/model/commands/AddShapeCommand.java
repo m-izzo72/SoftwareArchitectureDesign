@@ -28,7 +28,6 @@ public class AddShapeCommand implements Command {
 
     @Override
     public void undo() {
-        // casination
         Map.Entry<String, ShapeData> shapeToDelete = null;
         Iterator<Map.Entry<String, ShapeData>> iterator = receiver.getShapes().entrySet().iterator();
         while (iterator.hasNext()) { shapeToDelete = iterator.next(); }

@@ -31,6 +31,7 @@ public class MoveShapesCommand implements Command {
 
     @Override
     public void execute() {
+        System.out.println(shapeIds);
         // Move operation is managed by the controller, which updates the shape every time it changes its position.
         // A MoveShapesCommand is created when the shape has stopped moving, so there's no need to execute the command
         // as it is only necessary to undo the move

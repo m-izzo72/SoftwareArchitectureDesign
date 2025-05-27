@@ -168,6 +168,10 @@ public class Controller implements ModelObserver {
     private Pane canvasQuickToolbar;
     @FXML
     private Group canvasGroup;
+    @FXML
+    private SVGPath resizeIcon;
+    @FXML
+    private Slider resizeSlider;
 
     /* CLOSE AND MINIMIZE WINDOW */
 
@@ -225,6 +229,7 @@ public class Controller implements ModelObserver {
     private final State selectionState = new SelectionState();
     private final State drawingState = new PaintingState();
     private final State movingState = new MovingState();
+    private final State resizingState = new ResizingState();
 
 
 
@@ -606,6 +611,10 @@ public class Controller implements ModelObserver {
 
     public State getMovingState() {
         return movingState;
+    }
+
+    public State getResizingState() {
+        return resizingState;
     }
 
     /********************* SETTERS ******************/

@@ -11,6 +11,7 @@ import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class CanvasModel implements CanvasModelInterface {
@@ -33,8 +34,12 @@ public class CanvasModel implements CanvasModelInterface {
 
     public void bringToFront() {
         LinkedHashMap<String, ShapeData> selectedShapes = getSelectedShapes();
-        selectedShapes.forEach( (key, value) -> { shapes.remove(key); });
+        selectedShapes.forEach( (key, value) -> {
+            System.out.println("Bringing to front (selected shape): " + key);
+            System.out.println("Bringing to front (shape): " + shapes.containsKey(key) + key);
+            shapes.remove(key); });
         shapes.putAll(selectedShapes);
+        System.out.println("Bringing to front (new shapes): " + shapes.keySet());
         notifyObservers();
     }
 
@@ -51,48 +56,57 @@ public class CanvasModel implements CanvasModelInterface {
         notifyObservers();
     }
 
+    public void addShapeByKeepingKeys(String key, ShapeData shapeData) {
+        shapes.put(key, shapeData);
+        notifyObservers();
+    }
+
     public void selectShape(String shapeId) {
         shapes.get(shapeId).setSelected(!shapes.get(shapeId).isSelected());
         notifyObservers();
     }
 
     public void moveSelectedShapes(double dx, double dy) {
-        boolean moved = false;
-        for (ShapeData shape : shapes.values()) {
+        AtomicBoolean moved = new AtomicBoolean(false);
+        getSelectedShapes().forEach((key, value) -> {
+            moveShapeData(key, dx, dy);
+            moved.set(true);
+        });
+        /*for (ShapeData shape : shapes.values()) {
             if (shape.isSelected()) {
                 moveShapeData(shape, dx, dy);
-                moved = true;
+                moved.set(true);
             }
-        }
+        }*/
 
-        if (moved) {
+        if (moved.get()) {
             notifyObservers();
         }
     }
 
-    private void moveShapeData(ShapeData shapeData, double dx, double dy) {
-        if (shapeData instanceof LineData ld) {
+    private void moveShapeData(String shapeID, double dx, double dy) {
+        if (shapes.get(shapeID) instanceof LineData ld) {
             ld.setX(ld.getX() + dx);
             ld.setY(ld.getY() + dy);
             ld.setEndX(ld.getEndX() + dx);
             ld.setEndY(ld.getEndY() + dy);
-        } else if (shapeData instanceof RectangleData rd) {
+        } else if (shapes.get(shapeID) instanceof RectangleData rd) {
             rd.setX(rd.getX() + dx);
             rd.setY(rd.getY() + dy);
-        } else if (shapeData instanceof EllipseData ed) {
+        } else if (shapes.get(shapeID) instanceof EllipseData ed) {
             ed.setCenterX(ed.getCenterX() + dx);
             ed.setCenterY(ed.getCenterY() + dy);
             ed.setX(ed.getCenterX() - ed.getRadiusX());
             ed.setY(ed.getCenterY() - ed.getRadiusY());
         } else {
-            shapeData.setX(shapeData.getX() + dx);
-            shapeData.setY(shapeData.getY() + dy);
+            //shapes.get(shapeID).setX(shapes.get(shapeID).getX() + dx);
+            //shapes.get(shapeID).setY(shapes.get(shapeID).getY() + dy);
         }
     }
 
     public void moveShapeDataByIDs(ArrayList<String> shapes, double dx, double dy) {
         shapes.forEach(id -> {
-            moveShapeData(getShapes().get(id), dx, dy);
+            moveShapeData(id, dx, dy);
             notifyObservers();
         });
     }
@@ -127,7 +141,7 @@ public class CanvasModel implements CanvasModelInterface {
     public void pasteShapes() {
         deselectAllShapes();
         shapesClipboard.getClipboard().forEach(shapeData -> {
-            moveShapeData(shapeData, 50, 50); // Changes paste position so shapes aren't pasted onto the original ones
+            // moveShapeData(shapeData, 50, 50); // Changes paste position so shapes aren't pasted onto the original ones
             addShape(shapeData);
         });
 
@@ -138,6 +152,14 @@ public class CanvasModel implements CanvasModelInterface {
     }
 
     /* SELECTED SHAPES */
+
+    public void resizeShape(String shapeId, double newWidth, double newHeight) {
+        ShapeData shape = shapes.get(shapeId);
+        if (shape != null) {
+            shape.resize(newWidth, newHeight);
+            notifyObservers();
+        }
+    }
 
     public LinkedHashMap<String, ShapeData> getSelectedShapes() {
         return new LinkedHashMap<String, ShapeData>(shapes.entrySet().stream()

@@ -14,11 +14,11 @@ import java.util.List;
 public class MovingState implements State {
 
     private CanvasModel model;
-    private String primaryDraggedShapeId; // Usato per calcolare l'offset
+    private String primaryDraggedShapeId;
     private double dragOffsetX;
     private double dragOffsetY;
 
-    private double initialPressX_forUndo; // Coordinate del mouse all'inizio del drag totale
+    private double initialPressX_forUndo;
     private double initialPressY_forUndo;
     private List<String> selectedShapeIds_atDragStart;
 

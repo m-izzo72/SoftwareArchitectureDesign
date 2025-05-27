@@ -38,4 +38,22 @@ public class EllipseData extends ShapeData {
     public void setRadiusY(double radiusY) {
         this.radiusY = radiusY;
     }
+
+    @Override
+    public double getWidth() {
+        return getRadiusX() * 2;
+    }
+
+    @Override
+    public double getHeight() {
+        return getRadiusY() * 2;
+    }
+
+    @Override
+    public void resize(double newWidth, double newHeight) {
+        setRadiusX(newWidth / 2);
+        setRadiusY(newHeight / 2);
+        setCenterX(getX() + newWidth / 2);
+        setCenterY(getY() + newHeight / 2);
+    }
 }

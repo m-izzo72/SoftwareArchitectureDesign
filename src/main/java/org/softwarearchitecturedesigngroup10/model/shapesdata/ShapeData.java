@@ -13,7 +13,6 @@ public abstract class ShapeData implements Serializable, Cloneable {
     private double rotationAngle;
     private boolean isSelected;
 
-
     public ShapeData() { }
 
     public String getType() { return type; }
@@ -75,10 +74,13 @@ public abstract class ShapeData implements Serializable, Cloneable {
         isSelected = selected;
     }
 
+    public abstract double getWidth();
+    public abstract double getHeight();
+    public abstract void resize(double newWidth, double newHeight);
+
     @Override
     public ShapeData clone() {
         try {
-            // TODO: copy mutable state here, so the clone can't change the internals of the original
             return (ShapeData) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
