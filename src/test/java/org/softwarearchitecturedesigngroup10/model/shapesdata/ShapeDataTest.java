@@ -7,7 +7,22 @@ import static org.junit.jupiter.api.Assertions.*;
 class ShapeDataTest {
 
     private ShapeData createShapeData(){
-        return new ShapeData() {};
+        return new ShapeData() {
+            @Override
+            public double getWidth() {
+                return 0;
+            }
+
+            @Override
+            public double getHeight() {
+                return 0;
+            }
+
+            @Override
+            public void resize(double newWidth, double newHeight) {
+
+            }
+        };
     }
     @Test
     void testSetGetX(){
