@@ -21,6 +21,11 @@ public class SelectionState implements State {
     @Override
     public void handleMousePressed(MouseEvent event, Controller context) {
         Object target = event.getTarget();
+        System.out.println("SelectionState - Clicked on: " + target); // <-- AGGIUNGI QUESTO
+        if (target instanceof Shape) {
+            System.out.println("  ID: " + ((Shape) target).getId()); // <-- AGGIUNGI QUESTO
+            System.out.println("  UserData: " + ((Shape) target).getUserData()); // <-- AGGIUNGI QUESTO
+        }
         CanvasModel model = context.getCanvasModel();
         pressX = event.getX();
         pressY = event.getY();
