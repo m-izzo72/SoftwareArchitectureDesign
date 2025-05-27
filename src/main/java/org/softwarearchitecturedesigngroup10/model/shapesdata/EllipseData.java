@@ -51,9 +51,13 @@ public class EllipseData extends ShapeData {
 
     @Override
     public void resize(double newWidth, double newHeight) {
-        setRadiusX(newWidth / 2);
-        setRadiusY(newHeight / 2);
-        setCenterX(getX() + newWidth / 2);
-        setCenterY(getY() + newHeight / 2);
+        double newRadiusX = newWidth / 2.0;
+        double newRadiusY = newHeight / 2.0;
+
+        // Mantieni X/Y (top-left) fisso e aggiorna centro e raggi.
+        setRadiusX(newRadiusX);
+        setRadiusY(newRadiusY);
+        setCenterX(getX() + newRadiusX);
+        setCenterY(getY() + newRadiusY);
     }
 }

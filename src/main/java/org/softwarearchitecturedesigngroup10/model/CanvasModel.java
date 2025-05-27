@@ -156,8 +156,11 @@ public class CanvasModel implements CanvasModelInterface {
     public void resizeShape(String shapeId, double newWidth, double newHeight) {
         ShapeData shape = shapes.get(shapeId);
         if (shape != null) {
+            System.out.println("CanvasModel: Resizing " + shapeId + " to W:" + newWidth + " H:" + newHeight); // <-- DEBUG
             shape.resize(newWidth, newHeight);
             notifyObservers();
+        } else {
+            System.out.println("CanvasModel: Shape " + shapeId + " not found for resize."); // <-- DEBUG
         }
     }
 

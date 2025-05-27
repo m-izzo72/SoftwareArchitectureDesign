@@ -2,15 +2,18 @@ package org.softwarearchitecturedesigngroup10.view;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
+import javafx.scene.Node; // Importa Node
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import org.softwarearchitecturedesigngroup10.view.helper.Highlighter;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List; // Importa List
+import java.util.stream.Collectors; // Importa Collectors
 
 public class CanvasView implements CanvasViewInterface {
 
@@ -29,8 +32,8 @@ public class CanvasView implements CanvasViewInterface {
         this.resizeHandle.setStroke(Color.WHITE);
         this.resizeHandle.setId(RESIZE_HANDLE_ID);
         this.resizeHandle.setCursor(Cursor.SE_RESIZE);
-        this.resizeHandle.setVisible(false);
-        this.canvas.getChildren().add(resizeHandle);
+        this.resizeHandle.setVisible(false); // Nascosto di default
+        this.canvas.getChildren().add(this.resizeHandle); // Aggiungilo subito e tienilo
     }
 
     public void deletePreview() {
@@ -63,6 +66,7 @@ public class CanvasView implements CanvasViewInterface {
 
     public void paint(Shape shape) {
         canvas.getChildren().add(shape);
+        resizeHandle.toFront(); // Assicura che la maniglia sia sopra
     }
 
     public void paintPreview() {
@@ -82,7 +86,7 @@ public class CanvasView implements CanvasViewInterface {
         previewShape.setMouseTransparent(true);
     }
 
-    public void updatePreviewShapeGeometry(double startX, double startY, double currentX, double currentY) {
+    public void updatePreviewShapeGeometry(double currentX, double currentY, double startX, double startY) {
         if (previewShape == null) return;
 
         if (previewShape instanceof Rectangle rect) {
@@ -116,21 +120,35 @@ public class CanvasView implements CanvasViewInterface {
     @Override
     public void clear() {
         canvas.getChildren().clear();
-        this.canvas.getChildren().add(resizeHandle);
-        hideResizeHandle();
+        canvas.getChildren().add(resizeHandle); // Riaggiungi la maniglia
+        resizeHandle.setVisible(false);
     }
 
     @Override
     public void paintAllFromScratch(LinkedHashMap<String, Shape> shapes) {
-        canvas.getChildren().clear();
+        // Rimuovi tutte le forme (tranne la maniglia che è già presente)
+        List<Node> shapesToRemove = canvas.getChildren().stream()
+                .filter(node -> node != resizeHandle && !(node instanceof Shape && ((Shape)node).getId() != null && shapes.containsKey(((Shape)node).getId())))
+                .collect(Collectors.toList());
+        canvas.getChildren().removeAll(shapesToRemove);
 
+        // Aggiungi/Aggiorna le forme
         shapes.forEach((key, value) -> {
             value.setId(key);
+            // Rimuovi la vecchia versione se esiste, poi aggiungi la nuova
+            canvas.getChildren().removeIf(node -> node.getId() != null && node.getId().equals(key));
             canvas.getChildren().add(value);
         });
-        canvas.getChildren().add(resizeHandle);
-        resizeHandle.toFront();
+
+        // Rimuovi le forme che non sono più nel modello
+        List<Node> toRemove = canvas.getChildren().stream()
+                .filter(node -> node != resizeHandle && node.getId() != null && !shapes.containsKey(node.getId()))
+                .collect(Collectors.toList());
+        canvas.getChildren().removeAll(toRemove);
+
+        resizeHandle.toFront(); // Assicura che la maniglia sia sempre in cima
     }
+
 
     public void updateResizeHandle(Shape shape) {
         if (shape != null) {
@@ -141,17 +159,11 @@ public class CanvasView implements CanvasViewInterface {
             resizeHandle.setVisible(true);
             resizeHandle.toFront();
         } else {
-            hideResizeHandle();
+            resizeHandle.setVisible(false);
         }
     }
-
-    public void hideResizeHandle() {
-        resizeHandle.setVisible(false);
-    }
-
 
     public Rectangle getResizeHandle() {
         return resizeHandle;
     }
-
 }
