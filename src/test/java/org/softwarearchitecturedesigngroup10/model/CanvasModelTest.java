@@ -48,7 +48,7 @@ class CanvasModelTest {
         model.addShape(shape);
         String shapeId = model.getShapes().entrySet().iterator().next().getKey();
         boolean initiallySelected = shape.isSelected();
-        model.selectShape(shapeId) ;
+        model.selectShape(shapeId);
         assertEquals(!initiallySelected, model.getShapes().get(shapeId).isSelected());
     }
 
