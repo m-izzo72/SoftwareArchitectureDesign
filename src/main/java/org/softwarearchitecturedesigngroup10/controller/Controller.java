@@ -74,8 +74,6 @@ public class Controller implements ModelObserver {
     @FXML
     private Pane bottomPane;
     @FXML
-    private Pane quickToolbar;
-    @FXML
     private HBox mainArea;
     @FXML
     private Tab fileTab;
@@ -137,11 +135,6 @@ public class Controller implements ModelObserver {
     private ScrollPane scrollableCanvasContainer;
     @FXML
     private Pane bottomLeftCorner;
-    @FXML
-    private SVGPath fillColorToChangeIcon;
-    @FXML
-    private SVGPath strokeColorToChangeIcon;
-
 
 
     private CanvasModel canvasModel;
@@ -161,18 +154,26 @@ public class Controller implements ModelObserver {
     private SelectionPropertyObserver selectionPropertyObserver;
     @FXML
     private Slider zoomSlider;
-    @FXML
-    private MenuButton strokeWidthMenuButton;
 
     private double zoomFactor;
     @FXML
     private Slider editStrokeWidthSlider;
     @FXML
-    private SVGPath editStrokeWidthIcon;
-    @FXML
     private Pane canvasQuickToolbar;
     @FXML
     private Group canvasGroup;
+    @FXML
+    private ToggleButton textButton;
+    @FXML
+    private Button sendToBackButton11;
+    @FXML
+    private ToggleButton polygonButton;
+    @FXML
+    private Button sendToBackButton1;
+
+    public TabPane getTab() {
+        return tab;
+    }
 
     /* CLOSE AND MINIMIZE WINDOW */
 
@@ -238,6 +239,7 @@ public class Controller implements ModelObserver {
 
         if (anySelected) {
             selectedShapeLabelText.set(" > " + selectedModelShapes.size() + " selected shape(s)");
+            tab.getSelectionModel().select(2);
         } else {
             selectedShapeLabelText.set("");
         }
@@ -269,22 +271,24 @@ public class Controller implements ModelObserver {
         defaultCanvasWidth = canvas.getPrefWidth();
         zoomFactor = 1.0;
 
+        tab.getSelectionModel().select(1);
+
         // Initial state
         setCurrentState(idleState);
 
         canvasModel.addObserver(this);
         ArrayList<Node> nodesToBind = new ArrayList<>();
         Collections.addAll(nodesToBind,
-                fillColorToChangeIcon,
+//                fillColorToChangeIcon,
                 fillColorToChangePicker,
-                strokeColorToChangeIcon,
+//                strokeColorToChangeIcon,
                 strokeColorToChangePicker,
                 copyShapeButton,
                 eraseShapeButton,
                 cutShapeButton,
                 sendToBackButton,
                 bringToFrontButton,
-                editStrokeWidthIcon,
+//                editStrokeWidthIcon,
                 editStrokeWidthSlider
         );
 

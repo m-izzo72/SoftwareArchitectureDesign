@@ -63,6 +63,7 @@ public class CanvasModel implements CanvasModelInterface {
 
     public void selectShape(String shapeId) {
         shapes.get(shapeId).setSelected(!shapes.get(shapeId).isSelected());
+//        if(!getSelectedShapes().isEmpty())
         notifyObservers();
     }
 
