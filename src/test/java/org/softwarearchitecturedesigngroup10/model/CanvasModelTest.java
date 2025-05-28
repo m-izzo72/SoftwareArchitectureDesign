@@ -29,7 +29,7 @@ class CanvasModelTest {
     void testAddShape() {
         ShapeData shape = new LineData();
         model.addShape(shape);
-        assertEquals(1, model.getShapes().size());
+        assertEquals(1, model.getShapes().size()) ;
         assertTrue(model.getShapes().containsValue(shape));
     }
 
