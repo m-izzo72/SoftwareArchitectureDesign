@@ -54,7 +54,7 @@ class CanvasModelTest {
 
     @Test
     void testDeselectAllShapes() {
-        ShapeData shape1 = new LineData();
+        ShapeData shape1 = new LineData() ;
         ShapeData shape2 = new LineData();
         shape1.setSelected(true);
         shape2.setSelected(true);
