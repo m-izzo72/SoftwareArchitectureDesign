@@ -1,8 +1,8 @@
+// Contenuto suggerito per: src/test/java/org/softwarearchitecturedesigngroup10/model/CanvasModelTest.java
 package org.softwarearchitecturedesigngroup10.model;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.EllipseData;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.LineData;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.RectangleData;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
@@ -11,7 +11,6 @@ import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -122,42 +121,42 @@ class CanvasModelTest {
 
     @Test
     void testBringToFront() {
-        ShapeData shape1 = new LineData();
-        shape1.setSelected(false);
-        model.addShape(shape1);
+        ShapeData shapeToMove = new LineData();
+        shapeToMove.setSelected(true);
+        model.addShape(shapeToMove);
 
-        ShapeData shape2 = new LineData();
-        shape2.setSelected(true);
-        model.addShape(shape2);
+        ShapeData otherShape = new LineData();
+        model.addShape(otherShape);
 
-        List<String> keys = new ArrayList<>(model.getShapes().keySet());
-        String selectedKey = keys.get(1);
+        List<String> initialKeys = new ArrayList<>(model.getShapes().keySet());
+        String keyForShapeToMove = initialKeys.get(0);
 
-        model.selectShape(selectedKey);
         model.bringToFront();
 
-        List<String> newOrder = new ArrayList<>(model.getShapes().keySet());
-        assertEquals(selectedKey, newOrder.get(newOrder.size() - 1));
+        List<String> newOrderKeys = new ArrayList<>(model.getShapes().keySet());
+        assertEquals(keyForShapeToMove, newOrderKeys.get(newOrderKeys.size() - 1));
+        assertEquals(initialKeys.get(1), newOrderKeys.get(0));
+        assertEquals(2, newOrderKeys.size());
     }
 
     @Test
     void testSendToBack() {
-        ShapeData shape1 = new LineData();
-        shape1.setSelected(false);
-        model.addShape(shape1);
+        ShapeData otherShape = new LineData();
+        model.addShape(otherShape);
 
-        ShapeData shape2 = new LineData();
-        shape2.setSelected(true);
-        model.addShape(shape2);
+        ShapeData shapeToMove = new LineData();
+        shapeToMove.setSelected(true);
+        model.addShape(shapeToMove);
 
-        List<String> keys = new ArrayList<>(model.getShapes().keySet());
-        String selectedKey = keys.get(1);
+        List<String> initialKeys = new ArrayList<>(model.getShapes().keySet());
+        String keyForShapeToMove = initialKeys.get(1);
 
-        model.selectShape(selectedKey);
         model.sendToBack();
 
-        List<String> newOrder = new ArrayList<>(model.getShapes().keySet());
-        assertEquals(selectedKey, newOrder.get(0));
+        List<String> newOrderKeys = new ArrayList<>(model.getShapes().keySet());
+        assertEquals(keyForShapeToMove, newOrderKeys.get(0));
+        assertEquals(initialKeys.get(0), newOrderKeys.get(1));
+        assertEquals(2, newOrderKeys.size());
     }
 
     @Test
