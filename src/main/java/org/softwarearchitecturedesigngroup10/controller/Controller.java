@@ -200,10 +200,8 @@ public class Controller implements ModelObserver {
             viewShapes.put(key, fxShape);
         });
 
-        // 2. Disegna
         canvasView.paintAllFromScratch(viewShapes);
 
-        // 3. Applica evidenziazione e opacità
         boolean anySelected = !selectedModelShapes.isEmpty();
         viewShapes.forEach((key, fxShape) -> {
             boolean isSelected = selectedModelShapes.containsKey(key);
@@ -222,13 +220,11 @@ public class Controller implements ModelObserver {
             }
         });
 
-        // 4. Aggiorna la maniglia di ridimensionamento
         if (selectedModelShapes.size() == 1) {
             Map.Entry<String, ShapeData> entry = selectedModelShapes.entrySet().iterator().next();
             String selectedId = entry.getKey();
             ShapeData selectedData = entry.getValue();
 
-            // Mostra solo se NON è LineData e ha dimensioni sufficienti
             if (!(selectedData instanceof LineData) && selectedData.getWidth() > 5 && selectedData.getHeight() > 5) {
                 canvasView.updateResizeHandle(viewShapes.get(selectedId));
             } else {
@@ -238,7 +234,6 @@ public class Controller implements ModelObserver {
             canvasView.updateResizeHandle(null);
         }
 
-        // 5. Aggiorna UI
         if (anySelected) {
             selectedShapeLabelText.set(" > " + selectedModelShapes.size() + " selected shape(s)");
         } else {
@@ -416,7 +411,9 @@ public class Controller implements ModelObserver {
 
     @FXML
     public void onNewCanvasButtonAction(ActionEvent actionEvent) {
+        commandManager.clear();
         canvasModel.clear();
+
     }
 
     @FXML
@@ -449,8 +446,10 @@ public class Controller implements ModelObserver {
         File selectedFile = fileChooser.showOpenDialog(stage);
 
         if (selectedFile != null) {
+            commandManager.clear();
             canvasModel.load(selectedFile);
             title.setText(selectedFile.getName());
+
         }
     }
 

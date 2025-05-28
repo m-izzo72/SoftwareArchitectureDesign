@@ -315,6 +315,11 @@
 }
 
 #canvasWidthInput, #canvasHeightInput {
+    -fx-text-box-border: transparent;
+    -fx-border-color: #797b86;
+    -fx-control-inner-background: transparent;
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-text-fill: #5c5d63;
 
 }
 
