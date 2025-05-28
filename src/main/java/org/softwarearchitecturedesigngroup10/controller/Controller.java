@@ -48,6 +48,8 @@ import java.util.LinkedHashMap;
 import java.util.Map; // Aggiunto Map
 import java.util.concurrent.atomic.AtomicReference;
 
+import static java.lang.Double.parseDouble;
+
 public class Controller implements ModelObserver {
 
     /****************** FXML COMPONENTS ***********/
@@ -345,12 +347,27 @@ public class Controller implements ModelObserver {
         canvas.prefHeightProperty().bind(customHeightProperty);
         canvas.prefHeightProperty().addListener((observable, oldValue, newValue) -> {
             canvasGroup.prefHeight(newValue.doubleValue());
+            //canvasGroup.setTranslateX(- scrollableCanvasContainer.getPrefWidth() / 2);
         });
         canvas.prefWidthProperty().addListener((observable, oldValue, newValue) -> {
             canvasGroup.prefWidth(newValue.doubleValue());
+            //canvasGroup.setTranslateY(- scrollableCanvasContainer.getPrefHeight() / 2);
         });
         Bindings.bindBidirectional(canvasWidthInput.textProperty(), customWidthProperty, doubleConverter);
         Bindings.bindBidirectional(canvasHeightInput.textProperty(), customHeightProperty, doubleConverter);
+
+        canvasWidthInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                canvasWidthInput.setText(newValue.replaceAll("\\D", ""));
+            }
+            if (Double.parseDouble(newValue) > 10000) canvasWidthInput.setText("9999");
+        });
+        canvasHeightInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                canvasHeightInput.setText(newValue.replaceAll("\\D", ""));
+            }
+            if (Double.parseDouble(newValue) > 10000) canvasHeightInput.setText("9999");
+        });
 
 
     }
@@ -364,7 +381,7 @@ public class Controller implements ModelObserver {
         @Override
         public Number fromString(String string) {
             try {
-                return Double.parseDouble(string);
+                return parseDouble(string);
             } catch (NumberFormatException e) {
                 return 0;
             }
