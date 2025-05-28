@@ -176,19 +176,37 @@ interface model.Command{
 }
 
 class model.AddShapeCommand implements model.Command{
-  - receiver: model.CanvasModelInterface
+  - receiver: model.CanvasModel
   - shapeToAdd: model.ShapeData
 
-  + AddShapeCommand(receiver: model.CanvasModelInterface, shapeToAdd: model.ShapeData)
+  + AddShapeCommand(receiver: model.CanvasModel, shapeToAdd: model.ShapeData)
   + execute(): void
   + undo(): void
 }
+
+class model.DeselectAllShapeCommand implements model.Command{
+  - receiver: model.CanvasModel
+
+  + DeselectAllShapeCommand(receiver: model.CanvasModel)
+  + execute(): void
+  + undo(): void
+}
+
+class model.SelectShapeCommand implements model.Command{
+  - receiver: model.CanvasModel
+  - selectedShape: String
+
+  + SelectShapeCommand(receiver: model.CanvasModel, selectedShape: String)
+  + execute(): void
+  + undo(): void
+}
+
 
 class model.DeleteShapeCommand implements model.Command{
   - receiver: model.CanvasModelInterface
   - shapeToDelete: model.ShapeData
 
-  + DeleteShapeCommand(receiver: model.CanvasModelInterface, shapeToDelete: model.ShapeData)
+  + DeleteShapeCommand(receiver: model.CanvasModel, shapeToDelete: model.ShapeData)
   + execute(): void
   + undo(): void
 }
@@ -207,6 +225,8 @@ model.RectangleDataFactory ..> model.RectangleData: creates >
 model.EllipseDataFactory ..> model.EllipseData: creates >
 
 model.AddShapeCommand ..> model.CanvasModelInterface : uses >
+model.DeselectAllShapeCommand ..> model.CanvasModelInterface : uses >
+model.SelectShapeCommand ..> model.CanvasModelInterface : uses >
 model.DeleteShapeCommand ..> model.CanvasModelInterface : uses >
 controller.Controller --> model.CommandManager : uses >
 model.CommandManager o--> "*" model.Command : manage

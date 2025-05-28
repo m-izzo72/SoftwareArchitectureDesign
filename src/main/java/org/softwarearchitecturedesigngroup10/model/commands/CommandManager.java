@@ -26,4 +26,6 @@ public class CommandManager {
     public boolean isUndoStackEmpty() {
         return undoStack.isEmpty();
     }
+
+    public void clear() { undoStack.clear(); }
 }
