@@ -2,13 +2,17 @@ package org.softwarearchitecturedesigngroup10.model;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.EllipseData;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.LineData;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.RectangleData;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
 import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,7 +96,6 @@ class CanvasModelTest {
         LineData shape = new LineData();
         shape.setX(1);
         shape.setY(2);
-
         shape.setEndX(3);
         shape.setEndY(4);
 
@@ -115,5 +118,112 @@ class CanvasModelTest {
         model.addObserver(observer);
         model.addObserver(observer);
         model.notifyObservers();
+    }
+
+    @Test
+    void testBringToFront() {
+        ShapeData shape1 = new LineData();
+        shape1.setSelected(false);
+        model.addShape(shape1);
+
+        ShapeData shape2 = new LineData();
+        shape2.setSelected(true);
+        model.addShape(shape2);
+
+        List<String> keys = new ArrayList<>(model.getShapes().keySet());
+        String selectedKey = keys.get(1);
+
+        model.selectShape(selectedKey);
+        model.bringToFront();
+
+        List<String> newOrder = new ArrayList<>(model.getShapes().keySet());
+        assertEquals(selectedKey, newOrder.get(newOrder.size() - 1));
+    }
+
+    @Test
+    void testSendToBack() {
+        ShapeData shape1 = new LineData();
+        shape1.setSelected(false);
+        model.addShape(shape1);
+
+        ShapeData shape2 = new LineData();
+        shape2.setSelected(true);
+        model.addShape(shape2);
+
+        List<String> keys = new ArrayList<>(model.getShapes().keySet());
+        String selectedKey = keys.get(1);
+
+        model.selectShape(selectedKey);
+        model.sendToBack();
+
+        List<String> newOrder = new ArrayList<>(model.getShapes().keySet());
+        assertEquals(selectedKey, newOrder.get(0));
+    }
+
+    @Test
+    void testAddShapeByKeepingKeys() {
+        ShapeData shape = new LineData();
+        String key = "test-key";
+        model.addShapeByKeepingKeys(key, shape);
+        assertTrue(model.getShapes().containsKey(key));
+    }
+
+    @Test
+    void testMoveShapeDataByIDs() {
+        LineData shape = new LineData();
+        shape.setX(10);
+        shape.setY(10);
+        shape.setEndX(20);
+        shape.setEndY(20);
+
+        model.addShape(shape);
+        String id = model.getShapes().entrySet().iterator().next().getKey();
+
+        ArrayList<String> ids = new ArrayList<>();
+        ids.add(id);
+        model.moveShapeDataByIDs(ids, 5, 5);
+
+        LineData movedShape = (LineData) model.getShapes().get(id);
+        assertEquals(15, movedShape.getX());
+        assertEquals(15, movedShape.getY());
+        assertEquals(25, movedShape.getEndX());
+        assertEquals(25, movedShape.getEndY());
+    }
+
+    @Test
+    void testResizeShape() {
+        RectangleData shape = new RectangleData();
+        model.addShape(shape);
+        String id = model.getShapes().entrySet().iterator().next().getKey();
+        model.resizeShape(id, 100, 50);
+        assertEquals(100, shape.getWidth());
+        assertEquals(50, shape.getHeight());
+    }
+
+    @Test
+    void testEditShapesFillColour() {
+        ShapeData shape = new RectangleData();
+        shape.setSelected(true);
+        model.addShape(shape);
+        model.editShapesFillColour("red");
+        assertEquals("red", shape.getFillColor());
+    }
+
+    @Test
+    void testEditShapesStrokeColour() {
+        ShapeData shape = new RectangleData();
+        shape.setSelected(true);
+        model.addShape(shape);
+        model.editShapesStrokeColour("blue");
+        assertEquals("blue", shape.getStrokeColor());
+    }
+
+    @Test
+    void testEditShapesStrokeWidth() {
+        ShapeData shape = new RectangleData();
+        shape.setSelected(true);
+        model.addShape(shape);
+        model.editShapesStrokeWidth(5.0);
+        assertEquals(5.0, shape.getStrokeWidth());
     }
 }
