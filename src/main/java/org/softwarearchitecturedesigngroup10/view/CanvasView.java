@@ -5,12 +5,10 @@ import javafx.scene.Cursor;
 import javafx.scene.Node; // Importa Node
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
 import org.softwarearchitecturedesigngroup10.view.helper.Highlighter;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List; // Importa List
 import java.util.stream.Collectors; // Importa Collectors
@@ -22,6 +20,7 @@ public class CanvasView implements CanvasViewInterface {
     private Rectangle resizeHandle;
     private static final double HANDLE_SIZE = 8.0;
     public static final String RESIZE_HANDLE_ID = "resizeHandle";
+    public final ArrayList<Shape> vertices = new ArrayList<>();
 
     private Shape previewShape;
 
@@ -117,7 +116,16 @@ public class CanvasView implements CanvasViewInterface {
         canvas.getChildren().add(this.previewShape);
     }
 
+    public void setPolygonVerticesPreview(double x, double y) {
+        Shape vertex = new Circle(3, Color.BLUE);
+        vertex.setLayoutX(x); vertex.setLayoutY(y);
+        vertices.add(vertex);
+        canvas.getChildren().addAll(vertex);
+    }
 
+    public void erasePolygonVerticesPreview() {
+        canvas.getChildren().removeAll(this.vertices);
+    }
 
     @Override
     public void clear() {
@@ -135,28 +143,24 @@ public class CanvasView implements CanvasViewInterface {
 
     @Override
     public void paintAllFromScratch(LinkedHashMap<String, Shape> shapes) {
-        // Rimuovi tutte le forme (tranne la maniglia che è già presente)
         List<Node> shapesToRemove = canvas.getChildren().stream()
                 .filter(node -> node != resizeHandle && !(node instanceof Shape && node.getId() != null && shapes.containsKey(node.getId())))
                 .toList();
         canvas.getChildren().removeAll(shapesToRemove);
 
-        // Aggiungi/Aggiorna le forme
         shapes.forEach((key, value) -> {
             value.setId(key);
-            // Rimuovi la vecchia versione se esiste, poi aggiungi la nuova
             canvas.getChildren().removeIf(node -> node.getId() != null && node.getId().equals(key));
 
             canvas.getChildren().add(value);
         });
 
-        // Rimuovi le forme che non sono più nel modello
         List<Node> toRemove = canvas.getChildren().stream()
                 .filter(node -> node != resizeHandle && node.getId() != null && !shapes.containsKey(node.getId()))
                 .toList();
         canvas.getChildren().removeAll(toRemove);
 
-        resizeHandle.toFront(); // Assicura che la maniglia sia sempre in cima
+        resizeHandle.toFront();
     }
 
 

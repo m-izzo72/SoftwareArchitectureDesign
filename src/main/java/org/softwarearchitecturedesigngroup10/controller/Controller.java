@@ -40,10 +40,7 @@ import org.softwarearchitecturedesigngroup10.view.helper.Highlighter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.Double.parseDouble;
 
@@ -118,6 +115,7 @@ public class Controller implements ModelObserver {
     private double startX, startY; // For shape drawing/manipulation
     private double defaultCanvasWidth, defaultCanvasHeight;
     private double zoomFactor = 1.0;
+    private double gridSize = 20;
 
     // State Pattern
     private State currentState;
@@ -135,6 +133,10 @@ public class Controller implements ModelObserver {
     private static final Color UNFOCUSED_ICON_COLOR = Color.valueOf("#797979");
     @FXML
     private StackPane stackPane;
+    @FXML
+    private Slider gridSizeSlider;
+    @FXML
+    private AnchorPane helperStackPane;
 
 
     /****************** INITIALIZATION ******************/
@@ -188,6 +190,11 @@ public class Controller implements ModelObserver {
 
         rotationSlider.setOnThumbMouseReleased(this::onRotationSliderMouseReleased);
         rotationSlider.setOnThumbMouseDragged(this::onRotationSliderMouseDragged);
+
+        gridSizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            gridSize = newValue.doubleValue();
+            if(toggleGridButton.isSelected()) drawGrid(grid.getGraphicsContext2D());
+        });
     }
 
     /****************** WINDOW CONTROL ACTIONS ******************/
@@ -345,11 +352,11 @@ public class Controller implements ModelObserver {
         gc.setLineWidth(0.5);
 
         // Vertical lines
-        for (double x = 0; x <= width; x += 20) {
+        for (double x = 0; x <= width; x += gridSize) {
             gc.strokeLine(x + 0.5, 0, x + 0.5, height);
         }
         // Horizontal lines
-        for (double y = 0; y <= height; y += 20) {
+        for (double y = 0; y <= height; y += gridSize) {
             gc.strokeLine(0, y + 0.5, width, y + 0.5);
         }
     }
@@ -362,9 +369,16 @@ public class Controller implements ModelObserver {
         zoomFactor = newValue.doubleValue() / 3.0; // Example: if slider max is 9, this gives 3x zoom. Adjust base (3.0) as needed.
         if (zoomFactor <= 0) zoomFactor = 0.1; // Prevent zero or negative zoom
 
-        canvasGroup.setScaleX(zoomFactor);
-        canvasGroup.setScaleY(zoomFactor);
-        // Consider redrawing grid if its visual density should change with zoom
+//        canvas.setScaleX(zoomFactor);
+//        canvas.setScaleY(zoomFactor);
+//        grid.setScaleX(zoomFactor);
+//        grid.setScaleY(zoomFactor);
+        stackPane.setScaleX(zoomFactor);
+        stackPane.setScaleY(zoomFactor);
+
+        scrollableCanvasContainer.setHvalue(0.5);
+        scrollableCanvasContainer.setVvalue(0.5);
+
         // if (toggleGridButton.isSelected()) drawGrid(grid.getGraphicsContext2D());
     }
 
@@ -409,6 +423,8 @@ public class Controller implements ModelObserver {
             if (grid != null && grid.getGraphicsContext2D() != null) { // Ensure grid is ready
                 grid.setWidth(canvas.getPrefWidth()); // Match grid canvas to drawing canvas
                 grid.setHeight(canvas.getPrefHeight());
+//                stackPane.setPrefWidth(grid.getWidth());
+//                stackPane.setPrefHeight(grid.getHeight());
                 if (toggleGridButton.isSelected()) {
                     drawGrid(grid.getGraphicsContext2D());
                 } else {
@@ -417,10 +433,10 @@ public class Controller implements ModelObserver {
             }
             // Center scrollbars after resize
             // These might need to be runLater if the layout isn't immediate
-            // javafx.application.Platform.runLater(() -> {
-            //     scrollableCanvasContainer.setHvalue(0.5);
-            //     scrollableCanvasContainer.setVvalue(0.5);
-            // });
+            javafx.application.Platform.runLater(() -> {
+                 scrollableCanvasContainer.setHvalue(0.5);
+                 scrollableCanvasContainer.setVvalue(0.5);
+             });
         };
 
         customWidthProperty.addListener(canvasSizeListener);
@@ -435,24 +451,40 @@ public class Controller implements ModelObserver {
             if (!newValue.matches("\\d*")) {
                 canvasWidthInput.setText(newValue.replaceAll("\\D", ""));
             }
+            if (Double.parseDouble(newValue) > 4092) {
+                canvasWidthInput.setText("4092");
+            }
             // Max value is handled by the converter, but an additional check here is fine
         });
         canvasHeightInput.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
                 canvasHeightInput.setText(newValue.replaceAll("\\D", ""));
             }
+            if (Double.parseDouble(newValue) > 4092) {
+                canvasHeightInput.setText("4092");
+            }
         });
+
+
     }
 
     /****************** FILE ACTIONS (FILE TAB) ******************/
     @FXML
     public void onNewCanvasButtonAction(ActionEvent actionEvent) {
-        commandManager.clear();
-        canvasModel.clear();
-        // Optionally reset canvas size to default
-        // canvasWidthInput.setText(String.format("%.0f", defaultCanvasWidth));
-        // canvasHeightInput.setText(String.format("%.0f", defaultCanvasHeight));
-        title.setText("Untitled Canvas");
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Clear Canvas");
+        alert.setHeaderText("Are you sure you want to clear the canvas?");
+        alert.setContentText("All unsaved work will be lost.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            commandManager.clear(); // Svuota lo stack degli undo
+            canvasModel.clear();    // Pulisce le forme dal modello
+
+            title.setText("New Canvas");
+        }
     }
 
     @FXML
@@ -700,5 +732,9 @@ public class Controller implements ModelObserver {
 
     public StackPane getStackPane() {
         return stackPane;
+    }
+
+    public AnchorPane getHelperStackPane() {
+        return helperStackPane;
     }
 }

@@ -69,7 +69,7 @@
 }
 
 #bottomPane {
-    -fx-background-radius: 0 0 7 0;
+    -fx-background-radius: 0 0 7 7;
     -fx-background-color: #f7f7f9;
     -fx-border-style: solid hidden hidden hidden;
     -fx-border-width: 1;
@@ -124,6 +124,11 @@
     -fx-background-color: transparent;
 }
 
+#toggleGridButton, #confirmPolygon {
+    -fx-background-radius: 5;
+    -fx-background-color: transparent;
+}
+
 /* Pulsanti con bordi arrotondati */
 #fileNavigation, #shapeNavigation, #clipboardNavigation,
 #lineButton, #rectangleButton, #ellipseButton, #polygonButton, #textButton,
@@ -131,8 +136,7 @@
 #cutShapeButton, #copyShapeButton, #pasteShapeButton,
 #sendToBackButton, #bringToFrontButton, #flipXButton, #flipYButton,
 #eraseShapeButton, #selectToolButton, #selectToEditButton, #strokeWidthMenuButton,
-#editStrokeWidthMenuButton,
-#toggleGridButton {
+#editStrokeWidthMenuButton {
     -fx-background-radius: 7;
 }
 
@@ -160,7 +164,8 @@
 #eraseShapeButton:hover, #selectToolButton:hover, #selectToEditButton:hover,
 #strokeWidthMenuButton:hover, #editStrokeWidthMenuButton:hover,
 #quickToolbar .button:hover, #canvasQuickToolbar .button:hover,
-#toggleGridButton:hover {
+#toggleGridButton:hover,
+#confirmPolygon:hover {
     -fx-background-color: #e5e5e7;
 }
 
@@ -477,4 +482,16 @@
     -fx-stroke-width: 1;
     -fx-smooth: false;
     -fx-stroke-type: outside;
+}
+
+/********************* OTHER */
+
+#polygonAlert {
+    /*-fx-border-insets: 9 0 0 0;*/
+    -fx-background-color: #fffffe;
+    -fx-border-style: solid solid solid solid;
+    -fx-border-width: 1;
+    -fx-border-color: #eaebef;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
 }

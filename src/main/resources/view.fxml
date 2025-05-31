@@ -278,7 +278,7 @@
                      </graphic>
                   </Button>
                   <Separator layoutX="370.0" layoutY="13.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
-                  <Button fx:id="sendToBackButton" disable="true" graphicTextGap="12.0" layoutX="381.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSendToBackAction" prefHeight="32.0" prefWidth="98.0" text="To back">
+                  <Button fx:id="sendToBackButton" disable="true" graphicTextGap="12.0" layoutX="381.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSendToBackAction" prefHeight="32.0" prefWidth="98.0" text="To back" textFill="#797b86">
                      <graphic>
                         <Group>
                            <children>
@@ -287,7 +287,7 @@
                         </Group>
                      </graphic>
                   </Button>
-                  <Button fx:id="bringToFrontButton" disable="true" graphicTextGap="12.0" layoutX="381.0" layoutY="54.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBringToFrontAction" prefHeight="32.0" prefWidth="98.0" text="To front">
+                  <Button fx:id="bringToFrontButton" disable="true" graphicTextGap="12.0" layoutX="381.0" layoutY="54.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBringToFrontAction" prefHeight="32.0" prefWidth="98.0" text="To front" textFill="#797b86">
                      <graphic>
                         <Group>
                            <children>
@@ -297,7 +297,7 @@
                      </graphic>
                   </Button>
                   <Separator layoutX="489.0" layoutY="13.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
-                  <Button fx:id="flipXButton" disable="true" graphicTextGap="12.0" layoutX="501.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onFlipHorizontallyAction" prefHeight="32.0" prefWidth="136.0" text="Flip horizontally">
+                  <Button fx:id="flipXButton" disable="true" graphicTextGap="12.0" layoutX="501.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onFlipHorizontallyAction" prefHeight="32.0" prefWidth="136.0" text="Flip horizontally" textFill="#797b86">
                      <graphic>
                         <Group>
                            <children>
@@ -306,7 +306,7 @@
                         </Group>
                      </graphic>
                   </Button>
-                  <Button fx:id="flipYButton" disable="true" graphicTextGap="12.0" layoutX="501.0" layoutY="54.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onFlipVerticallyAction" prefHeight="32.0" prefWidth="136.0" text="Flip vertically">
+                  <Button fx:id="flipYButton" disable="true" graphicTextGap="12.0" layoutX="501.0" layoutY="54.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onFlipVerticallyAction" prefHeight="32.0" prefWidth="136.0" text="Flip vertically" textFill="#797b86">
                      <graphic>
                         <Group>
                            <children>
@@ -382,28 +382,33 @@
                   <Separator layoutX="553.0" orientation="VERTICAL" prefHeight="32.0" prefWidth="1.0" />
                   <ToggleButton fx:id="toggleGridButton" layoutX="567.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onToggleGridButtonAction" prefHeight="26.0" prefWidth="26.0">
                      <graphic>
-                        <SVGPath content="M160-520v-280h280v280H160Zm0 360v-280h280v280H160Zm360-360v-280h280v280H520Zm0 360v-280h280v280H520ZM200-560h200v-200H200v200Zm360 0h200v-200H560v200Zm0 360h200v-200H560v200Zm-360 0h200v-200H200v200Zm360-360Zm0 160Zm-160 0Zm0-160Z" fill="#797b86" scaleX="0.028" scaleY="0.028" />
+                        <SVGPath content="M160-520v-280h280v280H160Zm0 360v-280h280v280H160Zm360-360v-280h280v280H520Zm0 360v-280h280v280H520ZM200-560h200v-200H200v200Zm360 0h200v-200H560v200Zm0 360h200v-200H560v200Zm-360 0h200v-200H200v200Zm360-360Zm0 160Zm-160 0Zm0-160Z" fill="#797b86" scaleX="0.026" scaleY="0.026" />
                      </graphic></ToggleButton>
+                  <Slider fx:id="gridSizeSlider" layoutX="605.0" layoutY="7.0" min="5.0" prefHeight="16.0" prefWidth="98.0" value="20.0" />
                </children>
             </Pane>
-            <ScrollPane fx:id="scrollableCanvasContainer" prefHeight="417.0" prefWidth="898.0">
-               <content>
-                  <Group fx:id="canvasGroup">
-                     <children>
-                        <StackPane fx:id="stackPane" alignment="TOP_LEFT" prefHeight="403.0" prefWidth="884.0" style="-fx-background-color: #fffffe;">
+            <AnchorPane fx:id="helperStackPane">
+               <children>
+                  <ScrollPane fx:id="scrollableCanvasContainer" prefHeight="417.0" prefWidth="898.0">
+                     <content>
+                        <Group fx:id="canvasGroup">
                            <children>
-                              <Canvas fx:id="grid" height="414.0" width="896.0" />
-                              <Pane fx:id="canvas" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragReleased="#setOnMouseReleased" onMouseDragged="#setOnMouseDragged" onMousePressed="#setOnMousePressed" onMouseReleased="#setOnMouseReleased" prefHeight="414.0" prefWidth="896.0">
-                                 <cursor>
-                                    <Cursor fx:constant="DEFAULT" />
-                                 </cursor>
-                              </Pane>
+                              <StackPane fx:id="stackPane" style="-fx-background-color: #fffffe;">
+                                 <children>
+                                    <Canvas fx:id="grid" height="416.0" width="896.0" />
+                                    <Pane fx:id="canvas" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragReleased="#setOnMouseReleased" onMouseDragged="#setOnMouseDragged" onMousePressed="#setOnMousePressed" onMouseReleased="#setOnMouseReleased" prefHeight="416.0" prefWidth="896.0">
+                                       <cursor>
+                                          <Cursor fx:constant="DEFAULT" />
+                                       </cursor>
+                                    </Pane>
+                                 </children>
+                              </StackPane>
                            </children>
-                        </StackPane>
-                     </children>
-                  </Group>
-               </content>
-            </ScrollPane>
+                        </Group>
+                     </content>
+                  </ScrollPane>
+               </children>
+            </AnchorPane>
          </VBox>
       </HBox>
       <HBox>
