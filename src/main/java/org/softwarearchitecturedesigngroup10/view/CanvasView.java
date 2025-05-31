@@ -117,6 +117,8 @@ public class CanvasView implements CanvasViewInterface {
         canvas.getChildren().add(this.previewShape);
     }
 
+
+
     @Override
     public void clear() {
         canvas.getChildren().clear();
@@ -128,8 +130,8 @@ public class CanvasView implements CanvasViewInterface {
     public void paintAllFromScratch(LinkedHashMap<String, Shape> shapes) {
         // Rimuovi tutte le forme (tranne la maniglia che è già presente)
         List<Node> shapesToRemove = canvas.getChildren().stream()
-                .filter(node -> node != resizeHandle && !(node instanceof Shape && ((Shape)node).getId() != null && shapes.containsKey(((Shape)node).getId())))
-                .collect(Collectors.toList());
+                .filter(node -> node != resizeHandle && !(node instanceof Shape && node.getId() != null && shapes.containsKey(node.getId())))
+                .toList();
         canvas.getChildren().removeAll(shapesToRemove);
 
         // Aggiungi/Aggiorna le forme
@@ -143,7 +145,7 @@ public class CanvasView implements CanvasViewInterface {
         // Rimuovi le forme che non sono più nel modello
         List<Node> toRemove = canvas.getChildren().stream()
                 .filter(node -> node != resizeHandle && node.getId() != null && !shapes.containsKey(node.getId()))
-                .collect(Collectors.toList());
+                .toList();
         canvas.getChildren().removeAll(toRemove);
 
         resizeHandle.toFront(); // Assicura che la maniglia sia sempre in cima
@@ -166,4 +168,14 @@ public class CanvasView implements CanvasViewInterface {
     public Rectangle getResizeHandle() {
         return resizeHandle;
     }
+
+    public void rotatePreview(double angle) {
+        canvas.getChildren()
+                .stream()
+                .filter(element -> element.getEffect() != null)
+                .forEach(element -> {
+                    element.setRotate(angle);
+                });
+    }
+
 }

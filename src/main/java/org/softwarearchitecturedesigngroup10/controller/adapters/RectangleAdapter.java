@@ -18,6 +18,7 @@ public class RectangleAdapter implements ShapeAdapterInterface {
         rect.setFill(fillColor);
         rect.setStroke(strokeColor);
         rect.setStrokeWidth(rd.getStrokeWidth());
+        rect.setRotate(rd.getRotationAngle());
         return rect;
     }
 }

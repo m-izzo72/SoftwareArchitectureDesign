@@ -18,6 +18,7 @@ public class EllipseAdapter implements ShapeAdapterInterface {
         ellipse.setFill(fillColor);
         ellipse.setStroke(strokeColor);
         ellipse.setStrokeWidth(ed.getStrokeWidth());
+        ellipse.setRotate(ed.getRotationAngle());
         return ellipse;
     }
 }

@@ -12,6 +12,10 @@
     -fx-font-size: 9pt;
 }
 
+*:disabled {
+    -fx-opacity: 0.5;
+}
+
 #rootPane {
     -fx-font-family: 'customfont';
     -fx-font-smoothing-type: lcd;
@@ -93,6 +97,10 @@
     -fx-background-color: #f7f7f9;
 }
 
+#canvasGroup {
+    -fx-background-color: #fffffe;
+}
+
 #bottomLeftCorner {
     -fx-background-color: rgba(255, 105, 180, 0.11);
     -fx-background-radius: 0 0 7 6;
@@ -107,10 +115,12 @@
 #lineButton, #rectangleButton, #ellipseButton, #polygonButton, #textButton,
 #openFileButton, #saveFileButton, #newCanvasButton,
 #cutShapeButton, #copyShapeButton, #pasteShapeButton,
+#sendToBackButton, #bringToFrontButton, #flipXButton, #flipYButton,
 #eraseShapeButton, #selectToolButton, #strokeWidthMenuButton,
 #editStrokeWidthMenuButton,
 #closeButton, #minimizeButton, #undoButton,
-#quickToolbar .button, #canvasQuickToolbar .button {
+#quickToolbar .button, #canvasQuickToolbar .button,
+#toggleGridButton {
     -fx-background-color: transparent;
 }
 
@@ -119,8 +129,10 @@
 #lineButton, #rectangleButton, #ellipseButton, #polygonButton, #textButton,
 #openFileButton, #saveFileButton, #newCanvasButton,
 #cutShapeButton, #copyShapeButton, #pasteShapeButton,
+#sendToBackButton, #bringToFrontButton, #flipXButton, #flipYButton,
 #eraseShapeButton, #selectToolButton, #strokeWidthMenuButton,
-#editStrokeWidthMenuButton {
+#editStrokeWidthMenuButton,
+#toggleGridButton {
     -fx-background-radius: 7;
 }
 
@@ -144,9 +156,11 @@
 #lineButton:hover, #rectangleButton:hover, #ellipseButton:hover, #polygonButton:hover, #textButton:hover,
 #openFileButton:hover, #newCanvasButton:hover, #saveFileButton:hover,
 #cutShapeButton:hover, #copyShapeButton:hover, #pasteShapeButton:hover,
+#sendToBackButton:hover, #bringToFrontButton:hover, #flipXButton:hover, #flipYButton:hover,
 #eraseShapeButton:hover, #selectToolButton:hover,
 #strokeWidthMenuButton:hover, #editStrokeWidthMenuButton:hover,
-#quickToolbar .button:hover, #canvasQuickToolbar .button:hover {
+#quickToolbar .button:hover, #canvasQuickToolbar .button:hover,
+#toggleGridButton:hover {
     -fx-background-color: #e5e5e7;
 }
 
@@ -154,20 +168,23 @@
 #fileNavigation:selected, #shapeNavigation:selected, #clipboardNavigation:selected,
 #lineButton:selected, #rectangleButton:selected, #ellipseButton:selected, #polygonButton:selected, #textButton:selected,
 #openFileButton:selected, #saveFileButton:selected, #newCanvasButton:selected,
-#eraseShapeButton:selected, #selectToolButton:selected {
+#eraseShapeButton:selected, #selectToolButton:selected,
+#toggleGridButton:selected {
     -fx-background-color: #5874e6;
 }
 
 /* Stato :selected SVGPath */
-#lineButton:selected SVGPath, #rectangleButton:selected SVGPath, #ellipseButton:selected SVGPath, #polygonButton:selected, #textButton:selected,
+#lineButton:selected SVGPath, #rectangleButton:selected SVGPath, #ellipseButton:selected SVGPath, #polygonButton:selected SVGPath, #textButton:selected SVGPath,
 #openFileButton:selected SVGPath, #saveFileButton:selected SVGPath, #newCanvasButton:selected SVGPath,
-#eraseShapeButton:selected SVGPath, #selectToolButton:selected SVGPath {
+#eraseShapeButton:selected SVGPath, #selectToolButton:selected SVGPath,
+#toggleGridButton:selected SVGPath {
     -fx-fill: #ffffff;
 }
 
 /* Stato :selected:hover */
 #lineButton:selected:hover, #rectangleButton:selected:hover, #ellipseButton:selected:hover,
-#selectToolButton:selected:hover {
+#selectToolButton:selected:hover,
+#toggleGridButton:selected:hover {
     -fx-background-color: #4366f6;
 }
 
@@ -250,7 +267,7 @@
    ========================================================================== */
 
 #canvas {
-    -fx-background-color: #fffffe; /* Unito da definizione successiva */
+    /*-fx-background-color: #fffffe; */
 }
 
 #canvasInfoLabel {
@@ -272,10 +289,6 @@
     -fx-text-fill: #5c5d63;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
-}
-
-#fillColorToChangeIcon:disabled, #strokeColorToChangeIcon:disabled, #editStrokeWidthIcon:disabled {
-    -fx-opacity: 0.5;
 }
 
 /* ==========================================================================
@@ -305,12 +318,16 @@
     -fx-font-weight: bold;
 }
 
-#fillColorPicker, #strokeColorPicker, #fillColorToChangePicker, #strokeColorToChangePicker {
+#fillColorPicker, #strokeColorPicker, #editFillColorPicker, #editStrokeColorPicker {
     -fx-color-rect-width: 24;
     -fx-color-rect-height: 24;
     -fx-padding: 0;
     -fx-font-size: 1;
     -fx-background-color: transparent;
+}
+
+.color-picker .arrow-button .arrow {
+    -fx-shape: " ";
 }
 
 #fillColorPicker .large-rect-picker, #strokeColorPicker .large-rect-picker {
@@ -322,7 +339,7 @@
 }
 
 .menu-button > .arrow-button > .arrow {
-    -fx-shape: " "; /* Rimuove la freccia standard */
+    -fx-shape: " ";
 }
 
 /* ==========================================================================

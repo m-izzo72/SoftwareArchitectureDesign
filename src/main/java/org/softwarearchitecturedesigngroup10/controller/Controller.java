@@ -9,6 +9,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -38,6 +40,7 @@ import org.softwarearchitecturedesigngroup10.model.observers.observed.SelectionP
 import org.softwarearchitecturedesigngroup10.model.shapesdata.LineData;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData; // Assicurati che sia importato
 import org.softwarearchitecturedesigngroup10.view.CanvasView;
+import org.softwarearchitecturedesigngroup10.view.CircularSlider;
 import org.softwarearchitecturedesigngroup10.view.helper.Highlighter;
 
 import java.io.File;
@@ -118,10 +121,6 @@ public class Controller implements ModelObserver {
     @FXML
     private Button pasteShapeButton;
     @FXML
-    private ColorPicker fillColorToChangePicker;
-    @FXML
-    private ColorPicker strokeColorToChangePicker;
-    @FXML
     private Slider strokeSlider;
     @FXML
     private Button cutShapeButton;
@@ -133,8 +132,6 @@ public class Controller implements ModelObserver {
     private Button sendToBackButton;
     @FXML
     private ScrollPane scrollableCanvasContainer;
-    @FXML
-    private Pane bottomLeftCorner;
 
 
     private CanvasModel canvasModel;
@@ -165,15 +162,27 @@ public class Controller implements ModelObserver {
     @FXML
     private ToggleButton textButton;
     @FXML
-    private Button sendToBackButton11;
-    @FXML
     private ToggleButton polygonButton;
     @FXML
-    private Button sendToBackButton1;
-
-    public TabPane getTab() {
-        return tab;
-    }
+    private Canvas grid;
+    @FXML
+    private Button flipXButton;
+    @FXML
+    private CircularSlider rotationSlider;
+    @FXML
+    private Button flipYButton;
+    @FXML
+    private ToggleButton toggleGridButton;
+    @FXML
+    private Group editStrokeColourIcon;
+    @FXML
+    private Group editFillColourIcon;
+    @FXML
+    private Group editStrokeWidthIcon;
+    @FXML
+    private ColorPicker editStrokeColorPicker;
+    @FXML
+    private ColorPicker editFillColorPicker;
 
     /* CLOSE AND MINIMIZE WINDOW */
 
@@ -196,7 +205,6 @@ public class Controller implements ModelObserver {
         LinkedHashMap<String, ShapeData> modelShapes = canvasModel.getShapes();
         LinkedHashMap<String, ShapeData> selectedModelShapes = canvasModel.getSelectedShapes();
 
-        // 1. Converti
         modelShapes.forEach((key, value) -> {
             Shape fxShape = shapeConverter.convert(value);
             fxShape.setId(key);
@@ -279,17 +287,20 @@ public class Controller implements ModelObserver {
         canvasModel.addObserver(this);
         ArrayList<Node> nodesToBind = new ArrayList<>();
         Collections.addAll(nodesToBind,
-//                fillColorToChangeIcon,
-                fillColorToChangePicker,
-//                strokeColorToChangeIcon,
-                strokeColorToChangePicker,
+                editFillColourIcon,
+                editFillColorPicker,
+                editStrokeColourIcon,
+                editStrokeColorPicker,
                 copyShapeButton,
                 eraseShapeButton,
                 cutShapeButton,
                 sendToBackButton,
                 bringToFrontButton,
-//                editStrokeWidthIcon,
-                editStrokeWidthSlider
+                editStrokeWidthIcon,
+                editStrokeWidthSlider,
+                flipXButton,
+                flipYButton,
+                rotationSlider
         );
 
         selectionPropertyObserver = new SelectionPropertyObserver(canvasModel, nodesToBind);
@@ -313,6 +324,21 @@ public class Controller implements ModelObserver {
         titleBar.setOnMouseDragged(this::setOnTitleBarDragged);
 
         setCanvasScrollableAndResizable();
+
+        rotationSlider.setOnThumbMouseReleased(this::setOnRotationSliderMouseReleased);
+        rotationSlider.setOnThumbMouseDragged(this::setOnRotationSliderMouseDragged);
+
+
+    }
+
+    /* ANGLES AND ROTATION */
+
+    public void setOnRotationSliderMouseDragged(MouseEvent event) {
+        canvasView.rotatePreview(rotationSlider.getAngle());
+    }
+
+    public void setOnRotationSliderMouseReleased(MouseEvent event) {
+        commandManager.executeCommand(new RotateShapeCommand(canvasModel, rotationSlider.getAngle()));
     }
 
     /* UNDO */
@@ -322,11 +348,55 @@ public class Controller implements ModelObserver {
         commandManager.undo();
     }
 
+    /* GRID */
+
+    @FXML
+    public void onToggleGridButtonAction(ActionEvent actionEvent) {
+        if(toggleGridButton.isSelected()) {
+            drawGrid(grid.getGraphicsContext2D());
+        } else {
+            clearGrid(grid.getGraphicsContext2D());
+        }
+    }
+
+    public void clearGrid(GraphicsContext gc) {
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    }
+
+    private void drawGrid(GraphicsContext gc) {
+        double width = gc.getCanvas().getWidth();
+        double height = gc.getCanvas().getHeight();
+        gc.getCanvas().setWidth(canvas.getWidth());
+
+        // CONTROLLO CRUCIALE:
+        if (width <= 0 || height <= 0) {
+            System.err.println("Skipping grid draw: Invalid dimensions - W: " + width + ", H: " + height);
+            return; // Non fare nulla se le dimensioni non sono valide
+        }
+
+        gc.clearRect(0, 0, width, height); // Pulisce il canvas
+
+        gc.setStroke(Color.LIGHTGRAY); // Colore della griglia
+        gc.setLineWidth(0.5); // Spessore delle linee
+
+        // Linee verticali
+        for (double x = 0; x <= width; x += 20) {
+            // Aggiungere 0.5 per linee più nitide quando lo spessore è dispari o per allineamento pixel
+            gc.strokeLine(x + 0.5, 0, x + 0.5, height);
+        }
+
+        // Linee orizzontali
+        for (double y = 0; y <= height; y += 20) {
+            gc.strokeLine(0, y + 0.5, width, y + 0.5);
+        }
+    }
+
     /* ZOOM LOGIC */
 
     public void zoomListener(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         zoomFactor = ((double) 1 / 3) * newValue.doubleValue();
-        canvas.setScaleX(zoomFactor); canvas.setScaleY(zoomFactor);
+        canvasGroup.setScaleX(zoomFactor); canvasGroup.setScaleY(zoomFactor);
+        //grid.setHeight(canvas.getHeight()); grid.setWidth(canvas.getWidth());
 
     }
 
@@ -349,12 +419,18 @@ public class Controller implements ModelObserver {
         DoubleProperty customHeightProperty = new SimpleDoubleProperty(canvas.getPrefHeight());
         canvas.prefWidthProperty().bind(customWidthProperty);
         canvas.prefHeightProperty().bind(customHeightProperty);
+
+
+
         canvas.prefHeightProperty().addListener((observable, oldValue, newValue) -> {
             canvasGroup.prefHeight(newValue.doubleValue());
+
             //canvasGroup.setTranslateX(- scrollableCanvasContainer.getPrefWidth() / 2);
         });
         canvas.prefWidthProperty().addListener((observable, oldValue, newValue) -> {
             canvasGroup.prefWidth(newValue.doubleValue());
+
+            System.out.println("New grid size: " + grid.getWidth() + ", " + grid.getHeight());
             //canvasGroup.setTranslateY(- scrollableCanvasContainer.getPrefHeight() / 2);
         });
         Bindings.bindBidirectional(canvasWidthInput.textProperty(), customWidthProperty, doubleConverter);
@@ -573,7 +649,7 @@ public class Controller implements ModelObserver {
     @FXML
     public void onFillColorToChangePickerAction(ActionEvent actionEvent) {
         EditShapesFillColourCommand command = new EditShapesFillColourCommand(
-                canvasModel, fillColorToChangePicker.getValue().toString()
+                canvasModel, editFillColorPicker.getValue().toString()
         );
         commandManager.executeCommand(command);
     }
@@ -581,7 +657,7 @@ public class Controller implements ModelObserver {
     @FXML
     public void onStrokeColorToChangePickerAction(ActionEvent actionEvent) {
         EditShapesStrokeColourCommand command = new EditShapesStrokeColourCommand(
-                canvasModel, strokeColorToChangePicker.getValue().toString()
+                canvasModel, editStrokeColorPicker.getValue().toString()
         );
         commandManager.executeCommand(command);
     }
@@ -692,4 +768,5 @@ public class Controller implements ModelObserver {
     public void setStartY(double startY) {
         this.startY = startY;
     }
+
 }

@@ -14,5 +14,6 @@ module org.softwarearchitecturedesigngroup10 {
     opens org.softwarearchitecturedesigngroup10 to javafx.fxml;
     exports org.softwarearchitecturedesigngroup10;
     exports org.softwarearchitecturedesigngroup10.controller;
+    exports org.softwarearchitecturedesigngroup10.view to javafx.fxml;
     opens org.softwarearchitecturedesigngroup10.controller to javafx.fxml;
 }
