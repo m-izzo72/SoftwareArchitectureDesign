@@ -126,6 +126,13 @@ public class CanvasView implements CanvasViewInterface {
         resizeHandle.setVisible(false);
     }
 
+    public void xFlip(Shape shape) {
+        shape.setScaleX(-1);
+    }
+    public void yFlip(Shape shape) {
+        shape.setScaleY(-1);
+    }
+
     @Override
     public void paintAllFromScratch(LinkedHashMap<String, Shape> shapes) {
         // Rimuovi tutte le forme (tranne la maniglia che è già presente)
@@ -139,6 +146,7 @@ public class CanvasView implements CanvasViewInterface {
             value.setId(key);
             // Rimuovi la vecchia versione se esiste, poi aggiungi la nuova
             canvas.getChildren().removeIf(node -> node.getId() != null && node.getId().equals(key));
+
             canvas.getChildren().add(value);
         });
 

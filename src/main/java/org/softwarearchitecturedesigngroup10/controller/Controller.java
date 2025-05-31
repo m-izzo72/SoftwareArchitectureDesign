@@ -164,8 +164,6 @@ public class Controller implements ModelObserver {
     @FXML
     private ToggleButton polygonButton;
     @FXML
-    private Canvas grid;
-    @FXML
     private Button flipXButton;
     @FXML
     private CircularSlider rotationSlider;
@@ -183,6 +181,10 @@ public class Controller implements ModelObserver {
     private ColorPicker editStrokeColorPicker;
     @FXML
     private ColorPicker editFillColorPicker;
+    @FXML
+    private Canvas grid;
+    @FXML
+    private ToggleButton selectToolButton2;
 
     /* CLOSE AND MINIMIZE WINDOW */
 
@@ -231,6 +233,9 @@ public class Controller implements ModelObserver {
             }
         });
 
+        modelShapes.entrySet().stream().filter(entry -> entry.getValue().isXFlipped()).forEach(entry -> { canvasView.xFlip(viewShapes.get(entry.getKey())); });
+        modelShapes.entrySet().stream().filter(entry -> entry.getValue().isYFlipped()).forEach(entry -> { canvasView.yFlip(viewShapes.get(entry.getKey())); });
+
         if (selectedModelShapes.size() == 1) {
             Map.Entry<String, ShapeData> entry = selectedModelShapes.entrySet().iterator().next();
             String selectedId = entry.getKey();
@@ -270,6 +275,8 @@ public class Controller implements ModelObserver {
 
     @FXML
     public void initialize() {
+        selectToolButton2 = selectToolButton;
+
         canvasModel = new CanvasModel();
         canvasView = new CanvasView(canvas);
         commandManager = new CommandManager();
@@ -424,14 +431,15 @@ public class Controller implements ModelObserver {
 
         canvas.prefHeightProperty().addListener((observable, oldValue, newValue) -> {
             canvasGroup.prefHeight(newValue.doubleValue());
-
-            //canvasGroup.setTranslateX(- scrollableCanvasContainer.getPrefWidth() / 2);
+            grid.setHeight(newValue.doubleValue());
+            drawGrid(grid.getGraphicsContext2D());
+            scrollableCanvasContainer.setVvalue(0.5);
         });
         canvas.prefWidthProperty().addListener((observable, oldValue, newValue) -> {
             canvasGroup.prefWidth(newValue.doubleValue());
-
-            System.out.println("New grid size: " + grid.getWidth() + ", " + grid.getHeight());
-            //canvasGroup.setTranslateY(- scrollableCanvasContainer.getPrefHeight() / 2);
+            //grid.setWidth(100);
+            drawGrid(grid.getGraphicsContext2D());
+            scrollableCanvasContainer.setHvalue(0.5);
         });
         Bindings.bindBidirectional(canvasWidthInput.textProperty(), customWidthProperty, doubleConverter);
         Bindings.bindBidirectional(canvasHeightInput.textProperty(), customHeightProperty, doubleConverter);
@@ -440,13 +448,20 @@ public class Controller implements ModelObserver {
             if (!newValue.matches("\\d*")) {
                 canvasWidthInput.setText(newValue.replaceAll("\\D", ""));
             }
-            if (Double.parseDouble(newValue) > 10000) canvasWidthInput.setText("9999");
+            if (Double.parseDouble(newValue) > 4096) canvasWidthInput.setText("4096");
         });
         canvasHeightInput.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
                 canvasHeightInput.setText(newValue.replaceAll("\\D", ""));
             }
-            if (Double.parseDouble(newValue) > 10000) canvasHeightInput.setText("9999");
+            if (Double.parseDouble(newValue) > 4096) canvasHeightInput.setText("4096");
+        });
+
+        grid.widthProperty().addListener((observable, oldValue, newValue) -> {
+            onToggleGridButtonAction(null);
+        });
+        grid.heightProperty().addListener((observable, oldValue, newValue) -> {
+            onToggleGridButtonAction(null);
         });
 
 
@@ -769,4 +784,12 @@ public class Controller implements ModelObserver {
         this.startY = startY;
     }
 
+    @FXML
+    public void onFlipHorizontallyAction(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void onFlipVerticallyAction(ActionEvent actionEvent) {
+        commandManager.executeCommand(new FlipShapeVerticallyCommand(canvasModel));
+    }
 }

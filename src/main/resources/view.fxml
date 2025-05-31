@@ -18,6 +18,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.SVGPath?>
@@ -237,7 +238,7 @@
                   </Group>
                </graphic>
                <AnchorPane fx:id="clipboardTabContainer" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="898.0">
-                  <Button fx:id="eraseShapeButton" alignment="TOP_LEFT" disable="true" graphicTextGap="12.0" layoutX="157.0" layoutY="51.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onEraseShapeButtonAction" prefHeight="32.0" prefWidth="130.0" text="Delete shapes" textFill="#797b86">
+                  <Button fx:id="eraseShapeButton" alignment="TOP_LEFT" disable="true" graphicTextGap="12.0" layoutX="231.0" layoutY="51.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onEraseShapeButtonAction" prefHeight="32.0" prefWidth="130.0" text="Delete shapes" textFill="#797b86">
                      <graphic>
                         <Group>
                            <children>
@@ -249,7 +250,7 @@
                         <Tooltip text="Delete selected shape" />
                      </tooltip>
                   </Button>
-                  <Button fx:id="cutShapeButton" alignment="TOP_LEFT" disable="true" graphicTextGap="12.0" layoutX="157.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCutShapeButtonAction" prefHeight="32.0" prefWidth="130.0" text="Cut shapes" textFill="#797b86">
+                  <Button fx:id="cutShapeButton" alignment="TOP_LEFT" disable="true" graphicTextGap="12.0" layoutX="231.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCutShapeButtonAction" prefHeight="32.0" prefWidth="130.0" text="Cut shapes" textFill="#797b86">
                      <graphic>
                         <Group>
                            <children>
@@ -258,7 +259,7 @@
                         </Group>
                      </graphic>
                   </Button>
-                  <Button fx:id="copyShapeButton" alignment="TOP_LEFT" disable="true" graphicTextGap="12.0" layoutX="27.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCopyShapeButtonAction" prefHeight="32.0" prefWidth="130.0" text="Copy shapes" textFill="#797b86">
+                  <Button fx:id="copyShapeButton" alignment="TOP_LEFT" disable="true" graphicTextGap="12.0" layoutX="101.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCopyShapeButtonAction" prefHeight="32.0" prefWidth="130.0" text="Copy shapes" textFill="#797b86">
                      <graphic>
                         <Group>
                            <children>
@@ -267,7 +268,7 @@
                         </Group>
                      </graphic>
                   </Button>
-                  <Button fx:id="pasteShapeButton" alignment="TOP_LEFT" graphicTextGap="10.0" layoutX="27.0" layoutY="51.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onPasteButtonAction" prefHeight="32.0" prefWidth="130.0" text="Paste shapes" textFill="#797b86">
+                  <Button fx:id="pasteShapeButton" alignment="TOP_LEFT" graphicTextGap="10.0" layoutX="101.0" layoutY="51.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onPasteButtonAction" prefHeight="32.0" prefWidth="130.0" text="Paste shapes" textFill="#797b86">
                      <graphic>
                         <Group>
                            <children>
@@ -276,8 +277,8 @@
                         </Group>
                      </graphic>
                   </Button>
-                  <Separator layoutX="304.0" layoutY="13.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
-                  <Button fx:id="sendToBackButton" disable="true" graphicTextGap="12.0" layoutX="323.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSendToBackAction" prefHeight="32.0" prefWidth="98.0" text="To back">
+                  <Separator layoutX="370.0" layoutY="13.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
+                  <Button fx:id="sendToBackButton" disable="true" graphicTextGap="12.0" layoutX="381.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSendToBackAction" prefHeight="32.0" prefWidth="98.0" text="To back">
                      <graphic>
                         <Group>
                            <children>
@@ -286,7 +287,7 @@
                         </Group>
                      </graphic>
                   </Button>
-                  <Button fx:id="bringToFrontButton" disable="true" graphicTextGap="12.0" layoutX="323.0" layoutY="54.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBringToFrontAction" prefHeight="32.0" prefWidth="98.0" text="To front">
+                  <Button fx:id="bringToFrontButton" disable="true" graphicTextGap="12.0" layoutX="381.0" layoutY="54.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBringToFrontAction" prefHeight="32.0" prefWidth="98.0" text="To front">
                      <graphic>
                         <Group>
                            <children>
@@ -295,8 +296,8 @@
                         </Group>
                      </graphic>
                   </Button>
-                  <Separator layoutX="440.0" layoutY="13.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
-                  <Button fx:id="flipXButton" disable="true" graphicTextGap="12.0" layoutX="456.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSendToBackAction" prefHeight="32.0" prefWidth="136.0" text="Flip horizontally">
+                  <Separator layoutX="489.0" layoutY="13.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
+                  <Button fx:id="flipXButton" disable="true" graphicTextGap="12.0" layoutX="501.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onFlipHorizontallyAction" prefHeight="32.0" prefWidth="136.0" text="Flip horizontally">
                      <graphic>
                         <Group>
                            <children>
@@ -305,7 +306,7 @@
                         </Group>
                      </graphic>
                   </Button>
-                  <Button fx:id="flipYButton" disable="true" graphicTextGap="12.0" layoutX="456.0" layoutY="54.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSendToBackAction" prefHeight="32.0" prefWidth="136.0" text="Flip vertically">
+                  <Button fx:id="flipYButton" disable="true" graphicTextGap="12.0" layoutX="501.0" layoutY="54.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onFlipVerticallyAction" prefHeight="32.0" prefWidth="136.0" text="Flip vertically">
                      <graphic>
                         <Group>
                            <children>
@@ -314,40 +315,54 @@
                         </Group>
                      </graphic>
                   </Button>
-                  <ColorPicker fx:id="editStrokeColorPicker" disable="true" layoutX="647.0" layoutY="21.0" onAction="#onStrokeColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
+                  <ColorPicker fx:id="editStrokeColorPicker" disable="true" layoutX="681.0" layoutY="21.0" onAction="#onStrokeColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
                      <value>
                         <Color green="0.6000000238418579" blue="1.0" />
                      </value>
                   </ColorPicker>
-                  <ColorPicker fx:id="editFillColorPicker" disable="true" layoutX="710.0" layoutY="21.0" onAction="#onFillColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
+                  <ColorPicker fx:id="editFillColorPicker" disable="true" layoutX="744.0" layoutY="21.0" onAction="#onFillColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
                      <value>
                         <Color green="0.6000000238418579" blue="1.0" />
                      </value>
                   </ColorPicker>
-                  <Slider fx:id="editStrokeWidthSlider" blockIncrement="1.0" disable="true" layoutX="658.0" layoutY="58.0" max="10.0" min="1.0" prefHeight="16.0" prefWidth="90.0" />
-                  <CircularSlider fx:id="rotationSlider" disable="true" layoutX="792.0" layoutY="16.0" prefHeight="55.0" prefWidth="55.0" />
-                  <Separator layoutX="606.0" layoutY="13.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
-                  <Group fx:id="editStrokeColourIcon" disable="true" layoutX="618.0" layoutY="-52.0">
+                  <Slider fx:id="editStrokeWidthSlider" blockIncrement="1.0" disable="true" layoutX="692.0" layoutY="58.0" max="10.0" min="1.0" prefHeight="16.0" prefWidth="90.0" />
+                  <CircularSlider fx:id="rotationSlider" disable="true" layoutX="814.0" layoutY="16.0" prefHeight="55.0" prefWidth="55.0" />
+                  <Separator layoutX="647.0" layoutY="13.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
+                  <Group fx:id="editStrokeColourIcon" disable="true" layoutX="652.0" layoutY="-52.0">
                      <children>
                         <SVGPath content="M80 0v-120h800V0H80Zm160-303.46h49.46l332-331.39-25.15-25.53-24.92-24.54-331.39 332v49.46Zm-60 60v-135l448.39-447.77q8.69-8.69 19.73-13.15 11.03-4.46 22.96-4.46 11.94 0 23.12 4.46 11.18 4.46 20.49 13.77l48.08 48.69q9.31 8.69 13.46 19.91 4.15 11.21 4.15 23.18 0 11.22-4.21 22.31-4.21 11.1-13.4 20.29L315-243.46H180Zm540.38-490.92-49.46-49.46 49.46 49.46Zm-98.92 99.53-25.15-25.53-24.92-24.54 50.07 50.07Z" fill="#797b86" layoutY="-19.0" scaleX="0.025" scaleY="0.025" translateX="-462.0" translateY="526.0" />
                      </children>
                   </Group>
-                  <Group fx:id="editFillColourIcon" disable="true" layoutX="693.0" layoutY="16.0">
+                  <Group fx:id="editFillColourIcon" disable="true" layoutX="727.0" layoutY="16.0">
                      <children>
                         <SVGPath content="m255.46-880.54 42.39-42.53L632-588.92q21.08 21.08 21.08 51.61 0 30.54-21.08 51.62L458.92-311.85q-20.69 20.7-51.23 20.7-30.54 0-51.23-20.7L183.39-485.69q-21.08-21.08-21.08-51.62 0-30.53 21.08-51.61l181.92-181.77-109.85-109.85Zm152.62 152.62L224.77-545.38q-1.92 1.92-2.5 4.04-.58 2.11-.58 4.42h372q0-2.31-.57-4.42-.58-2.12-2.5-4.04L408.08-727.92Zm343.46 461.77q-29.16 0-49.58-20.43-20.42-20.42-20.42-49.57 0-19.46 10.96-40.19 10.96-20.73 23.65-39.04 8.23-11.23 17.08-22.69 8.85-11.47 18.31-22.7 9.46 11.23 18.31 22.7 8.84 11.46 17.07 22.69 12.69 18.31 23.66 39.04 10.96 20.73 10.96 40.19 0 29.15-20.43 49.57-20.42 20.43-49.57 20.43ZM80 0v-120h800V0H80Z" fill="#797b86" scaleX="0.025" scaleY="0.025" stroke="BLACK" strokeType="INSIDE" translateX="-473.0" translateY="478.0" />
                      </children>
                   </Group>
-                  <Group fx:id="editStrokeWidthIcon" disable="true" layoutX="617.0" layoutY="33.0">
+                  <Group fx:id="editStrokeWidthIcon" disable="true" layoutX="651.0" layoutY="33.0">
                      <children>
                         <SVGPath content="M220-229.23v-20h520v20H220Zm0-100v-40h520v40H220Zm0-120v-58.46h520v58.46H220Zm0-140v-141.54h520v141.54H220Z" fill="#797b86" layoutY="-13.0" scaleX="0.035" scaleY="0.035" translateX="-462.0" translateY="526.0" />
                      </children>
                   </Group>
-                  <Separator layoutX="762.0" layoutY="15.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
-                  <Label layoutX="798.0" layoutY="71.0" prefHeight="20.0" prefWidth="66.0" text="Rotate" textFill="#797b86">
+                  <Separator layoutX="799.0" layoutY="15.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
+                  <Label layoutX="820.0" layoutY="71.0" prefHeight="20.0" prefWidth="66.0" text="Rotate" textFill="#797b86">
                      <font>
                         <Font name="Inter 18pt Regular" size="11.0" />
                      </font>
                   </Label>
+                  <ToggleButton fx:id="selectToolButton2" contentDisplay="BOTTOM" layoutX="23.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSelectToolButtonSelected" prefHeight="55.0" prefWidth="55.0">
+                     <graphic>
+                        <SVGPath content="M462.23-260.77q-85.61-7.31-143.92-69.77Q260-393 260-480q0-91.67 64.17-155.83Q388.33-700 480-700q87 0 149.46 58.12 62.46 58.11 69.77 143.73L635.62-517q-12.97-54-55.87-88.5Q536.86-640 480-640q-66 0-113 47t-47 113q0 57 34.69 100T443-324l19.23 63.23Zm48 159.15q-7.56 1.62-15.11 1.62H480q-78.85 0-148.2-29.92t-120.65-81.21q-51.3-51.29-81.22-120.63Q100-401.1 100-479.93q0-78.84 29.92-148.21t81.21-120.68q51.29-51.31 120.63-81.25Q401.1-860 479.93-860q78.84 0 148.21 29.93 69.37 29.92 120.68 81.22t81.25 120.65Q860-558.85 860-480v14.92q0 7.46-1.62 14.93L800-468v-12q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93h12l18.23 58.38Zm295.38 7.39L624.23-276l-43.46 131.38L480-480l335.38 100.77L684-335.77l181.77 181.38-60.16 60.16Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="Selection Tool" />
+                     </tooltip>
+                  </ToggleButton>
+                  <Label layoutX="28.0" layoutY="69.0" prefHeight="20.0" prefWidth="41.0" text="Select" textFill="#797b86">
+                     <font>
+                        <Font name="Inter 18pt Regular" size="68.0" />
+                     </font>
+                  </Label>
+                  <Separator layoutX="88.0" layoutY="13.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
                </AnchorPane>
             </Tab>
          </TabPane>
@@ -375,12 +390,16 @@
                <content>
                   <Group fx:id="canvasGroup">
                      <children>
-                        <Canvas fx:id="grid" height="415.0" width="895.0" />
-                        <Pane fx:id="canvas" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragReleased="#setOnMouseReleased" onMouseDragged="#setOnMouseDragged" onMousePressed="#setOnMousePressed" onMouseReleased="#setOnMouseReleased" prefHeight="415.0" prefWidth="895.0">
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </Pane>
+                        <StackPane>
+                           <children>
+                              <Canvas fx:id="grid" height="415.0" width="895.0" />
+                              <Pane fx:id="canvas" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragReleased="#setOnMouseReleased" onMouseDragged="#setOnMouseDragged" onMousePressed="#setOnMousePressed" onMouseReleased="#setOnMouseReleased" prefHeight="415.0" prefWidth="895.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </Pane>
+                           </children>
+                        </StackPane>
                      </children>
                   </Group>
                </content>

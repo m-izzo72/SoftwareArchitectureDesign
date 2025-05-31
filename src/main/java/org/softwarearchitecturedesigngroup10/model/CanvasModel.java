@@ -239,4 +239,13 @@ public class CanvasModel implements CanvasModelInterface {
         notifyObservers();
     }
 
+    public void yFlip() {
+        getSelectedShapes().forEach((key, value) -> {value.setYFlipped();});
+        notifyObservers();
+    }
+
+    public void xFlip() {
+        getSelectedShapes().forEach((key, value) -> {value.setXFlipped();});
+        notifyObservers();
+    }
 }

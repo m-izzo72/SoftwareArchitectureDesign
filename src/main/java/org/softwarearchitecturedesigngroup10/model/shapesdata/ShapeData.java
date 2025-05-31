@@ -12,6 +12,24 @@ public abstract class ShapeData implements Serializable, Cloneable {
     private double strokeWidth;
     private double rotationAngle;
     private boolean isSelected;
+    private boolean isYFlipped;
+    private boolean isXFlipped;
+
+    public boolean isXFlipped() {
+        return isXFlipped;
+    }
+
+    public void setXFlipped() {
+        isXFlipped = !isYFlipped;
+    }
+
+    public boolean isYFlipped() {
+        return isYFlipped;
+    }
+
+    public void setYFlipped() {
+        isYFlipped = !isYFlipped;
+    }
 
     public ShapeData() { }
 
