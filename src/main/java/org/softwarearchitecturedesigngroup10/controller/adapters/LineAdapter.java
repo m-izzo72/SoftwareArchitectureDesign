@@ -18,6 +18,8 @@ public class LineAdapter implements ShapeAdapterInterface {
         line.setStroke(strokeColor);
         line.setStrokeWidth(ld.getStrokeWidth());
         line.setRotate(ld.getRotationAngle());
+        if(ld.isXFlipped()) line.setScaleX(-1);
+        if(ld.isYFlipped()) line.setScaleY(-1);
         return line;
     }
 }

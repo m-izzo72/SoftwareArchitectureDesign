@@ -1,10 +1,7 @@
 package org.softwarearchitecturedesigngroup10.controller.adapters;
 
 import javafx.scene.shape.Shape;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.EllipseData;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.LineData;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.RectangleData;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +13,7 @@ public class ShapeConverter {
         adapters.put(LineData.class, new LineAdapter());
         adapters.put(RectangleData.class, new RectangleAdapter());
         adapters.put(EllipseData.class, new EllipseAdapter());
+        adapters.put(PolygonData.class, new PolygonAdapter());
     }
 
     public Shape convert(ShapeData data) {

@@ -206,6 +206,7 @@ public class CanvasModel implements CanvasModelInterface {
     public void rotateShape(double angle) {
         getSelectedShapes().forEach((key, value) -> {
             value.setRotationAngle(angle);
+            System.out.println("CanvasModel: Rotating " + key + " to angle " + angle);
         });
         notifyObservers();
     }

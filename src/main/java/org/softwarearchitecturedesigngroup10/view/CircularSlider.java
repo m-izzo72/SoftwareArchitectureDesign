@@ -43,7 +43,7 @@ public class CircularSlider extends Pane {
 
         thumb.setFill(Color.DODGERBLUE);
         thumb.setStroke(Color.WHITE);
-        thumb.setStrokeWidth(2);
+        thumb.setStrokeWidth(0);
         thumb.setRadius(10);
 
         getChildren().addAll(track, thumb);

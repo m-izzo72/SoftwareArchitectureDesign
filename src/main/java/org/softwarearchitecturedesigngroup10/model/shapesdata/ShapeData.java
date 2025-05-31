@@ -14,13 +14,22 @@ public abstract class ShapeData implements Serializable, Cloneable {
     private boolean isSelected;
     private boolean isYFlipped;
     private boolean isXFlipped;
+    private double resizeFactor;
+
+    public double getResizeFactor() {
+        return resizeFactor;
+    }
+
+    public void setResizeFactor(double resizeFactor) {
+        this.resizeFactor = resizeFactor;
+    }
 
     public boolean isXFlipped() {
         return isXFlipped;
     }
 
     public void setXFlipped() {
-        isXFlipped = !isYFlipped;
+        isXFlipped = !isXFlipped;
     }
 
     public boolean isYFlipped() {

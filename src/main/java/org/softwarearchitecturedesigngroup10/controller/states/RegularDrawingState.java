@@ -14,13 +14,15 @@ import org.softwarearchitecturedesigngroup10.model.factories.LineDataFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.RectangleDataFactory;
 import org.softwarearchitecturedesigngroup10.model.factories.ShapeDataFactory;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
-public class PaintingState implements State {
+public class RegularDrawingState implements State {
 
     Image cursorImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/cursor.png")));
-
     ImageCursor drawingCursor = new ImageCursor(cursorImage, 0, 0);
+
+
 
 
 
@@ -60,12 +62,17 @@ public class PaintingState implements State {
             context.getCanvasView().setPreviewShape(null);
         }
 
+        ArrayList<Double> points = new ArrayList<>();
+        points.add(context.getStartX());
+        points.add(context.getStartY());
+        points.add(event.getX());
+        points.add(event.getY());
+
         context.getCommandManager().executeCommand(
                 new AddShapeCommand(
                         context.getCanvasModel(),
                         context.getFactory().createShapeData(
-                                context.getStartX(), context.getStartY(),
-                                event.getX(), event.getY(),
+                                points,
                                 context.getFillColorPicker().getValue().toString(),
                                 context.getStrokeColorPicker().getValue().toString(),
                                 context.getStrokeSlider().getValue(),

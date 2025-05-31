@@ -116,7 +116,7 @@
 #openFileButton, #saveFileButton, #newCanvasButton,
 #cutShapeButton, #copyShapeButton, #pasteShapeButton,
 #sendToBackButton, #bringToFrontButton, #flipXButton, #flipYButton,
-#eraseShapeButton, #selectToolButton, #strokeWidthMenuButton,
+#eraseShapeButton, #selectToolButton, #selectToEditButton, #strokeWidthMenuButton,
 #editStrokeWidthMenuButton,
 #closeButton, #minimizeButton, #undoButton,
 #quickToolbar .button, #canvasQuickToolbar .button,
@@ -130,7 +130,7 @@
 #openFileButton, #saveFileButton, #newCanvasButton,
 #cutShapeButton, #copyShapeButton, #pasteShapeButton,
 #sendToBackButton, #bringToFrontButton, #flipXButton, #flipYButton,
-#eraseShapeButton, #selectToolButton, #strokeWidthMenuButton,
+#eraseShapeButton, #selectToolButton, #selectToEditButton, #strokeWidthMenuButton,
 #editStrokeWidthMenuButton,
 #toggleGridButton {
     -fx-background-radius: 7;
@@ -157,7 +157,7 @@
 #openFileButton:hover, #newCanvasButton:hover, #saveFileButton:hover,
 #cutShapeButton:hover, #copyShapeButton:hover, #pasteShapeButton:hover,
 #sendToBackButton:hover, #bringToFrontButton:hover, #flipXButton:hover, #flipYButton:hover,
-#eraseShapeButton:hover, #selectToolButton:hover,
+#eraseShapeButton:hover, #selectToolButton:hover, #selectToEditButton:hover,
 #strokeWidthMenuButton:hover, #editStrokeWidthMenuButton:hover,
 #quickToolbar .button:hover, #canvasQuickToolbar .button:hover,
 #toggleGridButton:hover {
@@ -168,7 +168,7 @@
 #fileNavigation:selected, #shapeNavigation:selected, #clipboardNavigation:selected,
 #lineButton:selected, #rectangleButton:selected, #ellipseButton:selected, #polygonButton:selected, #textButton:selected,
 #openFileButton:selected, #saveFileButton:selected, #newCanvasButton:selected,
-#eraseShapeButton:selected, #selectToolButton:selected,
+#eraseShapeButton:selected, #selectToolButton:selected, #selectToEditButton:selected,
 #toggleGridButton:selected {
     -fx-background-color: #5874e6;
 }
@@ -176,7 +176,7 @@
 /* Stato :selected SVGPath */
 #lineButton:selected SVGPath, #rectangleButton:selected SVGPath, #ellipseButton:selected SVGPath, #polygonButton:selected SVGPath, #textButton:selected SVGPath,
 #openFileButton:selected SVGPath, #saveFileButton:selected SVGPath, #newCanvasButton:selected SVGPath,
-#eraseShapeButton:selected SVGPath, #selectToolButton:selected SVGPath,
+#eraseShapeButton:selected SVGPath, #selectToolButton:selected SVGPath, #selectToEditButton:selected SVGPath,
 #toggleGridButton:selected SVGPath {
     -fx-fill: #ffffff;
 }
