@@ -15,6 +15,36 @@ public class PolygonData extends ShapeData {
     }
 
     @Override
+    public void setX(double newAbsoluteReferenceX) {
+        double currentAbsoluteReferenceX = super.getX();
+        double deltaXToApplyToPoints = newAbsoluteReferenceX - currentAbsoluteReferenceX;
+
+        if (this.points != null && deltaXToApplyToPoints != 0) {
+            for (int i = 0; i < points.size(); i++) {
+                if (i % 2 == 0) { // X coord
+                    points.set(i, points.get(i) + deltaXToApplyToPoints);
+                }
+            }
+        }
+        super.setX(newAbsoluteReferenceX);
+    }
+
+    @Override
+    public void setY(double newAbsoluteReferenceY) {
+        double currentAbsoluteReferenceY = super.getY();
+        double deltaYToApplyToPoints = newAbsoluteReferenceY - currentAbsoluteReferenceY;
+
+        if (this.points != null && deltaYToApplyToPoints != 0) {
+            for (int i = 0; i < points.size(); i++) {
+                if (i % 2 == 1) { // Y coord
+                    points.set(i, points.get(i) + deltaYToApplyToPoints);
+                }
+            }
+        }
+        super.setY(newAbsoluteReferenceY);
+    }
+
+    @Override
     public double getWidth() {
         return 0;
     }

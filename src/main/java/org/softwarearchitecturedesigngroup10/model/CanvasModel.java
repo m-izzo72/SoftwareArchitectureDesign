@@ -2,10 +2,7 @@ package org.softwarearchitecturedesigngroup10.model;
 
 import org.softwarearchitecturedesigngroup10.model.commands.clipboard.ShapesClipboard;
 import org.softwarearchitecturedesigngroup10.model.filesmanager.FileManager;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.EllipseData;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.LineData;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.RectangleData;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.*;
 import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
 
 
@@ -99,9 +96,14 @@ public class CanvasModel implements CanvasModelInterface {
             ed.setCenterY(ed.getCenterY() + dy);
             ed.setX(ed.getCenterX() - ed.getRadiusX());
             ed.setY(ed.getCenterY() - ed.getRadiusY());
-        } else {
+        } else if (shapes.get(shapeID) instanceof PolygonData pd) {
+            pd.setX(pd.getX() + dx);
+            pd.setY(pd.getY() + dy);
             //shapes.get(shapeID).setX(shapes.get(shapeID).getX() + dx);
             //shapes.get(shapeID).setY(shapes.get(shapeID).getY() + dy);
+        } else if (shapes.get(shapeID) instanceof TextData td) {
+            td.setX(td.getX() + dx);
+            td.setY(td.getY() + dy);
         }
     }
 

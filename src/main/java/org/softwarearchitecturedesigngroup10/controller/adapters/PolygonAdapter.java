@@ -24,15 +24,17 @@ public class PolygonAdapter implements ShapeAdapterInterface{
         polygon.getPoints().addAll(pd.getPoints());
 
         polygon.setRotate(0);
+        polygon.setScaleY(1.0); polygon.setScaleX(1.0);
         if(pd.isYFlipped() && pd.isXFlipped()) {
-            polygon.setRotate(pd.getRotationAngle() + 180);
+            polygon.setRotate(pd.getRotationAngle());
             polygon.setScaleY(-1); polygon.setScaleX(-1);
         } else if(pd.isYFlipped() && !pd.isXFlipped()) {
             polygon.setRotate(-pd.getRotationAngle());
             polygon.setScaleY(-1); polygon.setScaleX(1);
         } else if(pd.isXFlipped() && !pd.isYFlipped()) {
-            polygon.setRotate(-pd.getRotationAngle() + 180);
-            polygon.setScaleY(1); polygon.setScaleX(-1);
+            polygon.setRotate(-pd.getRotationAngle());
+            polygon.setScaleY(1);
+            polygon.setScaleX(-1);
         } else {
             polygon.setRotate(pd.getRotationAngle());
             polygon.setScaleY(1); polygon.setScaleX(1);

@@ -101,6 +101,9 @@ public class Controller implements ModelObserver {
     @FXML private ColorPicker editFillColorPicker;
     @FXML private Canvas grid;
     @FXML private Button selectToEditButton;
+    @FXML private StackPane stackPane;
+    @FXML private Slider gridSizeSlider;
+    @FXML private AnchorPane helperStackPane;
 
     /****************** CONTROLLER STATE & SERVICES ******************/
     private Stage stage;
@@ -109,12 +112,9 @@ public class Controller implements ModelObserver {
     private CommandManager commandManager;
     private ShapeConverter shapeConverter;
     private ShapeDataFactory factory;
-    private SelectionPropertyObserver selectionPropertyObserver;
 
     private double xOffset = 0, yOffset = 0; // For window dragging
     private double startX, startY; // For shape drawing/manipulation
-    private double defaultCanvasWidth, defaultCanvasHeight;
-    private double zoomFactor = 1.0;
     private double gridSize = 20;
 
     // State Pattern
@@ -125,18 +125,14 @@ public class Controller implements ModelObserver {
     private final State polygonDrawingState = new PolygonDrawingState();
     private final State movingState = new MovingState();
     private final State resizingState = new ResizingState();
+    private final State textDrawingState = new TextDrawingState();
 
     // Color constants for focus listener
     private static final Color FOCUSED_BACKGROUND_COLOR = Color.valueOf("#525355");
     private static final Color UNFOCUSED_BACKGROUND_COLOR = Color.valueOf("#5a5b5e");
     private static final Color FOCUSED_ICON_COLOR = Color.valueOf("#fffffe");
     private static final Color UNFOCUSED_ICON_COLOR = Color.valueOf("#797979");
-    @FXML
-    private StackPane stackPane;
-    @FXML
-    private Slider gridSizeSlider;
-    @FXML
-    private AnchorPane helperStackPane;
+
 
 
     /****************** INITIALIZATION ******************/
@@ -147,8 +143,8 @@ public class Controller implements ModelObserver {
         commandManager = new CommandManager();
         shapeConverter = new ShapeConverter();
 
-        defaultCanvasHeight = canvas.getPrefHeight();
-        defaultCanvasWidth = canvas.getPrefWidth();
+//        defaultCanvasHeight = canvas.getPrefHeight();
+//        defaultCanvasWidth = canvas.getPrefWidth();
 
         // Selects the "Shapes" tab by default
         tab.getSelectionModel().select(1);
@@ -166,7 +162,7 @@ public class Controller implements ModelObserver {
                 sendToBackButton, bringToFrontButton,
                 editStrokeWidthIcon, editStrokeWidthSlider,
                 flipXButton, flipYButton, rotationSlider);
-        selectionPropertyObserver = new SelectionPropertyObserver(canvasModel, nodesToBind);
+        SelectionPropertyObserver selectionPropertyObserver = new SelectionPropertyObserver(canvasModel, nodesToBind);
         canvasModel.addObserver(selectionPropertyObserver);
 
         setupListeners();
@@ -269,17 +265,16 @@ public class Controller implements ModelObserver {
 
         viewShapes.forEach((id, fxShape) -> {
             boolean isThisShapeSelected = selectedModelShapes.containsKey(id);
-            canvasView.setUnselectedState(fxShape); // Default state for all
-            Highlighter.unhighlightShape(fxShape);   // Default state for all
+            canvasView.setUnselectedState(fxShape);
+            Highlighter.unhighlightShape(fxShape);
 
             if (anyShapeSelected) {
                 if (isThisShapeSelected) {
                     Highlighter.highlightShape(fxShape);
                 } else {
-                    canvasView.setSelectedEffect(fxShape); // e.g., dimming effect for non-selected shapes when something else is selected
+                    canvasView.setSelectedEffect(fxShape);
                 }
             }
-            // If !anyShapeSelected, they remain in their default unselected/unhighlighted state
         });
 
         // Update resize handles
@@ -363,23 +358,17 @@ public class Controller implements ModelObserver {
 
     // --- Zoom ---
     private void zoomListener(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-        // Assuming slider value from 0 to 300, mapping to 0.0 to 3.0 zoomFactor
-        // Or if slider is 1 to X, adjust ((double) 1 / 3) accordingly.
-        // Current: if slider is 3, zoomFactor = 1. if slider is 6, zoomFactor = 2.
-        zoomFactor = newValue.doubleValue() / 3.0; // Example: if slider max is 9, this gives 3x zoom. Adjust base (3.0) as needed.
-        if (zoomFactor <= 0) zoomFactor = 0.1; // Prevent zero or negative zoom
 
-//        canvas.setScaleX(zoomFactor);
-//        canvas.setScaleY(zoomFactor);
-//        grid.setScaleX(zoomFactor);
-//        grid.setScaleY(zoomFactor);
+        //private double defaultCanvasWidth, defaultCanvasHeight;
+        double zoomFactor = newValue.doubleValue() / 3.0;
+        if (zoomFactor <= 0) zoomFactor = 0.1;
+
         stackPane.setScaleX(zoomFactor);
         stackPane.setScaleY(zoomFactor);
 
         scrollableCanvasContainer.setHvalue(0.5);
         scrollableCanvasContainer.setVvalue(0.5);
 
-        // if (toggleGridButton.isSelected()) drawGrid(grid.getGraphicsContext2D());
     }
 
     // --- Canvas Resizing and Scrolling ---
@@ -405,9 +394,9 @@ public class Controller implements ModelObserver {
         public Number fromString(String string) {
             try {
                 double val = parseDouble(string);
-                return Math.max(1, Math.min(val, 4096)); // Ensure within reasonable bounds
+                return Math.max(1, Math.min(val, 4096));
             } catch (NumberFormatException e) {
-                return 0; // Or last valid value
+                return 0;
             }
         }
     };
@@ -423,16 +412,14 @@ public class Controller implements ModelObserver {
             if (grid != null && grid.getGraphicsContext2D() != null) { // Ensure grid is ready
                 grid.setWidth(canvas.getPrefWidth()); // Match grid canvas to drawing canvas
                 grid.setHeight(canvas.getPrefHeight());
-//                stackPane.setPrefWidth(grid.getWidth());
-//                stackPane.setPrefHeight(grid.getHeight());
+
                 if (toggleGridButton.isSelected()) {
                     drawGrid(grid.getGraphicsContext2D());
                 } else {
                     clearGrid(grid.getGraphicsContext2D());
                 }
             }
-            // Center scrollbars after resize
-            // These might need to be runLater if the layout isn't immediate
+
             javafx.application.Platform.runLater(() -> {
                  scrollableCanvasContainer.setHvalue(0.5);
                  scrollableCanvasContainer.setVvalue(0.5);
@@ -446,7 +433,6 @@ public class Controller implements ModelObserver {
         Bindings.bindBidirectional(canvasWidthInput.textProperty(), customWidthProperty, doubleConverter);
         Bindings.bindBidirectional(canvasHeightInput.textProperty(), customHeightProperty, doubleConverter);
 
-        // Input validation for text fields
         canvasWidthInput.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
                 canvasWidthInput.setText(newValue.replaceAll("\\D", ""));
@@ -454,7 +440,6 @@ public class Controller implements ModelObserver {
             if (Double.parseDouble(newValue) > 4092) {
                 canvasWidthInput.setText("4092");
             }
-            // Max value is handled by the converter, but an additional check here is fine
         });
         canvasHeightInput.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
@@ -480,8 +465,8 @@ public class Controller implements ModelObserver {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            commandManager.clear(); // Svuota lo stack degli undo
-            canvasModel.clear();    // Pulisce le forme dal modello
+            commandManager.clear();
+            canvasModel.clear();
 
             title.setText("New Canvas");
         }
@@ -501,9 +486,8 @@ public class Controller implements ModelObserver {
                 canvasModel.save(fileToSave);
                 title.setText(fileToSave.getName());
             } catch (IOException e) {
-                // Consider showing an Alert to the user
                 System.err.println("Error saving file: " + e.getMessage());
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
     }
@@ -522,19 +506,14 @@ public class Controller implements ModelObserver {
                 commandManager.clear();
                 canvasModel.load(selectedFile);
                 title.setText(selectedFile.getName());
-                // Update canvas size inputs if stored in file, or reset to loaded canvas size
-                // canvasWidthInput.setText(String.format("%.0f", canvasModel.getWidth()));
-                // canvasHeightInput.setText(String.format("%.0f", canvasModel.getHeight()));
             } catch (IOException | ClassNotFoundException e) {
-                // Consider showing an Alert to the user
                 System.err.println("Error opening file: " + e.getMessage());
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
     }
 
     /****************** SHAPE SELECTION ACTIONS (SHAPES TAB) ******************/
-    // Note: If more shape tools are added, consider a helper method to reduce redundancy.
     @FXML
     public void onEllipseButtonSelected(ActionEvent actionEvent) {
         if (ellipseButton.isSelected()) {
@@ -580,6 +559,17 @@ public class Controller implements ModelObserver {
     }
 
     @FXML
+    public void onWriteTextButtonAction(ActionEvent actionEvent) {
+        if(textButton.isSelected()) {
+            deselectOtherShapeTools(textButton);
+            setFactory(new TextDataFactory());
+            setCurrentState(textDrawingState);
+        } else {
+            setCurrentState(idleState);
+        }
+    }
+
+    @FXML
     public void onSelectToolButtonSelected(ActionEvent actionEvent) {
         if (selectToolButton.isSelected()) {
             deselectOtherShapeTools(selectToolButton);
@@ -595,9 +585,7 @@ public class Controller implements ModelObserver {
         if (selectedTool != lineButton) lineButton.setSelected(false);
         if (selectedTool != selectToolButton) selectToolButton.setSelected(false);
         if (selectedTool != polygonButton) polygonButton.setSelected(false);
-        // Add other shape tools here if any (textButton, polygonButton)
-        // if (selectedTool != textButton) textButton.setSelected(false);
-        // if (selectedTool != polygonButton) polygonButton.setSelected(false);
+        if (selectedTool != textButton) textButton.setSelected(false);
     }
 
     @FXML
@@ -680,7 +668,7 @@ public class Controller implements ModelObserver {
     }
 
     /****************** GETTERS ******************/
-    public Pane getCanvasPane() { return canvas; } // Renamed to avoid conflict with Canvas class
+    //public Pane getCanvasPane() { return canvas; }
     public ColorPicker getStrokeColorPicker() { return strokeColorPicker; }
     public ColorPicker getFillColorPicker() { return fillColorPicker; }
     public Slider getStrokeSlider() { return strokeSlider; }
@@ -697,7 +685,7 @@ public class Controller implements ModelObserver {
     public State getSelectionState() { return selectionState; }
     public State getMovingState() { return movingState; }
     public State getResizingState() { return resizingState; }
-    public Group getCanvasGroup() { return canvasGroup; } // Getter for canvasGroup
+    //public Group getCanvasGroup() { return canvasGroup; } // Getter for canvasGroup
 
     /********************* SETTERS ******************/
     public void setCurrentState(State newState) {
@@ -730,11 +718,19 @@ public class Controller implements ModelObserver {
         return canvas;
     }
 
-    public StackPane getStackPane() {
-        return stackPane;
-    }
+//    public StackPane getStackPane() {
+//        return stackPane;
+//    }
 
     public AnchorPane getHelperStackPane() {
         return helperStackPane;
+    }
+
+    public ToggleButton getTextButton() {
+        return textButton;
+    }
+
+    public State getIdleState() {
+        return idleState;
     }
 }

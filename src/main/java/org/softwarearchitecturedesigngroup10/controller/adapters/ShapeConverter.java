@@ -14,6 +14,7 @@ public class ShapeConverter {
         adapters.put(RectangleData.class, new RectangleAdapter());
         adapters.put(EllipseData.class, new EllipseAdapter());
         adapters.put(PolygonData.class, new PolygonAdapter());
+        adapters.put(TextData.class, new TextAdapter());
     }
 
     public Shape convert(ShapeData data) {

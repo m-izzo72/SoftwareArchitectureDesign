@@ -30,7 +30,7 @@ public class SelectionPropertyObserver implements ModelObserver {
             ((ColorPicker) selectionBoundNodes.get(1)).setValue(Color.valueOf(Objects.requireNonNull(canvasModel.getSelectedShapes().entrySet().stream().skip(canvasModel.getSelectedShapes().size() - 1).findFirst().orElse(null)).getValue().getFillColor()));
             ((ColorPicker) selectionBoundNodes.get(3)).setValue(Color.valueOf(Objects.requireNonNull(canvasModel.getSelectedShapes().entrySet().stream().skip(canvasModel.getSelectedShapes().size() - 1).findFirst().orElse(null)).getValue().getStrokeColor()));
             ((Slider) selectionBoundNodes.get(10)).setValue(Objects.requireNonNull(canvasModel.getSelectedShapes().entrySet().stream().skip(canvasModel.getSelectedShapes().size() - 1).findFirst().orElse(null)).getValue().getStrokeWidth());
-            ((CircularSlider) selectionBoundNodes.get(selectionBoundNodes.size() - 1)).setAngle(canvasModel.getSelectedShapes().entrySet().stream().skip(canvasModel.getSelectedShapes().size() - 1).findFirst().orElse(null).getValue().getRotationAngle());
+            ((CircularSlider) selectionBoundNodes.get(selectionBoundNodes.size() - 1)).setAngle(Objects.requireNonNull(canvasModel.getSelectedShapes().entrySet().stream().skip(canvasModel.getSelectedShapes().size() - 1).findFirst().orElse(null)).getValue().getRotationAngle());
 
         }
     }
