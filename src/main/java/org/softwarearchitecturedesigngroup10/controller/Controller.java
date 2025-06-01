@@ -154,15 +154,18 @@ public class Controller implements ModelObserver {
         canvasModel.addObserver(this);
 
         // Nodes to enable/disable based on selection
-        ArrayList<Node> nodesToBind = new ArrayList<>();
-        Collections.addAll(nodesToBind,
+//        ArrayList<Node> nodesToBind = new ArrayList<>();
+//        Collections.addAll(nodesToBind,
+//                );
+        SelectionPropertyObserver selectionPropertyObserver = new SelectionPropertyObserver(canvasModel,
                 editFillColourIcon, editFillColorPicker,
                 editStrokeColourIcon, editStrokeColorPicker,
-                copyShapeButton, eraseShapeButton, cutShapeButton,
+                copyShapeButton, eraseShapeButton,
+                cutShapeButton, pasteShapeButton,
                 sendToBackButton, bringToFrontButton,
                 editStrokeWidthIcon, editStrokeWidthSlider,
                 flipXButton, flipYButton, rotationSlider);
-        SelectionPropertyObserver selectionPropertyObserver = new SelectionPropertyObserver(canvasModel, nodesToBind);
+                //nodesToBind);
         canvasModel.addObserver(selectionPropertyObserver);
 
         setupListeners();

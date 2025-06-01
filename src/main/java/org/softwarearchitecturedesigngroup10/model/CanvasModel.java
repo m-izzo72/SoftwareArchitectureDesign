@@ -13,13 +13,16 @@ import java.util.stream.Collectors;
 
 public class CanvasModel implements CanvasModelInterface {
     LinkedHashMap<String, ShapeData> shapes;
+    LinkedHashMap<String, ShapeData> selectedShapes;
     private ShapesClipboard shapesClipboard;
     FileManager fileManager;
     ArrayList<ModelObserver> observers;
 
+
     public CanvasModel() {
         observers = new ArrayList<>();
         shapes = new LinkedHashMap<>();
+        selectedShapes = new LinkedHashMap<>();
         fileManager = new FileManager();
         shapesClipboard = new ShapesClipboard(this);
     }
@@ -58,8 +61,11 @@ public class CanvasModel implements CanvasModelInterface {
         notifyObservers();
     }
 
-    public void selectShape(String shapeId) {
+    public void toggleShapeSelection(String shapeId) {
         shapes.get(shapeId).setSelected(!shapes.get(shapeId).isSelected());
+        if (shapes.get(shapeId).isSelected()) selectedShapes.put(shapeId, shapes.get(shapeId));
+        else selectedShapes.remove(shapeId);
+
 //        if(!getSelectedShapes().isEmpty())
         notifyObservers();
     }
@@ -70,12 +76,6 @@ public class CanvasModel implements CanvasModelInterface {
             moveShapeData(key, dx, dy);
             moved.set(true);
         });
-        /*for (ShapeData shape : shapes.values()) {
-            if (shape.isSelected()) {
-                moveShapeData(shape, dx, dy);
-                moved.set(true);
-            }
-        }*/
 
         if (moved.get()) {
             notifyObservers();
@@ -116,6 +116,7 @@ public class CanvasModel implements CanvasModelInterface {
 
     public void deselectAllShapes() {
         shapes.forEach((key, value) -> value.setSelected(false));
+        selectedShapes.clear();
         notifyObservers();
     }
 
@@ -171,6 +172,10 @@ public class CanvasModel implements CanvasModelInterface {
         return new LinkedHashMap<String, ShapeData>(shapes.entrySet().stream()
                 .filter(entry -> entry.getValue().isSelected())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+    }
+
+    public LinkedHashMap<String, ShapeData> getOrderedSelectedShapes() {
+        return selectedShapes;
     }
 
     public void editShapesFillColour(String newFillColour) {

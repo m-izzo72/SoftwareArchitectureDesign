@@ -94,13 +94,11 @@ public class TextDrawingState implements State {
                     context.getFillColorPicker().getValue().toString(),
                     context.getStrokeColorPicker().getValue().toString(),
                     context.getStrokeSlider().getValue(),
-                    0 // Angolo di rotazione iniziale
+                    0
             );
             context.getCommandManager().executeCommand(new AddShapeCommand(context.getCanvasModel(), textData));
         }
 
-        // Se la finalizzazione non è dovuta a un nuovo click (che inizierebbe un nuovo testo),
-        // allora torna allo stato idle o di selezione.
         if (!dueToNewMousePress) {
             context.setCurrentState(context.getIdleState()); // O SelectionState
         }
@@ -109,7 +107,7 @@ public class TextDrawingState implements State {
     private void cancelTextInput(Controller context) {
         if (activeTextField == null) return;
         Pane canvasPane = context.getCanvas();
-        if (canvasPane != null && canvasPane.getChildren().contains(activeTextField)) {
+        if (canvasPane != null) {
             canvasPane.getChildren().remove(activeTextField);
         }
         activeTextField = null;

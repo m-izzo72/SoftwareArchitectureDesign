@@ -1,10 +1,13 @@
 package org.softwarearchitecturedesigngroup10.controller.states;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -76,9 +79,10 @@ public class PolygonDrawingState implements State {
         points = new ArrayList<>();
         polygonAlert = createPolygonAlertPane();
         confirmPolygonButton.setOnAction(this::confirmPolygon);
+
     }
 
-    public void confirmPolygon(ActionEvent event) {
+    public void confirmPolygon(Event event) {
         ArrayList<Double> vertices = new ArrayList<>(points);
         if (points.size() > 2) {
             context.getCommandManager().executeCommand(
@@ -125,6 +129,7 @@ public class PolygonDrawingState implements State {
         context.getCanvas().setCursor(drawingCursor);
         context.getHelperStackPane().getChildren().add(polygonAlert);
         this.context = context;
+
 
     }
 
