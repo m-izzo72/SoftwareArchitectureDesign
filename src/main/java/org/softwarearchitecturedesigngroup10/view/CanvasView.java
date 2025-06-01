@@ -31,8 +31,8 @@ public class CanvasView implements CanvasViewInterface {
         this.resizeHandle.setStroke(Color.WHITE);
         this.resizeHandle.setId(RESIZE_HANDLE_ID);
         this.resizeHandle.setCursor(Cursor.SE_RESIZE);
-        this.resizeHandle.setVisible(false); // Nascosto di default
-        this.canvas.getChildren().add(this.resizeHandle); // Aggiungilo subito e tienilo
+        this.resizeHandle.setVisible(false);
+        this.canvas.getChildren().add(this.resizeHandle);
     }
 
     public void deletePreview() {
@@ -63,9 +63,9 @@ public class CanvasView implements CanvasViewInterface {
 
     }
 
-    public void paint(Shape shape) {
+    public void draw(Shape shape) {
         canvas.getChildren().add(shape);
-        resizeHandle.toFront(); // Assicura che la maniglia sia sopra
+        resizeHandle.toFront();
     }
 
     public void paintPreview() {
@@ -130,19 +130,12 @@ public class CanvasView implements CanvasViewInterface {
     @Override
     public void clear() {
         canvas.getChildren().clear();
-        canvas.getChildren().add(resizeHandle); // Riaggiungi la maniglia
+        canvas.getChildren().add(resizeHandle);
         resizeHandle.setVisible(false);
     }
 
-    public void xFlip(Shape shape) {
-        shape.setScaleX(-1);
-    }
-    public void yFlip(Shape shape) {
-        shape.setScaleY(-1);
-    }
-
     @Override
-    public void paintAllFromScratch(LinkedHashMap<String, Shape> shapes) {
+    public void drawAllFromScratch(LinkedHashMap<String, Node> shapes) {
         List<Node> shapesToRemove = canvas.getChildren().stream()
                 .filter(node -> node != resizeHandle && !(node instanceof Shape && node.getId() != null && shapes.containsKey(node.getId())))
                 .toList();

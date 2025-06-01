@@ -4,6 +4,7 @@ import org.softwarearchitecturedesigngroup10.model.commands.clipboard.ShapesClip
 import org.softwarearchitecturedesigngroup10.model.filesmanager.FileManager;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.*;
 import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.composite.GroupedShapeData;
 
 
 import java.io.*;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 public class CanvasModel implements CanvasModelInterface {
     LinkedHashMap<String, ShapeData> shapes;
     LinkedHashMap<String, ShapeData> selectedShapes;
-    private ShapesClipboard shapesClipboard;
+    private final ShapesClipboard shapesClipboard;
     FileManager fileManager;
     ArrayList<ModelObserver> observers;
 
@@ -254,6 +255,78 @@ public class CanvasModel implements CanvasModelInterface {
 
     public void xFlip() {
         getSelectedShapes().forEach((key, value) -> {value.setXFlipped();});
+        notifyObservers();
+    }
+
+    public void groupSelectedShapes() {
+        LinkedHashMap<String, ShapeData> currentSelectedShapes = getSelectedShapes();
+        if (currentSelectedShapes.size() < 2) {
+            return;
+        }
+
+        GroupedShapeData group = new GroupedShapeData();
+        List<String> idsToRemove = new ArrayList<>();
+
+        LinkedHashMap<String, ShapeData> orderedOriginalShapes = new LinkedHashMap<>(shapes);
+        orderedOriginalShapes.keySet().retainAll(currentSelectedShapes.keySet());
+
+
+        for (Map.Entry<String, ShapeData> entry : orderedOriginalShapes.entrySet()) {
+            ShapeData selectedShape = entry.getValue();
+            group.add(selectedShape.clone());
+            idsToRemove.add(entry.getKey());
+        }
+
+        for (String id : idsToRemove) {
+            shapes.remove(id);
+        }
+
+        String groupId = UUID.randomUUID().toString();
+        shapes.put(groupId, group);
+
+        deselectAllShapes();
+        group.setSelected(true);
+        selectedShapes.put(groupId, group);
+
+        notifyObservers();
+    }
+
+    public void ungroupSelectedShapes() {
+        List<String> groupIdsToUngroup = new ArrayList<>();
+        for (Map.Entry<String, ShapeData> entry : selectedShapes.entrySet()) {
+            if (entry.getValue() instanceof GroupedShapeData) {
+                groupIdsToUngroup.add(entry.getKey());
+            }
+        }
+
+        if (groupIdsToUngroup.isEmpty()) {
+            return;
+        }
+
+        List<String> newSelectedIds = new ArrayList<>();
+
+        for (String groupId : groupIdsToUngroup) {
+            ShapeData shape = shapes.get(groupId);
+            if (shape instanceof GroupedShapeData group) {
+                for (ShapeData child : group.getChildren()) {
+                    String childId = UUID.randomUUID().toString();
+                    ShapeData childClone = child.clone();
+                    childClone.setSelected(true);
+                    shapes.put(childId, childClone);
+                    newSelectedIds.add(childId);
+                }
+                shapes.remove(groupId);
+            }
+        }
+
+        selectedShapes.clear();
+        for(String id : newSelectedIds) {
+            ShapeData newSelectedShape = shapes.get(id);
+            if (newSelectedShape != null) {
+                newSelectedShape.setSelected(true);
+                selectedShapes.put(id, newSelectedShape);
+            }
+        }
         notifyObservers();
     }
 }

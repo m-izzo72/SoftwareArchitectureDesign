@@ -28,6 +28,8 @@ import org.softwarearchitecturedesigngroup10.model.commands.clipboard.CopyShapeC
 import org.softwarearchitecturedesigngroup10.model.commands.clipboard.CutShapeCommand;
 import org.softwarearchitecturedesigngroup10.model.commands.clipboard.DeleteShapeCommand;
 import org.softwarearchitecturedesigngroup10.model.commands.clipboard.PasteShapeCommand;
+import org.softwarearchitecturedesigngroup10.model.commands.groups.GroupShapesCommand;
+import org.softwarearchitecturedesigngroup10.model.commands.groups.UngroupShapesCommand;
 import org.softwarearchitecturedesigngroup10.model.commands.shapeediting.*;
 import org.softwarearchitecturedesigngroup10.model.factories.*;
 import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
@@ -132,7 +134,14 @@ public class Controller implements ModelObserver {
     private static final Color UNFOCUSED_BACKGROUND_COLOR = Color.valueOf("#5a5b5e");
     private static final Color FOCUSED_ICON_COLOR = Color.valueOf("#fffffe");
     private static final Color UNFOCUSED_ICON_COLOR = Color.valueOf("#797979");
-
+    @FXML
+    private Tab libraryTab;
+    @FXML
+    private Button groupShapesButton;
+    @FXML
+    private Button ungroupShapesButton;
+    @FXML
+    private AnchorPane fileTabContainer1;
 
 
     /****************** INITIALIZATION ******************/
@@ -252,40 +261,69 @@ public class Controller implements ModelObserver {
     /****************** MODEL OBSERVER IMPLEMENTATION ******************/
     @Override
     public void update() {
-        LinkedHashMap<String, Shape> viewShapes = new LinkedHashMap<>();
+        LinkedHashMap<String, Node> viewNodes = new LinkedHashMap<>(); // Modificato per contenere Node
         LinkedHashMap<String, ShapeData> modelShapes = canvasModel.getShapes();
-        LinkedHashMap<String, ShapeData> selectedModelShapes = canvasModel.getSelectedShapes();
+
 
         modelShapes.forEach((id, data) -> {
-            Shape fxShape = shapeConverter.convert(data);
-            fxShape.setId(id);
-            viewShapes.put(id, fxShape);
+            Node fxNode = shapeConverter.convert(data); // shapeConverter.convert() ora restituisce Node
+            if (fxNode != null) {
+                fxNode.setId(id); // setId() è un metodo di Node
+                viewNodes.put(id, fxNode);
+            }
         });
 
-        canvasView.paintAllFromScratch(viewShapes);
+        // 2. Aggiornamento della Vista con i Nodi
+        canvasView.drawAllFromScratch(viewNodes); // CanvasView.paintAllFromScratch() ora accetta Map<String, Node>
 
-        boolean anyShapeSelected = !selectedModelShapes.isEmpty();
+        // 3. Gestione dell'Evidenziazione e degli Effetti di Selezione
+        boolean anyShapeSelected = !canvasModel.getSelectedShapes().isEmpty(); // Logica invariata
 
-        viewShapes.forEach((id, fxShape) -> {
-            boolean isThisShapeSelected = selectedModelShapes.containsKey(id);
-            canvasView.setUnselectedState(fxShape);
-            Highlighter.unhighlightShape(fxShape);
+        viewNodes.forEach((id, fxNode) -> {
+            boolean isThisShapeSelected = canvasModel.getSelectedShapes().containsKey(id); // Logica invariata
+
+            // Rimuovi l'opacità/effetti precedenti (se necessario, dipende da come li applichi)
+            // canvasView.setUnselectedState(fxNode); // Potrebbe necessitare di un cast se specifico per Shape
+            Highlighter.unhighlightShape(fxNode);   // Highlighter.unhighlightShape() ora accetta Node
 
             if (anyShapeSelected) {
                 if (isThisShapeSelected) {
-                    Highlighter.highlightShape(fxShape);
+                    Highlighter.highlightShape(fxNode); // Highlighter.highlightShape() ora accetta Node
                 } else {
-                    canvasView.setSelectedEffect(fxShape);
+                    // canvasView.setSelectedEffect(fxNode); // Potrebbe necessitare di un cast se specifico per Shape
+                    // Se setSelectedEffect opera solo su proprietà di Node (es. opacity), va bene.
+                    // Se usa metodi specifici di Shape (es. setFill, setStroke), allora devi
+                    // controllare il tipo di fxNode prima di applicare l'effetto.
+                    if (fxNode instanceof Shape) { // Controllo del tipo
+                        canvasView.setSelectedEffect((Shape) fxNode);
+                    } else if (fxNode instanceof javafx.scene.Group) {
+                        // Applica l'effetto a tutti i figli del gruppo o al gruppo stesso se ha senso
+                        // Esempio: imposta l'opacità del gruppo
+                        fxNode.setOpacity(0.5); // Esempio di effetto per un gruppo
+                    }
+                }
+            } else {
+                // Assicurati che tutti i nodi tornino allo stato non selezionato/non evidenziato
+                if (fxNode instanceof Shape) {
+                    canvasView.setUnselectedState((Shape) fxNode);
+                } else {
+                    fxNode.setOpacity(1.0); // Esempio per resettare un gruppo
                 }
             }
         });
 
-        // Update resize handles
-        if (selectedModelShapes.size() == 1) {
-            Map.Entry<String, ShapeData> entry = selectedModelShapes.entrySet().iterator().next();
+        // 4. Aggiornamento delle Maniglie di Ridimensionamento
+        if (canvasModel.getSelectedShapes().size() == 1) {
+            Map.Entry<String, ShapeData> entry = canvasModel.getSelectedShapes().entrySet().iterator().next();
             ShapeData selectedData = entry.getValue();
-            if (!(selectedData instanceof LineData) && selectedData.getWidth() > 5 && selectedData.getHeight() > 5) {
-                canvasView.updateResizeHandle(viewShapes.get(entry.getKey()));
+            Node selectedNode = viewNodes.get(entry.getKey()); // Ora è un Node
+
+            // La logica per mostrare le maniglie potrebbe dipendere dal fatto che sia una Shape
+            // e non, ad esempio, un LineData o un gruppo con dimensioni troppo piccole.
+            if (selectedNode instanceof Shape && !(selectedData instanceof LineData) &&
+                    selectedData.getWidth() > 5 && selectedData.getHeight() > 5) {
+                // getBoundsInParent() è un metodo di Node, quindi va bene.
+                canvasView.updateResizeHandle((Shape) selectedNode); // updateResizeHandle si aspetta Shape
             } else {
                 canvasView.updateResizeHandle(null);
             }
@@ -294,8 +332,8 @@ public class Controller implements ModelObserver {
         }
 
         // Update canvas info label
-        String selectedShapeLabelText = anyShapeSelected ? " > " + selectedModelShapes.size() + " selected shape(s)" : "";
-        canvasInfoLabel.setText(modelShapes.size() + " shape(s) on the canvas" + selectedShapeLabelText);
+        //String selectedShapeLabelText = anyShapeSelected ? " > " + selectedModelShapes.size() + " selected shape(s)" : "";
+        //canvasInfoLabel.setText(modelShapes.size() + " shape(s) on the canvas" + selectedShapeLabelText);
 
         // Update button states
         newCanvasButton.setDisable(modelShapes.isEmpty());
@@ -735,5 +773,15 @@ public class Controller implements ModelObserver {
 
     public State getIdleState() {
         return idleState;
+    }
+
+    @FXML
+    public void onUngroupShapesAction(ActionEvent actionEvent) {
+        commandManager.executeCommand(new UngroupShapesCommand(canvasModel));
+    }
+
+    @FXML
+    public void onGroupShapesAction(ActionEvent actionEvent) {
+        commandManager.executeCommand(new GroupShapesCommand(canvasModel));
     }
 }

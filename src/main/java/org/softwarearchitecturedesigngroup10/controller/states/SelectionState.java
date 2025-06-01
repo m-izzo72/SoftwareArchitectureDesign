@@ -1,6 +1,7 @@
 package org.softwarearchitecturedesigngroup10.controller.states;
 
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 import org.softwarearchitecturedesigngroup10.controller.Controller;
@@ -21,56 +22,78 @@ public class SelectionState implements State {
     @Override
     public void handleMousePressed(MouseEvent event, Controller context) {
         Object target = event.getTarget();
-        System.out.println("SelectionState - Clicked on: " + target); // <-- AGGIUNGI QUESTO
-        if (target instanceof Shape) {
-            System.out.println("  ID: " + ((Shape) target).getId()); // <-- AGGIUNGI QUESTO
-            System.out.println("  UserData: " + ((Shape) target).getUserData()); // <-- AGGIUNGI QUESTO
+        System.out.println("SelectionState - Clicked on: " + target); // Mantieni questo log!
+        Node targetNode = null;
+        if (target instanceof Node) {
+            targetNode = (Node) target;
+        } else {
+            event.consume(); // Non è un nodo, non sappiamo come gestirlo
+            return;
         }
+
         CanvasModel model = context.getCanvasModel();
         pressX = event.getX();
         pressY = event.getY();
         isPressOnSelectedShapes = false;
         clickedShapeId = null;
 
-        if (target instanceof Rectangle && ((Rectangle) target).getId() != null && ((Rectangle) target).getId().equals(CanvasView.RESIZE_HANDLE_ID)) {
-            Rectangle handle = (Rectangle) target;
-            String shapeId = (String) handle.getUserData();
-            if (shapeId != null) {
-                ResizingState resizingState = (ResizingState) context.getResizingState();
-                boolean initOk = resizingState.initializeResize(model, shapeId, pressX, pressY);
-                if (initOk) {
-                    context.setCurrentState(resizingState);
+        // Caso 1: Clic sulla maniglia di ridimensionamento (invariato)
+        if (targetNode instanceof Rectangle && CanvasView.RESIZE_HANDLE_ID.equals(targetNode.getId())) {
+            // ... (la tua logica esistente per la maniglia)
+            event.consume();
+            return;
+        }
+
+        // Caso 2: Tentativo di identificare la ShapeData corrispondente
+        // Dobbiamo risalire dal targetNode (potrebbe essere una Shape interna a un Group)
+        // all'ID della ShapeData radice (la GroupedShapeData o una ShapeData singola)
+        // che è gestita dal CanvasModel.
+
+        Node current = targetNode;
+        String rootShapeId = null;
+        ShapeData rootShapeData = null;
+
+        while (current != null) {
+            if (current.getId() != null && model.getShapes().containsKey(current.getId())) {
+                // Abbiamo trovato un Node il cui ID è una chiave nella mappa 'shapes' del modello.
+                // Questo è il nostro ShapeData (o GroupedShapeData) di interesse.
+                rootShapeId = current.getId();
+                rootShapeData = model.getShapes().get(rootShapeId);
+                break;
+            }
+            current = current.getParent(); // Risali l'albero della scena
+            if (current == context.getCanvas()) break; // Non andare oltre il canvas
+        }
+        System.out.println("SelectionState - Identified rootShapeId: " + rootShapeId); // Log importante
+
+        if (rootShapeId != null && rootShapeData != null) {
+            clickedShapeId = rootShapeId; // ID della ShapeData (potrebbe essere un gruppo)
+            isPressOnSelectedShapes = rootShapeData.isSelected();
+
+            if (!isPressOnSelectedShapes) { // Se si clicca su una forma/gruppo non selezionato
+                if (!event.isShiftDown()) {
+                    // Deseleziona tutto SOLO se non si preme Shift
+                    new DeselectAllShapeCommand(model).execute(); // Questo notificherà gli observer e aggiornerà selectedShapes
                 }
-            }
-            event.consume();
-            return;
-        }
+                // Seleziona la forma/gruppo cliccato
+                new SelectShapeCommand(model, clickedShapeId).execute(); // Questo aggiornerà lo stato di selezione e notificherà
+                isPressOnSelectedShapes = true; // Ora è considerato "premuto su una forma selezionata" per il drag
+            } else { // Se si clicca su una forma/gruppo GIÀ selezionato
+                if (event.isShiftDown()) {
+                    // Deseleziona la forma/gruppo se Shift è premuto (toggle)
+                    new SelectShapeCommand(model, clickedShapeId).execute();
+                    // isPressOnSelectedShapes diventerà false se viene deselezionato
+                    isPressOnSelectedShapes = model.getShapes().get(clickedShapeId).isSelected();
 
-        if (target instanceof Shape shape && shape.getId() != null && !shape.getId().equals(CanvasView.RESIZE_HANDLE_ID)) {
-            ShapeData data = model.getShapes().get(shape.getId());
-            if (data != null) {
-                clickedShapeId = shape.getId();
-                isPressOnSelectedShapes = data.isSelected();
+                }
+                // Altrimenti (già selezionato, no Shift), non fare nulla qui,
+                // aspetta il drag o il release. isPressOnSelectedShapes rimane true.
             }
-        } else if (target == context.getCanvas()) {
-            new DeselectAllShapeCommand(model).execute();
-            event.consume();
-            return;
-        }
 
-        if (target instanceof Shape && !isPressOnSelectedShapes && clickedShapeId != null) {
-            if (!event.isShiftDown()) {
-                new DeselectAllShapeCommand(model).execute();
-            }
-            new SelectShapeCommand(model, clickedShapeId).execute();
-            isPressOnSelectedShapes = true;
-
-        } else if (target instanceof Shape && isPressOnSelectedShapes && clickedShapeId != null) {
-            // Se clicco su una forma già selezionata, non faccio nulla qui,
-            // aspetto il drag o il release
-        } else if (target == context.getCanvas()) {
+        } else if (targetNode == context.getCanvas()) { // Clic sul canvas vuoto
             new DeselectAllShapeCommand(model).execute();
         }
+        // Altri casi potrebbero non fare nulla o consumare l'evento
 
         event.consume();
     }

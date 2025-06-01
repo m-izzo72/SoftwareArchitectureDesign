@@ -1,6 +1,8 @@
 package org.softwarearchitecturedesigngroup10.model.shapesdata;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class ShapeData implements Serializable, Cloneable {
 
@@ -112,5 +114,19 @@ public abstract class ShapeData implements Serializable, Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    /* USED FOR COMPOSITE PATTERN */
+
+    public void add(ShapeData shape) {
+        throw new UnsupportedOperationException("Cannot add to a simple shape.");
+    }
+
+    public void remove(ShapeData shape) {
+        throw new UnsupportedOperationException("Cannot remove from a simple shape.");
+    }
+
+    public List<ShapeData> getChildren() {
+        return Collections.emptyList();
     }
 }

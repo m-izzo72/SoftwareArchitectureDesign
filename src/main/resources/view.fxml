@@ -365,6 +365,47 @@
                   <Separator layoutX="88.0" layoutY="13.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
                </AnchorPane>
             </Tab>
+            <Tab fx:id="libraryTab" closable="false" text="Library">
+               <graphic>
+                  <Group>
+                     <children>
+                        <SVGPath content="M160 640 h320 v-80 H160 v80 Z m0-160 h320 v-80 H160 v80 Z M80 800 q-33 0-56.5-23.5 T0 720 v-640 q0-33 23.5-56.5 T80 0 h320 l240 240 v480 q0 33-23.5 56.5 T560 800 H80 Z m280-520 v-200 H80 v640 h480 v-440 H360 Z" scaleX="0.025" scaleY="0.025" translateX="-8.0" />
+                     </children>
+                  </Group>
+               </graphic>
+               <content>
+                  <AnchorPane fx:id="fileTabContainer1" minHeight="0.0" minWidth="0.0" prefHeight="86.0" prefWidth="898.0">
+                     <children>
+                        <Button fx:id="groupShapesButton" layoutX="14.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onGroupShapesAction" prefHeight="55.0" prefWidth="55.0">
+                           <graphic>
+                              <SVGPath content="M450-250h60v-120h120v-60H510v-120h-60v120H330v60h120v120ZM252.31-100Q222-100 201-121q-21-21-21-51.31v-615.38Q180-818 201-839q21-21 51.31-21H570l210 210v477.69Q780-142 759-121q-21 21-51.31 21H252.31ZM540-620v-180H252.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v615.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85h455.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46V-620H540ZM240-800v180-180V-160v-640Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
+                           </graphic>
+                           <tooltip>
+                              <Tooltip text="Erase canvas" />
+                           </tooltip>
+                        </Button>
+                        <Button fx:id="ungroupShapesButton" layoutX="117.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onUngroupShapesAction" prefHeight="55.0" prefWidth="55.0">
+                           <graphic>
+                              <SVGPath content="M252.31-100Q222-100 201-121q-21-21-21-51.31v-615.38Q180-818 201-839q21-21 51.31-21H570l210 210v260h-60v-230H540v-180H252.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v615.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85H610v60H252.31ZM878-79.23l-128-128v103.61h-60V-310h206.38v60H791.77l128 128L878-79.23ZM240-160v-640 640Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
+                           </graphic>
+                           <tooltip>
+                              <Tooltip text="Load canvas from file" />
+                           </tooltip>
+                        </Button>
+                        <Label layoutX="21.0" layoutY="69.0" prefHeight="20.0" prefWidth="79.0" text="New Canvas" textFill="#797b86">
+                           <font>
+                              <Font name="Inter 18pt Regular" size="11.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="120.0" layoutY="69.0" prefHeight="20.0" prefWidth="79.0" text="Load file" textFill="#797b86">
+                           <font>
+                              <Font name="Inter 18pt Regular" size="11.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
          </TabPane>
       </Pane>
       <HBox fx:id="mainArea" alignment="CENTER_LEFT" prefHeight="623.0" prefWidth="898.0">
