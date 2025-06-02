@@ -9,9 +9,9 @@ public interface CanvasViewInterface {
 
     void clear();
 
-    void draw(Shape shape);
+    void paint(Node shape);
 
-    void erase(Shape shape);
+    void erase(Node shape);
 
-    void drawAllFromScratch(LinkedHashMap<String, Node> shapes);
+    void paintAllFromScratch(LinkedHashMap<String, Node> shapes);
 }

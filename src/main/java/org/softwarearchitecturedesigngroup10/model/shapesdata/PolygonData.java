@@ -13,6 +13,9 @@ public class PolygonData extends ShapeData {
     public void setPoints(ArrayList<Double> points) {
         this.points = points;
     }
+    public PolygonData() {
+        setType("PD");
+    }
 
     @Override
     public void setX(double newAbsoluteReferenceX) {

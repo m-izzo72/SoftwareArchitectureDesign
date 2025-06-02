@@ -1,6 +1,6 @@
 package org.softwarearchitecturedesigngroup10.model.shapesdata;
 
-import javafx.scene.text.Font; // Per calcoli approssimativi dimensioni
+import javafx.scene.text.Font;
 import javafx.scene.text.TextBoundsType;
 
 public class TextData extends ShapeData {
@@ -11,7 +11,7 @@ public class TextData extends ShapeData {
     public TextData() {
         this.fontSize = 16;
         this.fontFamily = "System";
-        setType("Text");
+        setType("TD");
     }
 
     @Override

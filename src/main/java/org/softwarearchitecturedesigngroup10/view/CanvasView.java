@@ -2,6 +2,7 @@ package org.softwarearchitecturedesigngroup10.view;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.Node; // Importa Node
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -31,8 +32,8 @@ public class CanvasView implements CanvasViewInterface {
         this.resizeHandle.setStroke(Color.WHITE);
         this.resizeHandle.setId(RESIZE_HANDLE_ID);
         this.resizeHandle.setCursor(Cursor.SE_RESIZE);
-        this.resizeHandle.setVisible(false);
-        this.canvas.getChildren().add(this.resizeHandle);
+        this.resizeHandle.setVisible(false); // Nascosto di default
+        this.canvas.getChildren().add(this.resizeHandle); // Aggiungilo subito e tienilo
     }
 
     public void deletePreview() {
@@ -49,30 +50,30 @@ public class CanvasView implements CanvasViewInterface {
         this.previewShape = previewShape;
     }
 
-    public void setSelectedEffect(Shape shape) {
+    public void setSelectedEffect(Node shape) {
         if (shape != null) {
             shape.setOpacity(DIMMED_OPACITY);
         }
 
     }
 
-    public void setUnselectedState(Shape shape) {
+    public void setUnselectedState(Node shape) {
         if (shape != null) {
             shape.setOpacity(1.0);
         }
 
     }
 
-    public void draw(Shape shape) {
+    public void paint(Node shape) {
         canvas.getChildren().add(shape);
-        resizeHandle.toFront();
+        resizeHandle.toFront(); // Assicura che la maniglia sia sopra
     }
 
     public void paintPreview() {
         canvas.getChildren().add(previewShape);
     }
 
-    public void erase(Shape shape) {
+    public void erase(Node shape) {
         canvas.getChildren().remove(shape);
     }
 
@@ -134,8 +135,15 @@ public class CanvasView implements CanvasViewInterface {
         resizeHandle.setVisible(false);
     }
 
+    public void xFlip(Shape shape) {
+        shape.setScaleX(-1);
+    }
+    public void yFlip(Shape shape) {
+        shape.setScaleY(-1);
+    }
+
     @Override
-    public void drawAllFromScratch(LinkedHashMap<String, Node> shapes) {
+    public void paintAllFromScratch(LinkedHashMap<String, Node> shapes) {
         List<Node> shapesToRemove = canvas.getChildren().stream()
                 .filter(node -> node != resizeHandle && !(node instanceof Shape && node.getId() != null && shapes.containsKey(node.getId())))
                 .toList();
@@ -157,7 +165,7 @@ public class CanvasView implements CanvasViewInterface {
     }
 
 
-    public void updateResizeHandle(Shape shape) {
+    public void updateResizeHandle(Node shape) {
         if (shape != null) {
             Bounds bounds = shape.getBoundsInParent();
             resizeHandle.setX(bounds.getMaxX() - HANDLE_SIZE / 2);
@@ -179,7 +187,8 @@ public class CanvasView implements CanvasViewInterface {
                 .stream()
                 .filter(element -> element.getEffect() != null)
                 .forEach(element -> {
-                    element.setRotate(angle);
+                    if(element instanceof Group group) group.getChildren().forEach(child -> child.setRotate(angle));
+                    else element.setRotate(angle);
                 });
     }
 

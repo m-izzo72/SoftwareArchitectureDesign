@@ -323,23 +323,32 @@
     -fx-font-weight: bold;
 }
 
-#fillColorPicker, #strokeColorPicker, #editFillColorPicker, #editStrokeColorPicker {
+.color-picker {
     -fx-color-rect-width: 24;
     -fx-color-rect-height: 24;
     -fx-padding: 0;
-    -fx-font-size: 1;
+    -fx-font-size: 0;
     -fx-background-color: transparent;
 }
+
+.color-picker * {
+    -fx-padding: 0;
+}
+
+/*.color-picker > .color-picker-label > .picker-color > .picker-color-rect {*/
+/*    -fx-arc-width: 24;*/
+/*    -fx-arc-height: 24;*/
+/*}*/
 
 .color-picker .arrow-button .arrow {
     -fx-shape: " ";
 }
 
-#fillColorPicker .large-rect-picker, #strokeColorPicker .large-rect-picker {
+.color-picker .large-rect-picker {
     -fx-border-color: #eaebef;
 }
 
-#fillColorPicker .focus-indicator, #strokeColorPicker .focus-indicator {
+.color-picker .focus-indicator {
     -fx-border-color: transparent;
 }
 

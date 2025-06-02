@@ -3,7 +3,7 @@ package org.softwarearchitecturedesigngroup10.controller.adapters;
 import javafx.scene.Node;
 import javafx.scene.shape.Shape;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.*;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.composite.GroupedShapeData;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.composite.GroupedShapesData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,26 +17,15 @@ public class ShapeConverter {
         adapters.put(EllipseData.class, new EllipseAdapter());
         adapters.put(PolygonData.class, new PolygonAdapter());
         adapters.put(TextData.class, new TextAdapter());
+        adapters.put(GroupedShapesData.class, new GroupShapesAdapter(this));
     }
 
     public Node convert(ShapeData data) {
-        if (data instanceof GroupedShapeData groupData) {
-            javafx.scene.Group fxGroup = new javafx.scene.Group();
-            for (ShapeData childData : groupData.getChildren()) {
-                Node fxChildNode = convert(childData);
-                if (fxChildNode != null) {
-                    //fxChildNode.setMouseTransparent(true);
-                    fxGroup.getChildren().add(fxChildNode);
-                }
-            }
-            return fxGroup;
+        ShapeAdapterInterface adapter = adapters.get(data.getClass()); // Gets the adapter for the given data type by checking its class
+        if (adapter != null) {
+            return adapter.toFXShape(data);
         } else {
-            ShapeAdapterInterface adapter = adapters.get(data.getClass());
-            if (adapter != null) {
-                return adapter.toFXShape(data);
-            } else {
-                throw new IllegalArgumentException("No suitable adapter found for " + data.getClass().getName());
-            }
+            throw new IllegalArgumentException("No suitable adapter found");
         }
     }
 }

@@ -101,6 +101,8 @@
                         <Font name="Inter 18pt Regular" size="11.0" />
                      </font>
                   </Label>
+                  <Button fx:id="groupButton" layoutX="361.0" layoutY="29.0" mnemonicParsing="false" onAction="#onGroupButtonAction" text="Button" />
+                  <Button fx:id="unGroupButton" layoutX="483.0" layoutY="39.0" mnemonicParsing="false" onAction="#onUngroupButtonAction" text="Button" />
                </AnchorPane>
             </Tab>
             <Tab fx:id="shapesTab" closable="false" text="  Draw">
@@ -136,12 +138,12 @@
                         <Tooltip text="Draw new Ellipse" />
                      </tooltip>
                   </ToggleButton>
-                  <ColorPicker fx:id="fillColorPicker" layoutX="767.0" layoutY="21.0" prefHeight="24.0" prefWidth="24.0">
+                  <ColorPicker fx:id="fillColorPicker" layoutX="777.0" layoutY="21.0" prefHeight="24.0" prefWidth="24.0">
                      <value>
                         <Color green="0.6000000238418579" blue="1.0" />
                      </value>
                   </ColorPicker>
-                  <ColorPicker fx:id="strokeColorPicker" layoutX="699.0" layoutY="21.0" prefHeight="24.0" prefWidth="24.0">
+                  <ColorPicker fx:id="strokeColorPicker" layoutX="709.0" layoutY="21.0" prefHeight="24.0" prefWidth="24.0">
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="100.0" />
                      </padding>
@@ -315,12 +317,12 @@
                         </Group>
                      </graphic>
                   </Button>
-                  <ColorPicker fx:id="editStrokeColorPicker" disable="true" layoutX="681.0" layoutY="21.0" onAction="#onStrokeColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
+                  <ColorPicker fx:id="editStrokeColorPicker" disable="true" layoutX="689.0" layoutY="21.0" onAction="#onStrokeColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
                      <value>
                         <Color green="0.6000000238418579" blue="1.0" />
                      </value>
                   </ColorPicker>
-                  <ColorPicker fx:id="editFillColorPicker" disable="true" layoutX="744.0" layoutY="21.0" onAction="#onFillColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
+                  <ColorPicker fx:id="editFillColorPicker" disable="true" layoutX="752.0" layoutY="21.0" onAction="#onFillColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
                      <value>
                         <Color green="0.6000000238418579" blue="1.0" />
                      </value>

@@ -7,6 +7,10 @@ public class EllipseData extends ShapeData {
     private double centerX;
     private double centerY;
 
+    public EllipseData() {
+        setType("ED");
+    }
+
     public double getCenterX() {
         return centerX;
     }
@@ -54,7 +58,6 @@ public class EllipseData extends ShapeData {
         double newRadiusX = newWidth / 2.0;
         double newRadiusY = newHeight / 2.0;
 
-        // Mantieni X/Y (top-left) fisso e aggiorna centro e raggi.
         setRadiusX(newRadiusX);
         setRadiusY(newRadiusY);
         setCenterX(getX() + newRadiusX);

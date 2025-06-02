@@ -1,4 +1,3 @@
-// src/main/java/org/softwarearchitecturedesigngroup10/controller/states/MovingState.java
 package org.softwarearchitecturedesigngroup10.controller.states;
 
 import javafx.scene.Cursor;

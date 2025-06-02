@@ -116,14 +116,14 @@ public abstract class ShapeData implements Serializable, Cloneable {
         }
     }
 
-    /* USED FOR COMPOSITE PATTERN */
+    /** FOR GROUPED SHAPES **/
 
-    public void add(ShapeData shape) {
-        throw new UnsupportedOperationException("Cannot add to a simple shape.");
+    public void add(ShapeData data) {
+        throw new UnsupportedOperationException();
     }
 
-    public void remove(ShapeData shape) {
-        throw new UnsupportedOperationException("Cannot remove from a simple shape.");
+    public void remove(ShapeData data) {
+        throw new UnsupportedOperationException();
     }
 
     public List<ShapeData> getChildren() {

@@ -20,6 +20,10 @@ public class RectangleData extends ShapeData {
         this.height = height;
     }
 
+    public RectangleData() {
+        setType("RD");
+    }
+
     @Override
     public void resize(double newWidth, double newHeight) {
         setWidth(newWidth);
