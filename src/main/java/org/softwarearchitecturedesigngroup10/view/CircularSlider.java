@@ -1,10 +1,10 @@
 package org.softwarearchitecturedesigngroup10.view;
 
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty; // Importa ObjectProperty
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty; // Importa SimpleObjectProperty
-import javafx.event.EventHandler; // Importa EventHandler
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
@@ -23,7 +23,6 @@ public class CircularSlider extends Pane {
 
     private final DoubleProperty angle = new SimpleDoubleProperty(0);
 
-    // 1. Definisci le proprietà per gli event handler personalizzati
     private final ObjectProperty<EventHandler<? super MouseEvent>> onThumbMouseDragged =
             new SimpleObjectProperty<>(this, "onThumbMouseDragged");
 
@@ -51,45 +50,28 @@ public class CircularSlider extends Pane {
     }
 
     private void setupEvents() {
-        // Modifica i gestori esistenti per chiamare anche gli handler personalizzati
         thumb.setOnMouseDragged(event -> {
-            handleMouseDragInternal(event); // Logica interna per muovere lo slider
-            // Chiama l'handler personalizzato, se impostato
+            handleMouseDragInternal(event);
             if (getOnThumbMouseDragged() != null) {
                 getOnThumbMouseDragged().handle(event);
             }
         });
 
-        // Gestisce anche il click iniziale come un drag per aggiornare la posizione
-        thumb.setOnMousePressed(event -> {
-            handleMouseDragInternal(event); // Logica interna per muovere lo slider
-            // Nota: di solito onMousePressed non scatena un onMouseDragged handler
-            // Ma per coerenza con il drag, potremmo chiamarlo qui o avere un handler separato "onThumbMousePressed"
-            // Per ora, ci concentriamo su onDragged e onReleased come richiesto.
-        });
+        thumb.setOnMousePressed(this::handleMouseDragInternal);
 
         track.setOnMouseClicked(event -> {
-            // Calcola le coordinate locali al Pane
             Point2D mousePointInPane = sceneToLocal(event.getSceneX(), event.getSceneY());
             updateAngle(mousePointInPane.getX(), mousePointInPane.getY());
             updateThumbPosition();
-            // Se si clicca sulla traccia, potremmo voler scatenare un "released" o un evento di cambio valore
-            // Per ora, solo l'aggiornamento interno.
         });
 
-        // Aggiungi il gestore per il rilascio del mouse sulla maniglia
         thumb.setOnMouseReleased(event -> {
-            // Qualsiasi logica interna al rilascio (es. snapping) potrebbe andare qui
-            // ...
-
-            // Chiama l'handler personalizzato, se impostato
             if (getOnThumbMouseReleased() != null) {
                 getOnThumbMouseReleased().handle(event);
             }
         });
     }
 
-    // Rinominato per chiarezza, questa è la logica interna
     private void handleMouseDragInternal(MouseEvent event) {
         Point2D mousePoint = sceneToLocal(event.getSceneX(), event.getSceneY());
         updateAngle(mousePoint.getX(), mousePoint.getY());
@@ -127,7 +109,6 @@ public class CircularSlider extends Pane {
         updateThumbPosition();
     }
 
-    // --- Metodi per l'angolo ---
     public double getAngle() {
         return angle.get();
     }
@@ -141,7 +122,6 @@ public class CircularSlider extends Pane {
         return angle;
     }
 
-    // --- 2. Metodi Getter, Setter e Property per onThumbMouseDragged ---
     public final EventHandler<? super MouseEvent> getOnThumbMouseDragged() {
         return onThumbMouseDragged.get();
     }
@@ -154,7 +134,6 @@ public class CircularSlider extends Pane {
         return onThumbMouseDragged;
     }
 
-    // --- 3. Metodi Getter, Setter e Property per onThumbMouseReleased ---
     public final EventHandler<? super MouseEvent> getOnThumbMouseReleased() {
         return onThumbMouseReleased.get();
     }

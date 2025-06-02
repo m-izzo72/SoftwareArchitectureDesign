@@ -10,7 +10,7 @@ public class EllipseAdapter implements ShapeAdapterInterface {
     @Override
     public Shape toFXShape(ShapeData data) {
         if (!(data instanceof EllipseData ed)) {
-            throw new IllegalArgumentException("Tipo di dati non valido per EllipseAdapter");
+            throw new IllegalArgumentException();
         }
         Ellipse ellipse = new Ellipse(ed.getCenterX(), ed.getCenterY(), ed.getRadiusX(), ed.getRadiusY());
         Color fillColor = ed.getFillColor() != null ? Color.valueOf(ed.getFillColor()) : Color.TRANSPARENT;

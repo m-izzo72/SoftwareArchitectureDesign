@@ -5,10 +5,12 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
+import org.softwarearchitecturedesigngroup10.model.commands.clipboard.ShapesClipboard;
 import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.LineData;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.TextData;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.composite.GroupedShapesData;
 import org.softwarearchitecturedesigngroup10.view.CircularSlider;
 
 import java.util.ArrayList;
@@ -42,16 +44,20 @@ public class SelectionPropertyObserver implements ModelObserver {
                 8 sendToBackButton,     9 bringToFrontButton,
                 10 editStrokeWidthIcon, 11 editStrokeWidthSlider,
                 12 flipXButton,         13 flipYButton,
-                14 rotationSlider
+                14 rotationSlider,
+                15 groupButton,         16 ungroupButton
              */
 
             selectionBoundNodes.forEach(node -> node.setDisable(false));
 
-            if(shapes.values().stream().anyMatch(data -> data instanceof LineData) ) {
+            if(shapes.size() < 2) selectionBoundNodes.get(15).setDisable(true);
+            if(!(shapes.size() == 1 && shapes.values().stream().anyMatch(data -> data instanceof GroupedShapesData))) selectionBoundNodes.get(16).setDisable(true);
+
+            if(shapes.values().stream().anyMatch(data -> data instanceof LineData || (data instanceof GroupedShapesData gd && gd.getChildren().stream().anyMatch(shape -> shape instanceof LineData))) ) {
                 selectionBoundNodes.get(0).setDisable(true);
                 selectionBoundNodes.get(1).setDisable(true);
             }
-            if(shapes.values().stream().anyMatch(data -> data instanceof TextData)) {
+            if(shapes.values().stream().anyMatch(data -> data instanceof TextData || (data instanceof GroupedShapesData gd && gd.getChildren().stream().anyMatch(shape -> shape instanceof TextData))) ) {
                 selectionBoundNodes.get(2).setDisable(true);
                 selectionBoundNodes.get(3).setDisable(true);
                 selectionBoundNodes.get(10).setDisable(true);
@@ -59,7 +65,7 @@ public class SelectionPropertyObserver implements ModelObserver {
             }
 
             ShapeData lastSelectedShape = Objects.requireNonNull(shapes.entrySet().stream().skip(shapes.size() - 1).findFirst().orElse(null)).getValue();
-            System.out.println("\t\tLast selected shape: " + lastSelectedShape);
+            System.out.println("\t\tLast selected shape: " + lastSelectedShape +"\n\t\t\t" + lastSelectedShape.getFillColor());
 
             //assert lastSelectedShape != null;
             if(lastSelectedShape.getFillColor() != null)
@@ -72,6 +78,7 @@ public class SelectionPropertyObserver implements ModelObserver {
 
         }
 
+        if(ShapesClipboard.clipboard.isEmpty()) selectionBoundNodes.get(7).setDisable(true); else selectionBoundNodes.get(7).setDisable(false);
         //selectionBoundNodes.get(7).setDisable(canvasModel.getShapesClipboard().isEmpty());
     }
 }

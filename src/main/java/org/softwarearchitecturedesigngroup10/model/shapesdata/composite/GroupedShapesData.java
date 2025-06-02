@@ -13,7 +13,7 @@ public class GroupedShapesData extends ShapeData {
 
     public GroupedShapesData() {
         setType("GD");
-        children = new ArrayList<ShapeData>();
+        children = new ArrayList<>();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class GroupedShapesData extends ShapeData {
             child.setY(child.getY() + deltaY);
             if (child instanceof LineData ld) ld.setEndY(ld.getEndY() + deltaY);
             if (child instanceof EllipseData ed) {
-                ed.setCenterY(ed.getCenterX() + deltaY);
+                ed.setCenterY(ed.getCenterY() + deltaY);
                 ed.setX(ed.getCenterY() - ed.getRadiusY());
             }
         }
@@ -157,6 +157,26 @@ public class GroupedShapesData extends ShapeData {
         for (ShapeData child : children) {
             child.setSelected(selected);
         }
+    }
+
+    @Override
+    public double getRotationAngle() {
+        return getChildren().get(0).getRotationAngle();
+    }
+
+    @Override
+    public String getFillColor() {
+        return getChildren().get(0).getFillColor();
+    }
+
+    @Override
+    public String getStrokeColor() {
+        return getChildren().get(0).getStrokeColor();
+    }
+
+    @Override
+    public double getStrokeWidth() {
+        return getChildren().get(0).getStrokeWidth();
     }
 
     @Override

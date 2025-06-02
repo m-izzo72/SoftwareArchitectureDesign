@@ -59,6 +59,14 @@ public class PolygonData extends ShapeData {
 
     @Override
     public void resize(double newWidth, double newHeight) {
+        // NOT SUPPORTED
+    }
 
+    @Override
+    public ShapeData clone() {
+        ShapeData shapeData = super.clone();
+        ArrayList<Double> clonedPoints = new ArrayList<>(points);
+        ((PolygonData) shapeData).setPoints(clonedPoints);
+        return shapeData;
     }
 }

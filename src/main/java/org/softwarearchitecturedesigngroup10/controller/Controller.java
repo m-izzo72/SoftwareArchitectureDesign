@@ -1,26 +1,16 @@
 package org.softwarearchitecturedesigngroup10.controller;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import org.softwarearchitecturedesigngroup10.controller.adapters.ShapeConverter;
 import org.softwarearchitecturedesigngroup10.controller.states.*;
 import org.softwarearchitecturedesigngroup10.model.CanvasModel;
@@ -45,8 +35,6 @@ import org.softwarearchitecturedesigngroup10.view.helper.Highlighter;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-
-import static java.lang.Double.parseDouble;
 
 public class Controller implements ModelObserver {
 
@@ -108,6 +96,9 @@ public class Controller implements ModelObserver {
     @FXML private StackPane stackPane;
     @FXML private Slider gridSizeSlider;
     @FXML private AnchorPane helperStackPane;
+    @FXML private Button unGroupButton;
+    @FXML private Button groupButton;
+
 
     /****************** CONTROLLER STATE & SERVICES ******************/
     private Stage stage;
@@ -119,40 +110,43 @@ public class Controller implements ModelObserver {
 
     private double xOffset = 0, yOffset = 0; // For window dragging
     private double startX, startY; // For shape drawing/manipulation
-    private double gridSize = 20;
 
     // State Pattern
     private State currentState;
     private final State idleState = new IdleState();
-    private final State selectionState = new SelectionState();
-    private final State regularDrawingState = new RegularDrawingState();
-    private final State polygonDrawingState = new PolygonDrawingState();
-    private final State movingState = new MovingState();
-    private final State resizingState = new ResizingState();
-    private final State textDrawingState = new TextDrawingState();
+    private State selectionState;
+    private State regularDrawingState;
+    private State polygonDrawingState;
+    private State movingState;
+    private State resizingState;
+    private State textDrawingState;
 
     // Color constants for focus listener
     private static final Color FOCUSED_BACKGROUND_COLOR = Color.valueOf("#525355");
     private static final Color UNFOCUSED_BACKGROUND_COLOR = Color.valueOf("#5a5b5e");
     private static final Color FOCUSED_ICON_COLOR = Color.valueOf("#fffffe");
     private static final Color UNFOCUSED_ICON_COLOR = Color.valueOf("#797979");
-    @FXML
-    private Button unGroupButton;
-    @FXML
-    private Button groupButton;
+
+    private static final String NO_DRAWN_SHAPES = "No shapes on the canvas";
 
     /****************** INITIALIZATION ******************/
+    private void initializeStates() {
+        selectionState = new SelectionState();
+        regularDrawingState = new RegularDrawingState();
+        polygonDrawingState = new PolygonDrawingState(this);
+        movingState = new MovingState();
+        resizingState = new ResizingState();
+        textDrawingState = new TextDrawingState();
+    }
+
     @FXML
     public void initialize() {
-
-
         canvasModel = new CanvasModel();
-        canvasView = new CanvasView(canvas);
+        canvasView = new CanvasView(canvas, stackPane, scrollableCanvasContainer, grid);
         commandManager = new CommandManager();
         shapeConverter = new ShapeConverter();
 
-//        defaultCanvasHeight = canvas.getPrefHeight();
-//        defaultCanvasWidth = canvas.getPrefWidth();
+        initializeStates();
 
         // Selects the "Shapes" tab by default
         tab.getSelectionModel().select(1);
@@ -162,9 +156,6 @@ public class Controller implements ModelObserver {
         canvasModel.addObserver(this);
 
         // Nodes to enable/disable based on selection
-//        ArrayList<Node> nodesToBind = new ArrayList<>();
-//        Collections.addAll(nodesToBind,
-//                );
         SelectionPropertyObserver selectionPropertyObserver = new SelectionPropertyObserver(canvasModel,
                 editFillColourIcon, editFillColorPicker,
                 editStrokeColourIcon, editStrokeColorPicker,
@@ -172,35 +163,39 @@ public class Controller implements ModelObserver {
                 cutShapeButton, pasteShapeButton,
                 sendToBackButton, bringToFrontButton,
                 editStrokeWidthIcon, editStrokeWidthSlider,
-                flipXButton, flipYButton, rotationSlider);
-                //nodesToBind);
+                flipXButton, flipYButton, rotationSlider,
+                groupButton, unGroupButton);
         canvasModel.addObserver(selectionPropertyObserver);
 
         setupListeners();
-        canvasInfoLabel.setText("No shapes on the canvas");
-        setCanvasScrollableAndResizable();
-    }
 
-    private void setupListeners() {
-        editStrokeWidthSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            final double roundedValue = Math.round(newValue.doubleValue());
-            editStrokeWidthSlider.setValue(roundedValue); // Use setValue to avoid re-triggering
-        });
-        editStrokeWidthSlider.setOnMouseReleased(event ->
-                commandManager.executeCommand(new EditShapeStrokeWidthCommand(canvasModel, editStrokeWidthSlider.getValue()))
-        );
-
-        zoomSlider.valueProperty().addListener(this::zoomListener);
+        zoomSlider.valueProperty().addListener(canvasView::zoomListener);
 
         titleBar.setOnMousePressed(this::onTitleBarPressed);
         titleBar.setOnMouseDragged(this::onTitleBarDragged);
+
+        canvasInfoLabel.setText(NO_DRAWN_SHAPES);
+        canvasView.setCanvasScrollableAndResizable(canvasWidthInput, canvasHeightInput, toggleGridButton);
+    }
+
+    private void setupListeners() {
+        strokeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            final double roundedValue = Math.round(newValue.doubleValue()); strokeSlider.setValue(roundedValue);
+        });
+
+        editStrokeWidthSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            final double roundedValue = Math.round(newValue.doubleValue()); editStrokeWidthSlider.setValue(roundedValue);
+        });
+
+        editStrokeWidthSlider.setOnMouseReleased(event ->
+                commandManager.executeCommand(new EditShapeStrokeWidthCommand(canvasModel, editStrokeWidthSlider.getValue()))
+        );
 
         rotationSlider.setOnThumbMouseReleased(this::onRotationSliderMouseReleased);
         rotationSlider.setOnThumbMouseDragged(this::onRotationSliderMouseDragged);
 
         gridSizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            gridSize = newValue.doubleValue();
-            if(toggleGridButton.isSelected()) drawGrid(grid.getGraphicsContext2D());
+            canvasView.setGridSize(newValue.doubleValue()); if(toggleGridButton.isSelected()) canvasView.drawGrid();
         });
     }
 
@@ -270,7 +265,7 @@ public class Controller implements ModelObserver {
             viewShapes.put(id, fxShape);
         });
 
-        canvasView.paintAllFromScratch(viewShapes);
+        canvasView.drawAllFromScratch(viewShapes);
 
         boolean anyShapeSelected = !selectedModelShapes.isEmpty();
 
@@ -331,138 +326,13 @@ public class Controller implements ModelObserver {
     @FXML
     public void onToggleGridButtonAction(ActionEvent actionEvent) {
         if (grid == null || grid.getGraphicsContext2D() == null) return;
-        GraphicsContext gc = grid.getGraphicsContext2D();
         if (toggleGridButton.isSelected()) {
-            drawGrid(gc);
+            canvasView.drawGrid();
         } else {
-            clearGrid(gc);
+            canvasView.clearGrid();
         }
     }
 
-    private void clearGrid(GraphicsContext gc) {
-        gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-    }
-
-    private void drawGrid(GraphicsContext gc) {
-        double width = gc.getCanvas().getWidth();
-        double height = gc.getCanvas().getHeight();
-
-        if (width <= 0 || height <= 0) {
-            System.err.println("Skipping grid draw: Invalid dimensions - W: " + width + ", H: " + height);
-            return;
-        }
-
-        clearGrid(gc); // Clear previous grid
-
-        gc.setStroke(Color.LIGHTGRAY);
-        gc.setLineWidth(0.5);
-
-        // Vertical lines
-        for (double x = 0; x <= width; x += gridSize) {
-            gc.strokeLine(x + 0.5, 0, x + 0.5, height);
-        }
-        // Horizontal lines
-        for (double y = 0; y <= height; y += gridSize) {
-            gc.strokeLine(0, y + 0.5, width, y + 0.5);
-        }
-    }
-
-    // --- Zoom ---
-    private void zoomListener(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-
-        //private double defaultCanvasWidth, defaultCanvasHeight;
-        double zoomFactor = newValue.doubleValue() / 3.0;
-        if (zoomFactor <= 0) zoomFactor = 0.1;
-
-        stackPane.setScaleX(zoomFactor);
-        stackPane.setScaleY(zoomFactor);
-
-        scrollableCanvasContainer.setHvalue(0.5);
-        scrollableCanvasContainer.setVvalue(0.5);
-
-    }
-
-    // --- Canvas Resizing and Scrolling ---
-    private void setCanvasScrollableAndResizable() {
-        setCanvasClippable();
-        bindTextFieldToCanvasSize();
-    }
-
-    private void setCanvasClippable() {
-        Rectangle clipRect = new Rectangle();
-        clipRect.widthProperty().bind(canvas.widthProperty());
-        clipRect.heightProperty().bind(canvas.heightProperty());
-        canvas.setClip(clipRect);
-    }
-
-    private final StringConverter<Number> doubleConverter = new StringConverter<>() {
-        @Override
-        public String toString(Number object) {
-            return String.format("%.0f", object.doubleValue());
-        }
-
-        @Override
-        public Number fromString(String string) {
-            try {
-                double val = parseDouble(string);
-                return Math.max(1, Math.min(val, 4096));
-            } catch (NumberFormatException e) {
-                return 0;
-            }
-        }
-    };
-
-    private void bindTextFieldToCanvasSize() {
-        DoubleProperty customWidthProperty = new SimpleDoubleProperty(canvas.getPrefWidth());
-        DoubleProperty customHeightProperty = new SimpleDoubleProperty(canvas.getPrefHeight());
-
-        canvas.prefWidthProperty().bind(customWidthProperty);
-        canvas.prefHeightProperty().bind(customHeightProperty);
-
-        ChangeListener<Number> canvasSizeListener = (observable, oldValue, newValue) -> {
-            if (grid != null && grid.getGraphicsContext2D() != null) { // Ensure grid is ready
-                grid.setWidth(canvas.getPrefWidth()); // Match grid canvas to drawing canvas
-                grid.setHeight(canvas.getPrefHeight());
-
-                if (toggleGridButton.isSelected()) {
-                    drawGrid(grid.getGraphicsContext2D());
-                } else {
-                    clearGrid(grid.getGraphicsContext2D());
-                }
-            }
-
-            javafx.application.Platform.runLater(() -> {
-                 scrollableCanvasContainer.setHvalue(0.5);
-                 scrollableCanvasContainer.setVvalue(0.5);
-             });
-        };
-
-        customWidthProperty.addListener(canvasSizeListener);
-        customHeightProperty.addListener(canvasSizeListener);
-
-
-        Bindings.bindBidirectional(canvasWidthInput.textProperty(), customWidthProperty, doubleConverter);
-        Bindings.bindBidirectional(canvasHeightInput.textProperty(), customHeightProperty, doubleConverter);
-
-        canvasWidthInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                canvasWidthInput.setText(newValue.replaceAll("\\D", ""));
-            }
-            if (Double.parseDouble(newValue) > 4092) {
-                canvasWidthInput.setText("4092");
-            }
-        });
-        canvasHeightInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                canvasHeightInput.setText(newValue.replaceAll("\\D", ""));
-            }
-            if (Double.parseDouble(newValue) > 4092) {
-                canvasHeightInput.setText("4092");
-            }
-        });
-
-
-    }
 
     /****************** FILE ACTIONS (FILE TAB) ******************/
     @FXML
@@ -521,6 +391,27 @@ public class Controller implements ModelObserver {
                 System.err.println("Error opening file: " + e.getMessage());
                 //e.printStackTrace();
             }
+        }
+    }
+
+    @FXML
+    public void onGroupButtonAction(ActionEvent actionEvent) {
+        if (!canvasModel.getSelectedShapes().isEmpty() && canvasModel.getSelectedShapes().size() >= 2) {
+            commandManager.executeCommand(new GroupShapesCommand(canvasModel));
+        }
+    }
+
+    @FXML
+    public void onUngroupButtonAction(ActionEvent actionEvent) {
+        boolean groupSelected = false;
+        for (ShapeData shape : canvasModel.getSelectedShapes().values()) {
+            if (shape instanceof GroupedShapesData) {
+                groupSelected = true;
+                break;
+            }
+        }
+        if (groupSelected) {
+            commandManager.executeCommand(new UngroupShapesCommand(canvasModel));
         }
     }
 
@@ -733,9 +624,9 @@ public class Controller implements ModelObserver {
 //        return stackPane;
 //    }
 
-    public AnchorPane getHelperStackPane() {
-        return helperStackPane;
-    }
+//    public AnchorPane getHelperStackPane() {
+//        return helperStackPane;
+//    }
 
     public ToggleButton getTextButton() {
         return textButton;
@@ -745,24 +636,5 @@ public class Controller implements ModelObserver {
         return idleState;
     }
 
-    @FXML
-    public void onGroupButtonAction(ActionEvent actionEvent) {
-        if (!canvasModel.getSelectedShapes().isEmpty() && canvasModel.getSelectedShapes().size() >= 2) {
-            commandManager.executeCommand(new GroupShapesCommand(canvasModel));
-        }
-    }
-
-    @FXML
-    public void onUngroupButtonAction(ActionEvent actionEvent) {
-        boolean groupSelected = false;
-        for (ShapeData shape : canvasModel.getSelectedShapes().values()) {
-            if (shape instanceof GroupedShapesData) {
-                groupSelected = true;
-                break;
-            }
-        }
-        if (groupSelected) {
-            commandManager.executeCommand(new UngroupShapesCommand(canvasModel));
-        }
-    }
+    
 }

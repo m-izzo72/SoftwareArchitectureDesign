@@ -6,23 +6,14 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.effect.Glow;
-import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap; // Usa WeakHashMap per evitare memory leak
+import java.util.WeakHashMap;
 
 public class Highlighter {
 
-    private static class AnimationContext {
-        final Timeline timeline;
-        final Glow effect;
-
-        AnimationContext(Timeline timeline, Glow effect) {
-            this.timeline = timeline;
-            this.effect = effect;
-        }
+    private record AnimationContext(Timeline timeline, Glow effect) {
     }
 
     private static final Map<Node, AnimationContext> activeAnimatedHighlights = new WeakHashMap<>();
@@ -74,11 +65,11 @@ public class Highlighter {
         shape.setEffect(null);
     }
 
-    public static boolean isShapeSelected(Shape shape) {
-        return selectedShapes.getOrDefault(shape, false);
-    }
+//    public static boolean isShapeSelected(Shape shape) {
+//        return selectedShapes.getOrDefault(shape, false);
+//    }
 
-    public static boolean isHighlighted(Shape shape) {
-        return activeAnimatedHighlights.containsKey(shape);
-    }
+//    public static boolean isHighlighted(Shape shape) {
+//        return activeAnimatedHighlights.containsKey(shape);
+//    }
 }

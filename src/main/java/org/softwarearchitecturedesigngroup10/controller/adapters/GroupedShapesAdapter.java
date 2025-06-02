@@ -1,14 +1,13 @@
 package org.softwarearchitecturedesigngroup10.controller.adapters;
 
 import javafx.scene.Group;
-import javafx.scene.shape.Shape;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.composite.GroupedShapesData;
 
-public class GroupShapesAdapter implements ShapeAdapterInterface{
+public class GroupedShapesAdapter implements ShapeAdapterInterface{
     ShapeConverter converter;
 
-    public GroupShapesAdapter(ShapeConverter converter) {
+    public GroupedShapesAdapter(ShapeConverter converter) {
         this.converter = converter;
     }
 

@@ -1,7 +1,6 @@
 package org.softwarearchitecturedesigngroup10.controller.adapters;
 
 import javafx.scene.Node;
-import javafx.scene.shape.Shape;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.*;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.composite.GroupedShapesData;
 
@@ -17,7 +16,7 @@ public class ShapeConverter {
         adapters.put(EllipseData.class, new EllipseAdapter());
         adapters.put(PolygonData.class, new PolygonAdapter());
         adapters.put(TextData.class, new TextAdapter());
-        adapters.put(GroupedShapesData.class, new GroupShapesAdapter(this));
+        adapters.put(GroupedShapesData.class, new GroupedShapesAdapter(this));
     }
 
     public Node convert(ShapeData data) {
