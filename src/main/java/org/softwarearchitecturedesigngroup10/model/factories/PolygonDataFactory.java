@@ -15,6 +15,7 @@ public class PolygonDataFactory implements ShapeDataFactory {
         polygonData.setFillColor(fillColor);
         polygonData.setStrokeColor(strokeColor);
         polygonData.setStrokeWidth(strokeWidth);
+        polygonData.setRotationAngle(rotationAngle);
 
         return polygonData;
     }

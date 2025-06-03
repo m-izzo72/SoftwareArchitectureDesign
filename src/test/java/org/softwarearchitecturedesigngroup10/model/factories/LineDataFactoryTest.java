@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.LineData;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class LineDataFactoryTest {
@@ -17,11 +20,12 @@ class LineDataFactoryTest {
         String fillColor = "#FFFFFF";
         String strokeColor = "#000000";
         double strokeWidth = 2.0;
-        double rotationAngle = 0.0;
+        double rotationAngle = 15.0;
 
         LineDataFactory factory = new LineDataFactory();
+        ArrayList<Double> points = new ArrayList<>(Arrays.asList(startX, startY, endX, endY));
 
-        ShapeData shapeData = factory.createShapeData(startX, startY, endX, endY, fillColor, strokeColor, strokeWidth, rotationAngle);
+        ShapeData shapeData = factory.createShapeData(points, fillColor, strokeColor, strokeWidth, rotationAngle);
         assertTrue(shapeData instanceof LineData);
 
         LineData lineData = (LineData) shapeData;
@@ -33,6 +37,6 @@ class LineDataFactoryTest {
         assertEquals(fillColor, lineData.getFillColor());
         assertEquals(strokeColor, lineData.getStrokeColor());
         assertEquals(strokeWidth, lineData.getStrokeWidth());
-
+        assertEquals(rotationAngle, lineData.getRotationAngle());
     }
 }

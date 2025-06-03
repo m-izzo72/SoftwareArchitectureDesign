@@ -24,6 +24,7 @@ public class LineDataFactory implements ShapeDataFactory{
         lineData.setFillColor(fillColor);
         lineData.setStrokeColor(strokeColor);
         lineData.setStrokeWidth(strokeWidth);
+        lineData.setRotationAngle(rotationAngle);
 
         return lineData;
     }
