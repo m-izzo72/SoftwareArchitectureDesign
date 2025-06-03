@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -377,11 +378,11 @@ public class CanvasView implements CanvasViewInterface {
         return polygonAlertPane;
     }
 
-    public void insertPolygonAlertPane(Pane polygonAlertPane) {
-        canvasStackPane.getChildren().add(polygonAlertPane);
+    public void insertPolygonAlertPane(Pane polygonAlertPane, AnchorPane anchorPane) {
+        anchorPane.getChildren().add(polygonAlertPane);
     }
 
-    public void removePolygonAlertPane(Pane polygonAlertPane) {
-        canvasStackPane.getChildren().remove(polygonAlertPane);
+    public void removePolygonAlertPane(Pane polygonAlertPane, AnchorPane anchorPane) {
+        anchorPane.getChildren().remove(polygonAlertPane);
     }
 }

@@ -624,9 +624,9 @@ public class Controller implements ModelObserver {
 //        return stackPane;
 //    }
 
-//    public AnchorPane getHelperStackPane() {
-//        return helperStackPane;
-//    }
+    public AnchorPane getHelperStackPane() {
+        return helperStackPane;
+    }
 
     public ToggleButton getTextButton() {
         return textButton;

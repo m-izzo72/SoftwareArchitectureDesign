@@ -76,7 +76,7 @@ public class PolygonDrawingState implements State {
     public void enterState(Controller context) {
         context.getSelectToolButton().setSelected(false);
         context.getCanvas().setCursor(drawingCursor);
-        context.getCanvasView().insertPolygonAlertPane(polygonAlert);
+        context.getCanvasView().insertPolygonAlertPane(polygonAlert, context.getHelperStackPane());
         //context.getHelperStackPane().getChildren().add(polygonAlert);
         //this.context = context;
 //        context.getCanvas().setOnKeyPressed(event -> {
@@ -90,7 +90,7 @@ public class PolygonDrawingState implements State {
     @Override
     public void exitState(Controller context) {
         context.getCanvas().setCursor(Cursor.DEFAULT);
-        context.getCanvasView().removePolygonAlertPane(polygonAlert);
+        context.getCanvasView().removePolygonAlertPane(polygonAlert, context.getHelperStackPane());
         //context.getHelperStackPane().getChildren().remove(polygonAlert);
         points.clear();
         context.getCanvasView().erasePolygonVerticesPreview();

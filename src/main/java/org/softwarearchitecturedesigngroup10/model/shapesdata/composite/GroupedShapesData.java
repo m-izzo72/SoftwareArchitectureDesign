@@ -70,7 +70,7 @@ public class GroupedShapesData extends ShapeData {
             if (child instanceof LineData ld) ld.setEndY(ld.getEndY() + deltaY);
             if (child instanceof EllipseData ed) {
                 ed.setCenterY(ed.getCenterY() + deltaY);
-                ed.setX(ed.getCenterY() - ed.getRadiusY());
+                ed.setY(ed.getCenterY() - ed.getRadiusY());
             }
         }
     }
