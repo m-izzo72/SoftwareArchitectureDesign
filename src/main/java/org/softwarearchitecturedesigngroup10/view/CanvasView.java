@@ -229,7 +229,7 @@ public class CanvasView implements CanvasViewInterface {
         resizeHandle.toFront();
     }
 
-    public void paintPreview() {
+    public void drawPreview() {
         canvas.getChildren().add(previewShape);
     }
 

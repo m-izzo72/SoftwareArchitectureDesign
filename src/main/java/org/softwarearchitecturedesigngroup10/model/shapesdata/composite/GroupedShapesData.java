@@ -22,6 +22,16 @@ public class GroupedShapesData extends ShapeData {
     }
 
     @Override
+    public void setYFlipped() {
+        getChildren().forEach(ShapeData::setYFlipped);
+    }
+
+    @Override
+    public void setXFlipped() {
+        getChildren().forEach(ShapeData::setXFlipped);
+    }
+
+    @Override
     public List<ShapeData> getChildren() {
         return children;
     }

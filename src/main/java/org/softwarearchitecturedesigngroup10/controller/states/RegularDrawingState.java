@@ -44,7 +44,7 @@ public class RegularDrawingState implements State {
 
         if (context.getCanvasView().isPreviewShapeNotNull()) {
             context.getCanvasView().stylePreviewShape();
-            context.getCanvasView().paintPreview();
+            context.getCanvasView().drawPreview();
         }
 
         event.consume();

@@ -19,6 +19,18 @@ public class EllipseAdapter implements ShapeAdapterInterface {
         ellipse.setStroke(strokeColor);
         ellipse.setStrokeWidth(ed.getStrokeWidth());
         ellipse.setRotate(ed.getRotationAngle());
+
+        ellipse.setRotate(0);
+        if(ed.isYFlipped() && ed.isXFlipped()) {
+            ellipse.setRotate(ed.getRotationAngle() + 180);
+        } else if(ed.isYFlipped() && !ed.isXFlipped()) {
+            ellipse.setRotate(-ed.getRotationAngle());
+        } else if(ed.isXFlipped() && !ed.isYFlipped()) {
+            ellipse.setRotate(-ed.getRotationAngle() + 180);
+        } else {
+            ellipse.setRotate(ed.getRotationAngle());
+        }
+
         return ellipse;
     }
 }
