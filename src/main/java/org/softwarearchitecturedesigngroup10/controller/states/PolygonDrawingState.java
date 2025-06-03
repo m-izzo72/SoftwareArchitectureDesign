@@ -5,6 +5,7 @@ import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import org.softwarearchitecturedesigngroup10.controller.Controller;
@@ -23,7 +24,6 @@ public class PolygonDrawingState implements State {
     private final Button confirmPolygonButton;
     private final Pane polygonAlert;
     private Controller context;
-
 
     public PolygonDrawingState(Controller context) {
         this.context = context;
@@ -47,9 +47,8 @@ public class PolygonDrawingState implements State {
                                     0)
                     )
             );
+            points.clear();
         }
-
-        points.clear();
     }
 
     @Override
@@ -61,7 +60,6 @@ public class PolygonDrawingState implements State {
             event.consume();
             System.out.println(points);
         }
-
     }
 
     @Override
@@ -81,6 +79,12 @@ public class PolygonDrawingState implements State {
         context.getCanvasView().insertPolygonAlertPane(polygonAlert);
         //context.getHelperStackPane().getChildren().add(polygonAlert);
         //this.context = context;
+//        context.getCanvas().setOnKeyPressed(event -> {
+//            if (event.getCode() == KeyCode.ENTER) {
+//                System.out.println("Enter pressed");
+//                confirmPolygon(event);
+//            }
+//        });
     }
 
     @Override

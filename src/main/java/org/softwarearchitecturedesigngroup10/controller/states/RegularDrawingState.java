@@ -22,11 +22,6 @@ public class RegularDrawingState implements State {
     Image cursorImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/cursor.png")));
     ImageCursor drawingCursor = new ImageCursor(cursorImage, 0, 0);
 
-
-
-
-
-
     @Override
     public void handleMousePressed(MouseEvent event, Controller context) {
         context.setStartX(event.getX());

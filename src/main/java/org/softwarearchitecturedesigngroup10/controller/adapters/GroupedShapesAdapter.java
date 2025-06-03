@@ -15,6 +15,7 @@ public class GroupedShapesAdapter implements ShapeAdapterInterface{
     public Group toFXShape(ShapeData data) {
         Group group = new Group();
         ((GroupedShapesData) data).getChildren().forEach(shape -> {
+
             group.getChildren().add(converter.convert(shape));
         });
 
