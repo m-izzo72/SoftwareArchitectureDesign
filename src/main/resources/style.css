@@ -110,7 +110,6 @@
    PULSANTI (Generali, Toolbar, Navigazione)
    ========================================================================== */
 
-/* Pulsanti trasparenti base */
 #fileNavigation, #shapeNavigation, #clipboardNavigation,
 #lineButton, #rectangleButton, #ellipseButton, #polygonButton, #textButton,
 #openFileButton, #saveFileButton, #newCanvasButton,
@@ -120,7 +119,8 @@
 #editStrokeWidthMenuButton,
 #closeButton, #minimizeButton, #undoButton,
 #quickToolbar .button, #canvasQuickToolbar .button,
-#toggleGridButton {
+#toggleGridButton,
+#groupButton, #unGroupButton {
     -fx-background-color: transparent;
 }
 
@@ -129,14 +129,14 @@
     -fx-background-color: transparent;
 }
 
-/* Pulsanti con bordi arrotondati */
 #fileNavigation, #shapeNavigation, #clipboardNavigation,
 #lineButton, #rectangleButton, #ellipseButton, #polygonButton, #textButton,
 #openFileButton, #saveFileButton, #newCanvasButton,
 #cutShapeButton, #copyShapeButton, #pasteShapeButton,
 #sendToBackButton, #bringToFrontButton, #flipXButton, #flipYButton,
 #eraseShapeButton, #selectToolButton, #selectToEditButton, #strokeWidthMenuButton,
-#editStrokeWidthMenuButton {
+#editStrokeWidthMenuButton,
+#groupButton, #unGroupButton {
     -fx-background-radius: 7;
 }
 
@@ -144,7 +144,6 @@
     -fx-background-radius: 5;
 }
 
-/* Pulsanti di controllo finestra */
 #minimizeButton:hover, #undoButton:hover {
     -fx-background-color: #3c3d45;
     -fx-background-radius: 0;
@@ -155,7 +154,6 @@
     -fx-background-radius: 0 7 0 0;
 }
 
-/* Hover per pulsanti di navigazione/toolbar */
 #fileNavigation:hover, #shapeNavigation:hover, #clipboardNavigation:hover,
 #lineButton:hover, #rectangleButton:hover, #ellipseButton:hover, #polygonButton:hover, #textButton:hover,
 #openFileButton:hover, #newCanvasButton:hover, #saveFileButton:hover,
@@ -165,11 +163,11 @@
 #strokeWidthMenuButton:hover, #editStrokeWidthMenuButton:hover,
 #quickToolbar .button:hover, #canvasQuickToolbar .button:hover,
 #toggleGridButton:hover,
-#confirmPolygon:hover {
+#confirmPolygon:hover,
+#groupButton:hover, #unGroupButton:hover {
     -fx-background-color: #e5e5e7;
 }
 
-/* Stato :selected */
 #fileNavigation:selected, #shapeNavigation:selected, #clipboardNavigation:selected,
 #lineButton:selected, #rectangleButton:selected, #ellipseButton:selected, #polygonButton:selected, #textButton:selected,
 #openFileButton:selected, #saveFileButton:selected, #newCanvasButton:selected,
@@ -202,7 +200,7 @@
    TABS
    ========================================================================== */
 
-#fileTab, #shapesTab, #clipboardTab {
+#fileTab, #shapesTab, #clipboardTab, #libraryTab {
     -fx-pref-width: 100;
     -fx-pref-height: 32;
     -fx-max-width: 32;
@@ -216,11 +214,11 @@
     -fx-text-base-color: #797979;
 }
 
-#fileTab:selected, #shapesTab:selected, #clipboardTab:selected {
+#fileTab:selected, #shapesTab:selected, #clipboardTab:selected, #libraryTab:selected {
     -fx-text-base-color: #fffffe;
 }
 
-#fileTabContainer, #shapesTabContainer, #clipboardTabContainer {
+#fileTabContainer, #shapesTabContainer, #clipboardTabContainer, #libraryTabContainer {
     -fx-background-color: #f7f7f9;
     -fx-border-style: solid solid hidden hidden;
     -fx-border-width: 1;
@@ -240,7 +238,7 @@
 
 .tab-pane .tab-header-area {
     -fx-padding: 0;
-    -fx-min-height: 35px; /* Sembra molto alto, sicuro che sia corretto? */
+    -fx-min-height: 35px;
     -fx-max-height: 35px;
     -fx-pref-height: 35px;
 }
@@ -249,20 +247,20 @@
     -fx-padding: 0 0 0 20px;
 }
 
-#fileTab:selected .focus-indicator, #shapesTab:selected .focus-indicator, #clipboardTab:selected .focus-indicator {
+#fileTab:selected .focus-indicator, #shapesTab:selected .focus-indicator, #clipboardTab:selected .focus-indicator,  #libraryTab:selected .focus-indicator {
     -fx-border-color: transparent;
 }
 
-#fileTab SVGPath, #shapesTab SVGPath, #clipboardTab SVGPath {
+#fileTab SVGPath, #shapesTab SVGPath, #clipboardTab SVGPath, #libraryTab SVGPath {
     -fx-fill: #797979;
 }
 
 
-#fileTab:selected SVGPath, #shapesTab:selected SVGPath, #clipboardTab:selected SVGPath {
+#fileTab:selected SVGPath, #shapesTab:selected SVGPath, #clipboardTab:selected SVGPath, #libraryTab:selected SVGPath {
     -fx-fill: #fffffe;
 }
 
-#tab { /* Questo selettore è molto generico, sei sicuro? */
+#tab {
     /*-fx-background-color: rgba(255, 105, 180, 0.11);*/
     -fx-padding: 0 0 10px 0;
 }
@@ -406,7 +404,7 @@
 
 .scroll-bar > .increment-button,
 .scroll-bar > .decrement-button {
-    /* Stili base se necessari */
+    -fx-background-color: transparent;
 }
 
 .scroll-bar:horizontal > .increment-button { -fx-padding: 2 5 2 2; }
