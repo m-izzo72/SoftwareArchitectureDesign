@@ -1,234 +1,634 @@
 @startuml
 
-class controller.Controller implements model.ModelObserver {
-  - canvasModel: model.CanvasModelInterface
-  - canvasView: view.CanvasViewInterface
-  - commandManager: model.CommandManager
+!theme plain
+top to bottom direction
+skinparam linetype ortho
 
-  + Controller(canvasModel: model.CanvasModelInterface, canvasView: view.CanvasViewInterface, commandManager: model.CommandManager)
-  + setOnMousePressed(event: MouseEvent): void
-  + setOnMouseReleased(event: MouseEvent): void
+class AddShapeCommand {
+  + AddShapeCommand(CanvasModel, ShapeData):
+  - getPreviousState(): void
+  + execute(): void
+  + isUndoable(): boolean
+  + undo(): void
+}
+class BringToFrontCommand {
+  + BringToFrontCommand(CanvasModel):
+  - getPreviousState(): void
+  + execute(): void
+  + isUndoable(): boolean
+  + undo(): void
+}
+class CanvasModel {
+  + CanvasModel():
+  + sendToBack(): void
+  + getSelectedShapes(): LinkedHashMap<String, ShapeData>
+  + deselectAllShapes(): void
+  + yFlip(): void
+  + addShape(ShapeData): void
+  + groupSelectedShapes(): void
+  + toggleShapeSelection(String): void
+  + pasteShapes(): void
+  + editShapesFillColour(String): void
+  + save(File): void
+  + clear(): void
+  + getOrderedSelectedShapes(): LinkedHashMap<String, ShapeData>
+  + moveSelectedShapes(double, double): void
+  + rotateShape(double): void
+  + getShapes(): LinkedHashMap<String, ShapeData>
+  + addObserver(ModelObserver): void
+  + cutShapes(): void
+  + resizeShape(String, double, double): void
+  + ungroupSelectedShapes(): void
+  + deleteShapes(): void
+  + xFlip(): void
+  + deleteShape(String): void
+  + editShapesStrokeWidth(double): void
+  + bringToFront(): void
+  + editShapesStrokeColour(String): void
+  + moveShapeDataByIDs(ArrayList<String>, double, double): void
+  + copyShapes(): void
+  + notifyObservers(): void
+  + addShapeByKeepingKeys(String, ShapeData): void
+  + load(File): void
+  - moveShapeData(String, double, double): void
+}
+interface CanvasModelInterface << interface >> {
+  + clear(): void
+  + addObserver(ModelObserver): void
+  + notifyObservers(): void
+  + save(File): void
+  + addShape(ShapeData): void
+  + deleteShapes(): void
+  + load(File): void
+}
+class CanvasView {
+  + CanvasView(Pane, StackPane, ScrollPane, Canvas):
+  - getPolygonAlertPane(): Pane
+  + clear(): void
+  + updatePreviewShapeGeometry(double, double, double, double): void
+  + updateResizeHandle(Node): void
+  + setCanvasScrollableAndResizable(TextField, TextField, ToggleButton): void
+  + drawAllFromScratch(LinkedHashMap<String, Node>): void
+  + insertPolygonAlertPane(Pane, AnchorPane): void
+  + getResizeHandle(): Rectangle
+  + stylePreviewShape(): void
+  + erase(Node): void
+  + createPolygonAlertPane(Button): Pane
+  + removePolygonAlertPane(Pane, AnchorPane): void
+  + setPreviewShape(Shape): void
+  + zoomListener(ObservableValue<Number>, Number, Number): void
+  + drawGrid(): void
+  - bindTextFieldToCanvasSize(TextField, TextField, ToggleButton): void
+  + setUnselectedState(Node): void
+  + setPolygonVerticesPreview(double, double): void
+  + setGridSize(double): void
+  + rotatePreview(double): void
+  - setCanvasClippable(): void
+  + draw(Node): void
+  + paintPreview(): void
+  + erasePolygonVerticesPreview(): void
+  + deletePreview(): void
+  + clearGrid(): void
+  + setSelectedEffect(Node): void
+  + isPreviewShapeNotNull(): boolean
+}
+interface CanvasViewInterface << interface >> {
+  + draw(Node): void
+  + drawAllFromScratch(LinkedHashMap<String, Node>): void
+  + clear(): void
+  + erase(Node): void
+}
+class CircularSlider {
+  + CircularSlider():
+  - setupUI(): void
+  + getAngle(): double
+  + onThumbMouseDraggedProperty(): ObjectProperty<EventHandler<MouseEvent>>
+  + setAngle(double): void
+  + angleProperty(): DoubleProperty
+  + setOnThumbMouseReleased(EventHandler<MouseEvent>): void
+  + onThumbMouseReleasedProperty(): ObjectProperty<EventHandler<MouseEvent>>
+  - setupEvents(): void
+  - updateThumbPosition(): void
+  - handleMouseDragInternal(MouseEvent): void
+  # layoutChildren(): void
+  + getOnThumbMouseReleased(): EventHandler<MouseEvent>
+  + getOnThumbMouseDragged(): EventHandler<MouseEvent>
+  - updateAngle(double, double): void
+  + setOnThumbMouseDragged(EventHandler<MouseEvent>): void
+}
+interface Command << interface >> {
+  + isUndoable(): boolean
+  + execute(): void
+  + undo(): void
+}
+class CommandManager {
+  + CommandManager():
+  + executeCommand(Command): void
+  + clear(): void
+  + isUndoStackEmpty(): boolean
+  + undo(): void
+}
+class Controller {
+  + Controller():
+  + onEllipseButtonSelected(ActionEvent): void
+  - onRotationSliderMouseReleased(MouseEvent): void
+  + onSendToBackAction(ActionEvent): void
+  + onCloseButtonAction(ActionEvent): void
+  + setOnMouseDragged(MouseEvent): void
+  + onPasteButtonAction(ActionEvent): void
+  + onFlipHorizontallyAction(ActionEvent): void
+  + setOnMouseReleased(MouseEvent): void
+  + update(): void
+  + onSaveFileButtonAction(ActionEvent): void
+  + onOpenFileButtonAction(ActionEvent): void
+  + onEraseShapeButtonAction(ActionEvent): void
+  + onCopyShapeButtonAction(ActionEvent): void
+  + initialize(): void
+  + onSelectToEditButtonSelected(ActionEvent): void
+  + onFillColorToChangePickerAction(ActionEvent): void
+  + onBringToFrontAction(ActionEvent): void
+  + onLineButtonSelected(ActionEvent): void
+  + onStrokeColorToChangePickerAction(ActionEvent): void
+  - setupListeners(): void
+  - initializeStates(): void
+  + onToggleGridButtonAction(ActionEvent): void
+  + addFocusListener(): void
+  + onSelectToolButtonSelected(ActionEvent): void
+  + onCutShapeButtonAction(ActionEvent): void
+  + onUndoButtonAction(ActionEvent): void
+  + onGroupButtonAction(ActionEvent): void
+  + onRectangleButtonSelected(ActionEvent): void
+  + onUngroupButtonAction(ActionEvent): void
+  + onMinimizeButtonAction(ActionEvent): void
+  - deselectOtherShapeTools(ToggleButton): void
+  + onNewCanvasButtonAction(ActionEvent): void
+  - toWebColor(Color): String
+  + onPolygonButtonSelected(ActionEvent): void
+  - onRotationSliderMouseDragged(MouseEvent): void
+  + onFlipVerticallyAction(ActionEvent): void
+  - onTitleBarPressed(MouseEvent): void
+  + onWriteTextButtonAction(ActionEvent): void
+  - onTitleBarDragged(MouseEvent): void
+}
+class CopyShapeCommand {
+  + CopyShapeCommand(CanvasModel):
+  + execute(): void
+  + undo(): void
+  + isUndoable(): boolean
+}
+class CutShapeCommand {
+  + CutShapeCommand(CanvasModel):
+  + isUndoable(): boolean
+  - getPreviousState(): void
+  + undo(): void
+  + execute(): void
+}
+class DeleteShapeCommand {
+  + DeleteShapeCommand(CanvasModel):
+  + undo(): void
+  + isUndoable(): boolean
+  - getPreviousState(): void
+  + execute(): void
+}
+class DeselectAllShapeCommand {
+  + DeselectAllShapeCommand(CanvasModel):
+  + isUndoable(): boolean
+  + undo(): void
+  + execute(): void
+}
+class EditShapeStrokeWidthCommand {
+  + EditShapeStrokeWidthCommand(CanvasModel, double):
+  + undo(): void
+  - getPreviousState(): void
+  + execute(): void
+  + isUndoable(): boolean
+}
+class EditShapesFillColourCommand {
+  + EditShapesFillColourCommand(CanvasModel, String):
+  + execute(): void
+  - getPreviousState(): void
+  + undo(): void
+  + isUndoable(): boolean
+}
+class EditShapesStrokeColourCommand {
+  + EditShapesStrokeColourCommand(CanvasModel, String):
+  + execute(): void
+  - getPreviousState(): void
+  + undo(): void
+  + isUndoable(): boolean
+}
+class EllipseAdapter {
+  + EllipseAdapter():
+  + toFXShape(ShapeData): Shape
+}
+class EllipseData {
+  + EllipseData():
+  + resize(double, double): void
+}
+class EllipseDataFactory {
+  + EllipseDataFactory():
+  + createShapeData(ArrayList<Double>, String, String, double, double): ShapeData
+}
+class FileManager {
+  + FileManager():
+  + load(File): LinkedHashMap<String, ShapeData>
+  + save(LinkedHashMap<String, ShapeData>, File): void
+}
+interface FileManagerInterface << interface >> {
+  + load(File): LinkedHashMap<String, ShapeData>
+  + save(LinkedHashMap<String, ShapeData>, File): void
+}
+class FlipShapeHorizontallyCommand {
+  + FlipShapeHorizontallyCommand(CanvasModel):
+  - getPreviousState(): void
+  + undo(): void
+  + isUndoable(): boolean
+  + execute(): void
+}
+class FlipShapeVerticallyCommand {
+  + FlipShapeVerticallyCommand(CanvasModel):
+  + execute(): void
+  + isUndoable(): boolean
+  - getPreviousState(): void
+  + undo(): void
+}
+class GroupShapesCommand {
+  + GroupShapesCommand(CanvasModel):
+  + undo(): void
+  + execute(): void
+  + isUndoable(): boolean
+}
+class GroupedShapesAdapter {
+  + GroupedShapesAdapter(ShapeConverter):
+  + toFXShape(ShapeData): Group
+}
+class GroupedShapesData {
+  + GroupedShapesData():
+  + add(ShapeData): void
+  + remove(ShapeData): void
+  + clone(): ShapeData
+  + resize(double, double): void
+}
+class Highlighter {
+  + Highlighter():
+  + unhighlightShape(Node): void
+  + highlightShape(Node): void
+}
+class IdleState {
+  + IdleState():
+  + handleMousePressed(MouseEvent, Controller): void
+  + handleMouseDragged(MouseEvent, Controller): void
+  + exitState(Controller): void
+  + enterState(Controller): void
+  + handleMouseReleased(MouseEvent, Controller): void
+}
+class LineAdapter {
+  + LineAdapter():
+  + toFXShape(ShapeData): Shape
+}
+class LineData {
+  + LineData():
+  + resize(double, double): void
+}
+class LineDataFactory {
+  + LineDataFactory():
+  + createShapeData(ArrayList<Double>, String, String, double, double): ShapeData
+}
+class MainApplication {
+  + MainApplication():
+  + main(String[]): void
+  + start(Stage): void
+}
+interface ModelObserver << interface >> {
   + update(): void
 }
-
-interface view.CanvasViewInterface {
-  + paint(shape: javafx.scene.shape.Shape): void
-  + delete(shape: javafx.scene.shape.Shape): void
-  + clear(): void
-  + redrawAll(shapes: java.util.List<javafx.scene.shape.Shape>): void
+class MoveShapesCommand {
+  + MoveShapesCommand(CanvasModel, List<String>, double, double):
+  + undo(): void
+  + isUndoable(): boolean
+  + execute(): void
 }
-
-class view.CanvasView implements view.CanvasViewInterface {
-  - canvas: javafx.scene.layout.Pane
-  + paint(shape: javafx.scene.shape.Shape): void
-  + delete(shape: javafx.scene.shape.Shape): void
-  + clear(): void
-  + redrawAll(shapes: java.util.List<javafx.scene.shape.Shape>): void
+class MovingState {
+  + MovingState():
+  + enterState(Controller): void
+  + initializeMove(CanvasModel, String, double, double): boolean
+  + handleMouseDragged(MouseEvent, Controller): void
+  + exitState(Controller): void
+  + handleMousePressed(MouseEvent, Controller): void
+  + handleMouseReleased(MouseEvent, Controller): void
 }
-
-abstract class view.javafx.scene.shape.Shape {
-  + setFill(paint: javafx.scene.paint.Paint): void
-  + setStroke(paint: javafx.scene.paint.Paint): void
-  + setStrokeWidth(width: double): void
+class PasteShapeCommand {
+  + PasteShapeCommand(CanvasModel):
+  - getPreviousState(): void
+  + isUndoable(): boolean
+  + execute(): void
+  + undo(): void
 }
-
-class view.javafx.scene.shape.Rectangle extends view.javafx.scene.shape.Shape {
-  - x: double
-  - y: double
-  - width: double
-  - height: double
-  + Rectangle()
-  + getX(): double
-  + getY(): double
-  + getWidth(): double
-  + getHeight(): double
+class PolygonAdapter {
+  + PolygonAdapter():
+  + toFXShape(ShapeData): Shape
 }
-
-class view.javafx.scene.shape.Ellipse extends view.javafx.scene.shape.Shape {
-  - centerX: double
-  - centerY: double
-  - radiusX: double
-  - radiusY: double
-  + Ellipse()
-  + getCenterX(): double
-  + getCenterY(): double
-  + getRadiusX(): double
-  + getRadiusY(): double
+class PolygonData {
+  + PolygonData():
+  + resize(double, double): void
+  + clone(): ShapeData
 }
-
-class view.javafx.scene.shape.Line extends view.javafx.scene.shape.Shape {
-  - startX: double
-  - startY: double
-  - endX: double
-  - endY: double
-  + Line()
-  + getStartX(): double
-  + getStartY(): double
-  + getEndX(): double
-  + getEndY(): double
+class PolygonDataFactory {
+  + PolygonDataFactory():
+  + createShapeData(ArrayList<Double>, String, String, double, double): ShapeData
 }
-
-class view.javafx.scene.layout.Pane {
-  + getChildren(): javafx.collections.ObservableList<javafx.scene.Node>
+class PolygonDrawingState {
+  + PolygonDrawingState(Controller):
+  + handleMouseReleased(MouseEvent, Controller): void
+  + enterState(Controller): void
+  + handleMousePressed(MouseEvent, Controller): void
+  + confirmPolygon(Event): void
+  + exitState(Controller): void
+  + handleMouseDragged(MouseEvent, Controller): void
 }
-
-interface model.ModelObserver {
+class RectangleAdapter {
+  + RectangleAdapter():
+  + toFXShape(ShapeData): Shape
+}
+class RectangleData {
+  + RectangleData():
+  + resize(double, double): void
+}
+class RectangleDataFactory {
+  + RectangleDataFactory():
+  + createShapeData(ArrayList<Double>, String, String, double, double): ShapeData
+}
+class RegularDrawingState {
+  + RegularDrawingState():
+  + handleMousePressed(MouseEvent, Controller): void
+  + handleMouseDragged(MouseEvent, Controller): void
+  + exitState(Controller): void
+  + handleMouseReleased(MouseEvent, Controller): void
+  + enterState(Controller): void
+}
+class ResizeShapeCommand {
+  + ResizeShapeCommand(CanvasModel, String, double, double, double, double):
+  + undo(): void
+  + execute(): void
+  + isUndoable(): boolean
+}
+class ResizingState {
+  + ResizingState():
+  + handleMousePressed(MouseEvent, Controller): void
+  + handleMouseReleased(MouseEvent, Controller): void
+  + enterState(Controller): void
+  + initializeResize(CanvasModel, String, double, double): boolean
+  + handleMouseDragged(MouseEvent, Controller): void
+  + exitState(Controller): void
+}
+class RotateShapeCommand {
+  + RotateShapeCommand(CanvasModel, double):
+  - getPreviousState(): void
+  + isUndoable(): boolean
+  + execute(): void
+  + undo(): void
+}
+class SelectShapeCommand {
+  + SelectShapeCommand(CanvasModel, String):
+  + undo(): void
+  + execute(): void
+  + isUndoable(): boolean
+}
+class SelectionPropertyObserver {
+  + SelectionPropertyObserver(CanvasModel, Node[]):
   + update(): void
 }
-
-interface model.CanvasModelInterface {
-  + addShape(shapeToAdd: model.ShapeData): void
-  + deleteShape(shapeToDelete: model.ShapeData): void
-  + save(f: java.io.File): void
-  + load(f: java.io.File): void
-  + getShapes(): java.util.List<model.ShapeData>
-  + addObserver(observer: model.ModelObserver): void
-  + removeObserver(observer: model.ModelObserver): void
-  + notifyObservers(): void
+class SelectionState {
+  + SelectionState():
+  + handleMouseDragged(MouseEvent, Controller): void
+  + handleMousePressed(MouseEvent, Controller): void
+  + exitState(Controller): void
+  + handleMouseReleased(MouseEvent, Controller): void
+  + enterState(Controller): void
 }
-
-class model.CanvasModel implements model.CanvasModelInterface {
-  - shapes: java.util.List<model.ShapeData>
-  - fileManager: model.FileManager
-  - observers: java.util.List<model.ModelObserver>
-
-  + CanvasModel()
-  + addShape(shapeToAdd: model.ShapeData): void
-  + deleteShape(shapeToDelete: model.ShapeData): void
-  + save(f: java.io.File): void
-  + load(f: java.io.File): void
-  + getShapes(): java.util.List<model.ShapeData>
-  + addObserver(observer: model.ModelObserver): void
-  + removeObserver(observer: model.ModelObserver): void
-  + notifyObservers(): void
-}
-
-interface model.FileManagerInterface{
- +save(f: java.io.File, shapes: List<Shape>): void
- +load(f: java.io.File): void
-
-}
-
-class model.FileManager implements model.FileManagerInterface{
- +save(f: java.io.File, shapes: List<Shape>): void
- +load(f: java.io.File): void
-}
-
-abstract class model.ShapeData {
-  # id: String
-  # type: String
-  # x: double
-  # y: double
-  # fillColor: String
-  # strokeColor: String
-  # strokeWidth: double
-  # rotationAngle: double
-
-  + ShapeData(id: String, type: String, x: double, y: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double)
-}
-
-class model.LineData extends model.ShapeData {
-  - endX: double
-  - endY: double
-  + LineData(id: String, startX: double, startY: double, endX: double, endY: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double)
-}
-
-class model.RectangleData extends model.ShapeData {
-  - width: double
-  - height: double
-  + RectangleData(id: String, x: double, y: double, width: double, height: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double)
-}
-
-class model.EllipseData extends model.ShapeData {
-  - radiusX: double
-  - radiusY: double
-  + EllipseData(id: String, centerX: double, centerY: double, radiusX: double, radiusY: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double)
-}
-
-interface model.ShapeDataFactory{
-	+createShape(startX: double, startY: double, endX: double, endY: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double): model.ShapeData
-}
-
-class model.RectangleDataFactory implements model.ShapeDataFactory{
-	+createShape(startX: double, startY: double, endX: double, endY: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double): model.ShapeData
-}
-
-class model.LineDataFactory implements model.ShapeDataFactory{
-	+createShape(startX: double, startY: double, endX: double, endY: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double): model.ShapeData
-}
-
-class model.EllipseDataFactory implements model.ShapeDataFactory{
-	+createShape(startX: double, startY: double, endX: double, endY: double, fillColor: String, strokeColor: String, strokeWidth: double, rotationAngle: double): model.ShapeData
-}
-
-class model.CommandManager{
-  -undoStack: java.util.Stack<model.Command>
-  -redoStack: java.util.Stack<model.Command>
-
-  + executeCommand (command: model.Command): void
-  + undo(): void
-  + redo(): void
-}
-
-interface model.Command{
+class SendToBackCommand {
+  + SendToBackCommand(CanvasModel):
   + execute(): void
   + undo(): void
+  - getPreviousState(): void
+  + isUndoable(): boolean
 }
+interface ShapeAdapterInterface << interface >> {
+  + toFXShape(ShapeData): Node
+}
+class ShapeConverter {
+  + ShapeConverter():
+  + convert(ShapeData): Node
+}
+class ShapeData {
+  + ShapeData():
+  + add(ShapeData): void
+  + clone(): ShapeData
+  + remove(ShapeData): void
+  + isXFlipped(): boolean
+  + resize(double, double): void
+  + isYFlipped(): boolean
+  + isSelected(): boolean
+}
+interface ShapeDataFactory << interface >> {
+  + createShapeData(ArrayList<Double>, String, String, double, double): ShapeData
+}
+class ShapesClipboard {
+  + ShapesClipboard():
+  + copyToClipboard(HashMap<String, ShapeData>): void
+  + getPasteOffset(): double
+  + getClipboard(): ArrayList<ShapeData>
+}
+interface State << interface >> {
+  + exitState(Controller): void
+  + handleMousePressed(MouseEvent, Controller): void
+  + handleMouseReleased(MouseEvent, Controller): void
+  + enterState(Controller): void
+  + handleMouseDragged(MouseEvent, Controller): void
+}
+class TextAdapter {
+  + TextAdapter():
+  + toFXShape(ShapeData): Shape
+}
+class TextData {
+  + TextData():
+  + resize(double, double): void
 
-class model.AddShapeCommand implements model.Command{
-  - receiver: model.CanvasModel
-  - shapeToAdd: model.ShapeData
-
-  + AddShapeCommand(receiver: model.CanvasModel, shapeToAdd: model.ShapeData)
-  + execute(): void
+}
+class TextDataFactory {
+  + TextDataFactory():
+  + createShapeData(double, double, String, String, double, String, String, double, double): ShapeData
+  + createShapeData(ArrayList<Double>, String, String, double, double): ShapeData
+}
+class TextDrawingState {
+  + TextDrawingState():
+  - finalizeTextInput(Controller, boolean): void
+  + handleMousePressed(MouseEvent, Controller): void
+  + handleMouseReleased(MouseEvent, Controller): void
+  - cancelTextInput(Controller): void
+  + enterState(Controller): void
+  + handleMouseDragged(MouseEvent, Controller): void
+  + exitState(Controller): void
+}
+class UngroupShapesCommand {
+  + UngroupShapesCommand(CanvasModel):
   + undo(): void
-}
-
-class model.DeselectAllShapeCommand implements model.Command{
-  - receiver: model.CanvasModel
-
-  + DeselectAllShapeCommand(receiver: model.CanvasModel)
+  + isUndoable(): boolean
   + execute(): void
-  + undo(): void
 }
 
-class model.SelectShapeCommand implements model.Command{
-  - receiver: model.CanvasModel
-  - selectedShape: String
-
-  + SelectShapeCommand(receiver: model.CanvasModel, selectedShape: String)
-  + execute(): void
-  + undo(): void
-}
-
-
-class model.DeleteShapeCommand implements model.Command{
-  - receiver: model.CanvasModelInterface
-  - shapeToDelete: model.ShapeData
-
-  + DeleteShapeCommand(receiver: model.CanvasModel, shapeToDelete: model.ShapeData)
-  + execute(): void
-  + undo(): void
-}
-
-controller.Controller o-> model.CanvasModelInterface
-controller.Controller o-> view.CanvasViewInterface
-model.CanvasModelInterface --o model.ModelObserver : observes >
-
-view.CanvasView ..> view.javafx.scene.layout.Pane : uses >
-view.CanvasView ..> view.javafx.scene.shape.Shape
-model.CanvasModel o--> "*" model.ShapeData
-model.CanvasModel ..> model.FileManagerInterface : uses >
-
-model.LineDataFactory ..> model.LineData: creates >
-model.RectangleDataFactory ..> model.RectangleData: creates >
-model.EllipseDataFactory ..> model.EllipseData: creates >
-
-model.AddShapeCommand ..> model.CanvasModelInterface : uses >
-model.DeselectAllShapeCommand ..> model.CanvasModelInterface : uses >
-model.SelectShapeCommand ..> model.CanvasModelInterface : uses >
-model.DeleteShapeCommand ..> model.CanvasModelInterface : uses >
-controller.Controller --> model.CommandManager : uses >
-model.CommandManager o--> "*" model.Command : manage
-
+AddShapeCommand               "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+AddShapeCommand                -[#008200,dashed]-^  Command
+AddShapeCommand               "1" *-[#595959,plain]-> "previousState\n*" ShapeData
+BringToFrontCommand           "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+BringToFrontCommand            -[#008200,dashed]-^  Command
+BringToFrontCommand           "1" *-[#595959,plain]-> "previousState\n*" ShapeData
+CanvasModel                    -[#008200,dashed]-^  CanvasModelInterface
+CanvasModel                    -[#595959,dashed]->  FileManager                   : "«create»"
+CanvasModel                   "1" *-[#595959,plain]-> "fileManager\n1" FileManager
+CanvasModel                    -[#595959,dashed]->  GroupedShapesData             : "«create»"
+CanvasModel                   "1" *-[#595959,plain]-> "observers\n*" ModelObserver
+CanvasModel                   "1" *-[#595959,plain]-> "shapes\n*" ShapeData
+CanvasModel                   "1" *-[#595959,plain]-> "shapesClipboard\n1" ShapesClipboard
+CanvasModel                    -[#595959,dashed]->  ShapesClipboard               : "«create»"
+CanvasView                     -[#008200,dashed]-^  CanvasViewInterface
+Controller                     -[#595959,dashed]->  BringToFrontCommand           : "«create»"
+Controller                    "1" *-[#595959,plain]-> "canvasModel\n1" CanvasModel
+Controller                     -[#595959,dashed]->  CanvasModel                   : "«create»"
+Controller                     -[#595959,dashed]->  CanvasView                    : "«create»"
+Controller                    "1" *-[#595959,plain]-> "canvasView\n1" CanvasView
+Controller                    "1" *-[#595959,plain]-> "rotationSlider\n1" CircularSlider
+Controller                     -[#595959,dashed]->  CommandManager                : "«create»"
+Controller                    "1" *-[#595959,plain]-> "commandManager\n1" CommandManager
+Controller                     -[#595959,dashed]->  CopyShapeCommand              : "«create»"
+Controller                     -[#595959,dashed]->  CutShapeCommand               : "«create»"
+Controller                     -[#595959,dashed]->  DeleteShapeCommand            : "«create»"
+Controller                     -[#595959,dashed]->  EditShapeStrokeWidthCommand   : "«create»"
+Controller                     -[#595959,dashed]->  EditShapesFillColourCommand   : "«create»"
+Controller                     -[#595959,dashed]->  EditShapesStrokeColourCommand : "«create»"
+Controller                     -[#595959,dashed]->  EllipseDataFactory            : "«create»"
+Controller                     -[#595959,dashed]->  FlipShapeHorizontallyCommand  : "«create»"
+Controller                     -[#595959,dashed]->  FlipShapeVerticallyCommand    : "«create»"
+Controller                     -[#595959,dashed]->  GroupShapesCommand            : "«create»"
+Controller                     -[#595959,dashed]->  IdleState                     : "«create»"
+Controller                     -[#595959,dashed]->  LineDataFactory               : "«create»"
+Controller                     -[#008200,dashed]-^  ModelObserver
+Controller                     -[#595959,dashed]->  MovingState                   : "«create»"
+Controller                     -[#595959,dashed]->  PasteShapeCommand             : "«create»"
+Controller                     -[#595959,dashed]->  PolygonDataFactory            : "«create»"
+Controller                     -[#595959,dashed]->  PolygonDrawingState           : "«create»"
+Controller                     -[#595959,dashed]->  RectangleDataFactory          : "«create»"
+Controller                     -[#595959,dashed]->  RegularDrawingState           : "«create»"
+Controller                     -[#595959,dashed]->  ResizingState                 : "«create»"
+Controller                     -[#595959,dashed]->  RotateShapeCommand            : "«create»"
+Controller                     -[#595959,dashed]->  SelectionPropertyObserver     : "«create»"
+Controller                     -[#595959,dashed]->  SelectionState                : "«create»"
+Controller                     -[#595959,dashed]->  SendToBackCommand             : "«create»"
+Controller                     -[#595959,dashed]->  ShapeConverter                : "«create»"
+Controller                    "1" *-[#595959,plain]-> "shapeConverter\n1" ShapeConverter
+Controller                    "1" *-[#595959,plain]-> "factory\n1" ShapeDataFactory
+Controller                    "1" *-[#595959,plain]-> "currentState\n1" State
+Controller                     -[#595959,dashed]->  TextDataFactory               : "«create»"
+Controller                     -[#595959,dashed]->  TextDrawingState              : "«create»"
+Controller                     -[#595959,dashed]->  UngroupShapesCommand          : "«create»"
+CopyShapeCommand              "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+CopyShapeCommand               -[#008200,dashed]-^  Command
+CutShapeCommand               "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+CutShapeCommand                -[#008200,dashed]-^  Command
+CutShapeCommand               "1" *-[#595959,plain]-> "previousState\n*" ShapeData
+DeleteShapeCommand            "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+DeleteShapeCommand             -[#008200,dashed]-^  Command
+DeleteShapeCommand            "1" *-[#595959,plain]-> "previousState\n*" ShapeData
+DeselectAllShapeCommand       "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+DeselectAllShapeCommand        -[#008200,dashed]-^  Command
+EditShapeStrokeWidthCommand   "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+EditShapeStrokeWidthCommand    -[#008200,dashed]-^  Command
+EditShapeStrokeWidthCommand   "1" *-[#595959,plain]-> "previousState\n*" ShapeData
+EditShapesFillColourCommand   "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+EditShapesFillColourCommand    -[#008200,dashed]-^  Command
+EditShapesFillColourCommand   "1" *-[#595959,plain]-> "previousState\n*" ShapeData
+EditShapesStrokeColourCommand "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+EditShapesStrokeColourCommand  -[#008200,dashed]-^  Command
+EditShapesStrokeColourCommand "1" *-[#595959,plain]-> "previousState\n*" ShapeData
+EllipseAdapter                 -[#008200,dashed]-^  ShapeAdapterInterface
+EllipseData                    -[#000082,plain]-^  ShapeData
+EllipseDataFactory             -[#595959,dashed]->  EllipseData                   : "«create»"
+EllipseDataFactory             -[#008200,dashed]-^  ShapeDataFactory
+FileManager                    -[#008200,dashed]-^  FileManagerInterface
+FlipShapeHorizontallyCommand  "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+FlipShapeHorizontallyCommand   -[#008200,dashed]-^  Command
+FlipShapeHorizontallyCommand  "1" *-[#595959,plain]-> "previousState\n*" ShapeData
+FlipShapeVerticallyCommand    "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+FlipShapeVerticallyCommand     -[#008200,dashed]-^  Command
+FlipShapeVerticallyCommand    "1" *-[#595959,plain]-> "previousState\n*" ShapeData
+GroupShapesCommand            "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+GroupShapesCommand             -[#008200,dashed]-^  Command
+GroupShapesCommand            "1" *-[#595959,plain]-> "shapesBeforeGroup\n*" ShapeData
+GroupedShapesAdapter           -[#008200,dashed]-^  ShapeAdapterInterface
+GroupedShapesAdapter          "1" *-[#595959,plain]-> "converter\n1" ShapeConverter
+GroupedShapesData              -[#000082,plain]-^  ShapeData
+GroupedShapesData             "1" *-[#595959,plain]-> "children\n*" ShapeData
+IdleState                      -[#008200,dashed]-^  State
+LineAdapter                    -[#008200,dashed]-^  ShapeAdapterInterface
+LineData                       -[#000082,plain]-^  ShapeData
+LineDataFactory                -[#595959,dashed]->  LineData                      : "«create»"
+LineDataFactory                -[#008200,dashed]-^  ShapeDataFactory
+MainApplication                     -[#595959,dashed]->  Controller                   : "«create»"
+MoveShapesCommand             "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+MoveShapesCommand              -[#008200,dashed]-^  Command
+MovingState                   "1" *-[#595959,plain]-> "model\n1" CanvasModel
+MovingState                    -[#595959,dashed]->  MoveShapesCommand             : "«create»"
+MovingState                    -[#008200,dashed]-^  State
+PasteShapeCommand             "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+PasteShapeCommand              -[#008200,dashed]-^  Command
+PasteShapeCommand             "1" *-[#595959,plain]-> "previousState\n*" ShapeData
+PolygonAdapter                 -[#008200,dashed]-^  ShapeAdapterInterface
+PolygonData                    -[#000082,plain]-^  ShapeData
+PolygonDataFactory             -[#595959,dashed]->  PolygonData                   : "«create»"
+PolygonDataFactory             -[#008200,dashed]-^  ShapeDataFactory
+PolygonDrawingState            -[#595959,dashed]->  AddShapeCommand               : "«create»"
+PolygonDrawingState           "1" *-[#595959,plain]-> "context\n1" Controller
+PolygonDrawingState            -[#008200,dashed]-^  State
+RectangleAdapter               -[#008200,dashed]-^  ShapeAdapterInterface
+RectangleData                  -[#000082,plain]-^  ShapeData
+RectangleDataFactory           -[#595959,dashed]->  RectangleData                 : "«create»"
+RectangleDataFactory           -[#008200,dashed]-^  ShapeDataFactory
+RegularDrawingState            -[#595959,dashed]->  AddShapeCommand               : "«create»"
+RegularDrawingState            -[#008200,dashed]-^  State
+ResizeShapeCommand            "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+ResizeShapeCommand             -[#008200,dashed]-^  Command
+ResizingState                 "1" *-[#595959,plain]-> "model\n1" CanvasModel
+ResizingState                  -[#595959,dashed]->  ResizeShapeCommand            : "«create»"
+ResizingState                  -[#008200,dashed]-^  State
+RotateShapeCommand            "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+RotateShapeCommand             -[#008200,dashed]-^  Command
+RotateShapeCommand            "1" *-[#595959,plain]-> "previousState\n*" ShapeData
+SelectShapeCommand            "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+SelectShapeCommand             -[#008200,dashed]-^  Command
+SelectionPropertyObserver     "1" *-[#595959,plain]-> "canvasModel\n1" CanvasModel
+SelectionPropertyObserver      -[#008200,dashed]-^  ModelObserver
+SelectionState                 -[#595959,dashed]->  DeselectAllShapeCommand       : "«create»"
+SelectionState                 -[#595959,dashed]->  SelectShapeCommand            : "«create»"
+SelectionState                 -[#008200,dashed]-^  State
+SendToBackCommand             "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+SendToBackCommand              -[#008200,dashed]-^  Command
+SendToBackCommand             "1" *-[#595959,plain]-> "previousState\n*" ShapeData
+ShapeConverter                 -[#595959,dashed]->  EllipseAdapter                : "«create»"
+ShapeConverter                 -[#595959,dashed]->  GroupedShapesAdapter          : "«create»"
+ShapeConverter                 -[#595959,dashed]->  LineAdapter                   : "«create»"
+ShapeConverter                 -[#595959,dashed]->  PolygonAdapter                : "«create»"
+ShapeConverter                 -[#595959,dashed]->  RectangleAdapter              : "«create»"
+ShapeConverter                "1" *-[#595959,plain]-> "adapters\n*" ShapeAdapterInterface
+ShapeConverter                 -[#595959,dashed]->  TextAdapter                   : "«create»"
+ShapesClipboard               "1" *-[#595959,plain]-> "clipboard\n*" ShapeData
+TextAdapter                    -[#008200,dashed]-^  ShapeAdapterInterface
+TextData                       -[#000082,plain]-^  ShapeData
+TextDataFactory                -[#008200,dashed]-^  ShapeDataFactory
+TextDataFactory                -[#595959,dashed]->  TextData                      : "«create»"
+TextDrawingState               -[#595959,dashed]->  AddShapeCommand               : "«create»"
+TextDrawingState               -[#008200,dashed]-^  State
+TextDrawingState               -[#595959,dashed]->  TextDataFactory               : "«create»"
+UngroupShapesCommand          "1" *-[#595959,plain]-> "receiver\n1" CanvasModel
+UngroupShapesCommand           -[#008200,dashed]-^  Command
+UngroupShapesCommand          "1" *-[#595959,plain]-> "groupThatWasUngrouped\n1" GroupedShapesData
 @enduml
