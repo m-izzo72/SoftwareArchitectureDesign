@@ -279,8 +279,9 @@ public class CanvasModel implements CanvasModelInterface {
         deselectAllShapes();
         groupedShapesData.setSelected(true);
         addShape(groupedShapesData);
+        deselectAllShapes();
 
-        notifyObservers();
+        //notifyObservers();
     }
 
     public void ungroupSelectedShapes() {
