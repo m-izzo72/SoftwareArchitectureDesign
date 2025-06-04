@@ -1,4 +1,3 @@
-// src/main/java/org/softwarearchitecturedesigngroup10/controller/states/MovingState.java
 package org.softwarearchitecturedesigngroup10.controller.states;
 
 import javafx.scene.Cursor;
@@ -75,7 +74,6 @@ public class MovingState implements State {
     @Override
     public void handleMouseReleased(MouseEvent event, Controller context) {
         if (model == null || selectedShapeIds_atDragStart == null || selectedShapeIds_atDragStart.isEmpty()) {
-            // Se non c'era un drag valido inizializzato, torna indietro
             context.setCurrentState(context.getSelectionState());
             event.consume();
             return;
@@ -84,17 +82,15 @@ public class MovingState implements State {
         double finalMouseX = event.getX();
         double finalMouseY = event.getY();
 
-        // Calcola il delta totale del movimento del mouse
         double totalDx = finalMouseX - initialPressX_forUndo;
         double totalDy = finalMouseY - initialPressY_forUndo;
 
         System.out.println("Drag finished. Total dx=" + totalDx + ", dy=" + totalDy);
 
-        // Se c'è stato un movimento effettivo, crea e registra il comando
-        if (Math.abs(totalDx) > 0.1 || Math.abs(totalDy) > 0.1) { // Soglia per evitare comandi per micro-movimenti
+        if (Math.abs(totalDx) > 0.1 || Math.abs(totalDy) > 0.1) {
             MoveShapesCommand moveCommand = new MoveShapesCommand(
                     model,
-                    selectedShapeIds_atDragStart, // Passa gli ID che erano selezionati all'inizio
+                    selectedShapeIds_atDragStart,
                     totalDx,
                     totalDy
             );

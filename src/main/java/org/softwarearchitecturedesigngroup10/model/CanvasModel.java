@@ -2,11 +2,9 @@ package org.softwarearchitecturedesigngroup10.model;
 
 import org.softwarearchitecturedesigngroup10.model.commands.clipboard.ShapesClipboard;
 import org.softwarearchitecturedesigngroup10.model.filesmanager.FileManager;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.EllipseData;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.LineData;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.RectangleData;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.*;
 import org.softwarearchitecturedesigngroup10.model.observers.ModelObserver;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.composite.GroupedShapesData;
 
 
 import java.io.*;
@@ -16,15 +14,19 @@ import java.util.stream.Collectors;
 
 public class CanvasModel implements CanvasModelInterface {
     LinkedHashMap<String, ShapeData> shapes;
-    private ShapesClipboard shapesClipboard;
+    LinkedHashMap<String, ShapeData> selectedShapes;
+    private final ShapesClipboard shapesClipboard;
     FileManager fileManager;
     ArrayList<ModelObserver> observers;
+
 
     public CanvasModel() {
         observers = new ArrayList<>();
         shapes = new LinkedHashMap<>();
+        selectedShapes = new LinkedHashMap<>();
         fileManager = new FileManager();
-        shapesClipboard = new ShapesClipboard(this);
+        shapesClipboard = new ShapesClipboard();
+
     }
 
     public void clear() {
@@ -45,7 +47,7 @@ public class CanvasModel implements CanvasModelInterface {
 
     public void sendToBack() {
         LinkedHashMap<String, ShapeData> selectedShapes = getSelectedShapes();
-        selectedShapes.forEach( (key, value) -> { shapes.remove(key); });
+        selectedShapes.forEach( (key, value) -> shapes.remove(key));
         selectedShapes.putAll(shapes);
         shapes = selectedShapes;
         notifyObservers();
@@ -61,8 +63,10 @@ public class CanvasModel implements CanvasModelInterface {
         notifyObservers();
     }
 
-    public void selectShape(String shapeId) {
+    public void toggleShapeSelection(String shapeId) {
         shapes.get(shapeId).setSelected(!shapes.get(shapeId).isSelected());
+        if (shapes.get(shapeId).isSelected()) selectedShapes.put(shapeId, shapes.get(shapeId));
+        else selectedShapes.remove(shapeId);
         notifyObservers();
     }
 
@@ -72,12 +76,6 @@ public class CanvasModel implements CanvasModelInterface {
             moveShapeData(key, dx, dy);
             moved.set(true);
         });
-        /*for (ShapeData shape : shapes.values()) {
-            if (shape.isSelected()) {
-                moveShapeData(shape, dx, dy);
-                moved.set(true);
-            }
-        }*/
 
         if (moved.get()) {
             notifyObservers();
@@ -98,9 +96,15 @@ public class CanvasModel implements CanvasModelInterface {
             ed.setCenterY(ed.getCenterY() + dy);
             ed.setX(ed.getCenterX() - ed.getRadiusX());
             ed.setY(ed.getCenterY() - ed.getRadiusY());
-        } else {
-            //shapes.get(shapeID).setX(shapes.get(shapeID).getX() + dx);
-            //shapes.get(shapeID).setY(shapes.get(shapeID).getY() + dy);
+        } else if (shapes.get(shapeID) instanceof PolygonData pd) {
+            pd.setX(pd.getX() + dx);
+            pd.setY(pd.getY() + dy);
+        } else if (shapes.get(shapeID) instanceof TextData td) {
+            td.setX(td.getX() + dx);
+            td.setY(td.getY() + dy);
+        } else if (shapes.get(shapeID) instanceof GroupedShapesData gd) {
+            gd.setX(gd.getX() + dx);
+            gd.setY(gd.getY() + dy);
         }
     }
 
@@ -113,6 +117,7 @@ public class CanvasModel implements CanvasModelInterface {
 
     public void deselectAllShapes() {
         shapes.forEach((key, value) -> value.setSelected(false));
+        selectedShapes.clear();
         notifyObservers();
     }
 
@@ -131,6 +136,7 @@ public class CanvasModel implements CanvasModelInterface {
 
     public void copyShapes() {
         shapesClipboard.copyToClipboard(getSelectedShapes());
+        notifyObservers();
     }
 
     public void cutShapes() {
@@ -141,26 +147,29 @@ public class CanvasModel implements CanvasModelInterface {
     public void pasteShapes() {
         deselectAllShapes();
         shapesClipboard.getClipboard().forEach(shapeData -> {
-            // moveShapeData(shapeData, 50, 50); // Changes paste position so shapes aren't pasted onto the original ones
-            addShape(shapeData);
+            String key = UUID.randomUUID().toString();
+            addShapeByKeepingKeys(key, shapeData);
+            double offset = shapesClipboard.getPasteOffset();
+            moveShapeData(key, offset, offset); // Changes paste position so shapes aren't pasted onto the original ones
+            deselectAllShapes();
         });
 
     }
 
-    public ArrayList<ShapeData> getShapesClipboard() {
-        return shapesClipboard.getActualShapesClipboard();
-    }
+//    public ArrayList<ShapeData> getShapesClipboard() {
+//        return shapesClipboard.getActualShapesClipboard();
+//    }
 
     /* SELECTED SHAPES */
 
     public void resizeShape(String shapeId, double newWidth, double newHeight) {
         ShapeData shape = shapes.get(shapeId);
         if (shape != null) {
-            System.out.println("CanvasModel: Resizing " + shapeId + " to W:" + newWidth + " H:" + newHeight); // <-- DEBUG
+            System.out.println("CanvasModel: Resizing " + shapeId + " to W:" + newWidth + " H:" + newHeight);
             shape.resize(newWidth, newHeight);
             notifyObservers();
         } else {
-            System.out.println("CanvasModel: Shape " + shapeId + " not found for resize."); // <-- DEBUG
+            System.out.println("CanvasModel: Shape " + shapeId + " not found for resize.");
         }
     }
 
@@ -168,6 +177,10 @@ public class CanvasModel implements CanvasModelInterface {
         return new LinkedHashMap<String, ShapeData>(shapes.entrySet().stream()
                 .filter(entry -> entry.getValue().isSelected())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+    }
+
+    public LinkedHashMap<String, ShapeData> getOrderedSelectedShapes() {
+        return selectedShapes;
     }
 
     public void editShapesFillColour(String newFillColour) {
@@ -202,6 +215,14 @@ public class CanvasModel implements CanvasModelInterface {
         notifyObservers();
     }
 
+    public void rotateShape(double angle) {
+        getSelectedShapes().forEach((key, value) -> {
+            value.setRotationAngle(angle);
+            System.out.println("CanvasModel: Rotating " + key + " to angle " + angle);
+        });
+        notifyObservers();
+    }
+
     public LinkedHashMap<String, ShapeData> getShapes() {
         return shapes;
     }
@@ -231,4 +252,61 @@ public class CanvasModel implements CanvasModelInterface {
         notifyObservers();
     }
 
+    public void yFlip() {
+        getSelectedShapes().forEach((key, value) -> value.setYFlipped());
+        notifyObservers();
+    }
+
+    public void xFlip() {
+        getSelectedShapes().forEach((key, value) -> value.setXFlipped());
+        notifyObservers();
+    }
+
+    public void groupSelectedShapes() {
+        // Group only if at least 2 shapes are selected
+        LinkedHashMap<String, ShapeData> selectedShapes = getSelectedShapes();
+        if (selectedShapes.size() < 2) { return; }
+
+        GroupedShapesData groupedShapesData = new GroupedShapesData();
+        //List<String> shapesIDsToRemove = new ArrayList<>();
+
+        selectedShapes.forEach((key, selectedShape) -> {
+            groupedShapesData.add(selectedShape);
+            //shapesIDsToRemove.add(key);
+            deleteShape(key);
+        });
+
+        deselectAllShapes();
+        groupedShapesData.setSelected(true);
+        addShape(groupedShapesData);
+        deselectAllShapes();
+
+        //notifyObservers();
+    }
+
+    public void ungroupSelectedShapes() {
+        LinkedHashMap<String, ShapeData> selectedShapes = getSelectedShapes();
+        ArrayList<String> groupIDsToUngroup = new ArrayList<>();
+        selectedShapes.entrySet()
+                .stream()
+                .filter( entry -> entry.getValue() instanceof GroupedShapesData)
+                .forEach(entry -> groupIDsToUngroup.add(entry.getKey()));
+
+        if(groupIDsToUngroup.isEmpty()) {
+            return;
+        }
+
+        groupIDsToUngroup.forEach(groupID -> {
+            ShapeData data = shapes.get(groupID);
+            if(data instanceof GroupedShapesData group) {
+                group.getChildren().forEach(child -> {
+                    child.setSelected(true);
+                    addShape(child);
+                });
+                deleteShape(groupID);
+            }
+        });
+
+        notifyObservers();
+    }
 }

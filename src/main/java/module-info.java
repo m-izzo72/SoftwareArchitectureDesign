@@ -12,7 +12,14 @@ module org.softwarearchitecturedesigngroup10 {
     //requires eu.hansolo.tilesfx;
 
     opens org.softwarearchitecturedesigngroup10 to javafx.fxml;
+    exports org.softwarearchitecturedesigngroup10.controller.states;
+    exports org.softwarearchitecturedesigngroup10.model.factories;
+    exports org.softwarearchitecturedesigngroup10.model.commands;
+    exports org.softwarearchitecturedesigngroup10.model;
+    exports org.softwarearchitecturedesigngroup10.model.shapesdata;
+    exports org.softwarearchitecturedesigngroup10.model.observers;
     exports org.softwarearchitecturedesigngroup10;
     exports org.softwarearchitecturedesigngroup10.controller;
+    exports org.softwarearchitecturedesigngroup10.view to javafx.fxml;
     opens org.softwarearchitecturedesigngroup10.controller to javafx.fxml;
 }

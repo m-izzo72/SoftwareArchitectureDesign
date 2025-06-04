@@ -3,11 +3,10 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.Group?>
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ColorPicker?>
-<?import javafx.scene.control.CustomMenuItem?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
@@ -19,16 +18,18 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Font?>
+<?import org.softwarearchitecturedesigngroup10.view.CircularSlider?>
 
 <Pane fx:id="rootPane" maxWidth="1.7976931348623157E308" prefHeight="650.0" prefWidth="900.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.softwarearchitecturedesigngroup10.controller.Controller">
    <VBox layoutX="1.0" layoutY="1.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="648.0" prefWidth="898.0">
-      <Pane fx:id="titleBar" prefHeight="32.0" prefWidth="898.0">
+      <Pane fx:id="titleBar" prefHeight="346.0" prefWidth="898.0">
          <HBox alignment="CENTER_RIGHT" layoutX="20.0" layoutY="-1.0" prefHeight="32.0" prefWidth="879.0">
-            <Label fx:id="title" prefHeight="21.0" prefWidth="706.0" text="New Canvas" textFill="WHITE">
+            <Label fx:id="title" prefHeight="21.0" prefWidth="738.0" text="New Canvas" textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font></Label>
@@ -51,76 +52,78 @@
                </graphic>
             </Button>
          </HBox>
-      </Pane>
-      <HBox fx:id="mainArea" prefHeight="585.0" prefWidth="898.0">
-         <TabPane fx:id="tab" prefHeight="585.0" prefWidth="114.0" side="LEFT" tabClosingPolicy="UNAVAILABLE">
-            <Tab fx:id="fileTab" closable="false">
+         <TabPane fx:id="tab" layoutY="32.0" prefHeight="145.0" prefWidth="898.0" tabClosingPolicy="UNAVAILABLE">
+            <Tab fx:id="fileTab" closable="false" text="  File">
                <graphic>
-                  <SVGPath content="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" scaleX="0.025" scaleY="0.025" translateX="-307.0" translateY="-4.0" />
+                  <Group>
+                     <children>
+                        <SVGPath content="M160 640 h320 v-80 H160 v80 Z m0-160 h320 v-80 H160 v80 Z M80 800 q-33 0-56.5-23.5 T0 720 v-640 q0-33 23.5-56.5 T80 0 h320 l240 240 v480 q0 33-23.5 56.5 T560 800 H80 Z m280-520 v-200 H80 v640 h480 v-440 H360 Z" scaleX="0.025" scaleY="0.025" translateX="-8.0" />
+                     </children>
+                  </Group>
                </graphic>
-               <AnchorPane fx:id="fileTabContainer" minHeight="0.0" minWidth="0.0" prefHeight="585.0" prefWidth="70.0">
-                  <Button fx:id="newCanvasButton" disable="true" layoutX="6.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onNewCanvasButtonAction" prefHeight="55.0" prefWidth="55.0">
+               <AnchorPane fx:id="fileTabContainer" minHeight="0.0" minWidth="0.0" prefHeight="86.0" prefWidth="898.0">
+                  <Button fx:id="newCanvasButton" disable="true" layoutX="14.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onNewCanvasButtonAction" prefHeight="55.0" prefWidth="55.0">
                      <graphic>
                         <SVGPath content="M450-250h60v-120h120v-60H510v-120h-60v120H330v60h120v120ZM252.31-100Q222-100 201-121q-21-21-21-51.31v-615.38Q180-818 201-839q21-21 51.31-21H570l210 210v477.69Q780-142 759-121q-21 21-51.31 21H252.31ZM540-620v-180H252.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v615.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85h455.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46V-620H540ZM240-800v180-180V-160v-640Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
                      </graphic>
-                     <tooltip>
-                        <Tooltip text="Erase canvas" />
-                     </tooltip>
                   </Button>
-                  <Button fx:id="saveFileButton" layoutX="6.0" layoutY="80.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onOpenFileButtonAction" prefHeight="55.0" prefWidth="55.0">
+                  <Button fx:id="saveFileButton" layoutX="117.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onOpenFileButtonAction" prefHeight="55.0" prefWidth="55.0">
                      <graphic>
                         <SVGPath content="M252.31-100Q222-100 201-121q-21-21-21-51.31v-615.38Q180-818 201-839q21-21 51.31-21H570l210 210v260h-60v-230H540v-180H252.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v615.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85H610v60H252.31ZM878-79.23l-128-128v103.61h-60V-310h206.38v60H791.77l128 128L878-79.23ZM240-160v-640 640Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
                      </graphic>
-                     <tooltip>
-                        <Tooltip text="Load canvas from file" />
-                     </tooltip>
                   </Button>
-                  <Button fx:id="openFileButton" layoutX="6.0" layoutY="145.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSaveFileButtonAction" prefHeight="55.0" prefWidth="55.0">
+                  <Button fx:id="openFileButton" layoutX="216.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSaveFileButtonAction" prefHeight="55.0" prefWidth="55.0">
                      <graphic>
                         <SVGPath content="M720-134.23 865.77-280 824-321.77l-74 74V-429h-60v181.23l-74-74L574.23-280 720-134.23ZM570-10v-60h300v60H570ZM242.31-170q-29.54 0-50.92-21.39Q170-212.77 170-242.31v-555.38q0-29.54 21.39-50.92Q212.77-870 242.31-870H520l230 230v123.31h-60V-610H490v-200H242.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v555.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85h240v60h-240ZM230-230v-580 580Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
                      </graphic>
-                     <tooltip>
-                        <Tooltip text="Save canvas to file" />
-                     </tooltip>
                   </Button>
+                  <Label layoutX="21.0" layoutY="69.0" prefHeight="20.0" prefWidth="79.0" text="New Canvas" textFill="#797b86">
+                     <font>
+                        <Font name="Inter 18pt Regular" size="11.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="120.0" layoutY="69.0" prefHeight="20.0" prefWidth="79.0" text="Load file" textFill="#797b86">
+                     <font>
+                        <Font name="Inter 18pt Regular" size="11.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="221.0" layoutY="69.0" prefHeight="20.0" prefWidth="79.0" text="Save file" textFill="#797b86">
+                     <font>
+                        <Font name="Inter 18pt Regular" size="11.0" />
+                     </font>
+                  </Label>
                </AnchorPane>
             </Tab>
-            <Tab fx:id="shapesTab" closable="false">
+            <Tab fx:id="shapesTab" closable="false" text="  Draw">
                <graphic>
-                  <SVGPath content="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z" scaleX="0.025" scaleY="0.025" translateX="-367.0" translateY="-4.0" />
+                  <Group>
+                     <children>
+                        <SVGPath content="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z" scaleX="0.025" scaleY="0.025" translateX="-367.0" translateY="-4.0" />
+                     </children>
+                  </Group>
                </graphic>
                <AnchorPane fx:id="shapesTabContainer" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="60.0">
-                  <ToggleButton fx:id="lineButton" layoutX="6.0" layoutY="100.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onLineButtonSelected" prefHeight="55.0" prefWidth="55.0">
+                  <ToggleButton fx:id="lineButton" layoutX="131.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onLineButtonSelected" prefHeight="55.0" prefWidth="55.0">
                      <graphic>
                         <SVGPath content="M200-440v-80h560v80H200Z" fill="#797b86" rotate="-35.5" scaleX="0.07" scaleY="0.05" />
                      </graphic>
-                     <tooltip>
-                        <Tooltip text="Draw new Line" />
-                     </tooltip>
                   </ToggleButton>
-                  <ToggleButton fx:id="rectangleButton" layoutX="6.0" layoutY="167.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onRectangleButtonSelected" prefHeight="55.0" prefWidth="55.0">
+                  <ToggleButton fx:id="rectangleButton" layoutX="224.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onRectangleButtonSelected" prefHeight="55.0" prefWidth="55.0">
                      <graphic>
                         <SVGPath content="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
                      </graphic>
-                     <tooltip>
-                        <Tooltip text="Draw new Rectangle" />
-                     </tooltip>
                   </ToggleButton>
-                  <ToggleButton fx:id="ellipseButton" layoutX="6.0" layoutY="233.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onEllipseButtonSelected" prefHeight="55.0" prefWidth="55.0">
+                  <ToggleButton fx:id="ellipseButton" layoutX="338.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onEllipseButtonSelected" prefHeight="55.0" prefWidth="55.0">
                      <graphic>
                         <SVGPath content="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
                      </graphic>
-                     <tooltip>
-                        <Tooltip text="Draw new Ellipse" />
-                     </tooltip>
                   </ToggleButton>
-                  <Separator layoutX="-1.0" layoutY="303.0" prefHeight="1.0" prefWidth="69.0" />
-                  <ColorPicker fx:id="fillColorPicker" layoutX="35.0" layoutY="318.0" prefHeight="24.0" prefWidth="24.0">
+                  <ColorPicker fx:id="fillColorPicker" layoutX="777.0" layoutY="21.0" prefHeight="24.0" prefWidth="24.0">
                      <value>
                         <Color green="0.6000000238418579" blue="1.0" />
                      </value>
                   </ColorPicker>
-                  <ColorPicker fx:id="strokeColorPicker" layoutX="35.0" layoutY="356.0" prefHeight="24.0" prefWidth="24.0">
+                  <ColorPicker fx:id="strokeColorPicker" layoutX="709.0" layoutY="21.0" prefHeight="24.0" prefWidth="24.0">
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="100.0" />
                      </padding>
@@ -128,108 +131,250 @@
                         <Color red="0.18333333730697632" blue="1.0" />
                      </value>
                   </ColorPicker>
-                  <SVGPath content="M80 0v-120h800V0H80Zm160-303.46h49.46l332-331.39-25.15-25.53-24.92-24.54-331.39 332v49.46Zm-60 60v-135l448.39-447.77q8.69-8.69 19.73-13.15 11.03-4.46 22.96-4.46 11.94 0 23.12 4.46 11.18 4.46 20.49 13.77l48.08 48.69q9.31 8.69 13.46 19.91 4.15 11.21 4.15 23.18 0 11.22-4.21 22.31-4.21 11.1-13.4 20.29L315-243.46H180Zm540.38-490.92-49.46-49.46 49.46 49.46Zm-98.92 99.53-25.15-25.53-24.92-24.54 50.07 50.07Z" fill="#797b86" layoutX="-1.0" layoutY="263.0" scaleX="0.03" scaleY="0.03" translateX="-462.0" translateY="526.0" />
-                  <SVGPath content="m255.46-880.54 42.39-42.53L632-588.92q21.08 21.08 21.08 51.61 0 30.54-21.08 51.62L458.92-311.85q-20.69 20.7-51.23 20.7-30.54 0-51.23-20.7L183.39-485.69q-21.08-21.08-21.08-51.62 0-30.53 21.08-51.61l181.92-181.77-109.85-109.85Zm152.62 152.62L224.77-545.38q-1.92 1.92-2.5 4.04-.58 2.11-.58 4.42h372q0-2.31-.57-4.42-.58-2.12-2.5-4.04L408.08-727.92Zm343.46 461.77q-29.16 0-49.58-20.43-20.42-20.42-20.42-49.57 0-19.46 10.96-40.19 10.96-20.73 23.65-39.04 8.23-11.23 17.08-22.69 8.85-11.47 18.31-22.7 9.46 11.23 18.31 22.7 8.84 11.46 17.07 22.69 12.69 18.31 23.66 39.04 10.96 20.73 10.96 40.19 0 29.15-20.43 49.57-20.42 20.43-49.57 20.43ZM80 0v-120h800V0H80Z" fill="#797b86" layoutX="10.0" layoutY="312.0" scaleX="0.03" scaleY="0.03" stroke="BLACK" strokeType="INSIDE" translateX="-473.0" translateY="478.0" />
-                  <Separator layoutY="435.0" prefHeight="1.0" prefWidth="68.0" />
-                  <ToggleButton fx:id="selectToolButton" layoutX="7.0" layoutY="24.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSelectToolButtonSelected" prefHeight="55.0" prefWidth="55.0">
+                  <Group layoutX="671.0" layoutY="-71.0">
+                     <children>
+                        <SVGPath content="M80 0v-120h800V0H80Zm160-303.46h49.46l332-331.39-25.15-25.53-24.92-24.54-331.39 332v49.46Zm-60 60v-135l448.39-447.77q8.69-8.69 19.73-13.15 11.03-4.46 22.96-4.46 11.94 0 23.12 4.46 11.18 4.46 20.49 13.77l48.08 48.69q9.31 8.69 13.46 19.91 4.15 11.21 4.15 23.18 0 11.22-4.21 22.31-4.21 11.1-13.4 20.29L315-243.46H180Zm540.38-490.92-49.46-49.46 49.46 49.46Zm-98.92 99.53-25.15-25.53-24.92-24.54 50.07 50.07Z" fill="#797b86" scaleX="0.025" scaleY="0.025" translateX="-462.0" translateY="526.0" />
+                     </children>
+                  </Group>
+                  <Group layoutX="750.0" layoutY="17.0">
+                     <children>
+                        <SVGPath content="m255.46-880.54 42.39-42.53L632-588.92q21.08 21.08 21.08 51.61 0 30.54-21.08 51.62L458.92-311.85q-20.69 20.7-51.23 20.7-30.54 0-51.23-20.7L183.39-485.69q-21.08-21.08-21.08-51.62 0-30.53 21.08-51.61l181.92-181.77-109.85-109.85Zm152.62 152.62L224.77-545.38q-1.92 1.92-2.5 4.04-.58 2.11-.58 4.42h372q0-2.31-.57-4.42-.58-2.12-2.5-4.04L408.08-727.92Zm343.46 461.77q-29.16 0-49.58-20.43-20.42-20.42-20.42-49.57 0-19.46 10.96-40.19 10.96-20.73 23.65-39.04 8.23-11.23 17.08-22.69 8.85-11.47 18.31-22.7 9.46 11.23 18.31 22.7 8.84 11.46 17.07 22.69 12.69 18.31 23.66 39.04 10.96 20.73 10.96 40.19 0 29.15-20.43 49.57-20.42 20.43-49.57 20.43ZM80 0v-120h800V0H80Z" fill="#797b86" scaleX="0.025" scaleY="0.025" stroke="BLACK" strokeType="INSIDE" translateX="-473.0" translateY="478.0" />
+                     </children>
+                  </Group>
+                  <Button fx:id="selectToEditButton" contentDisplay="BOTTOM" layoutX="21.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSelectToEditButtonSelected" prefHeight="55.0" prefWidth="55.0">
                      <graphic>
-                        <SVGPath content="M462.23-260.77q-85.61-7.31-143.92-69.77Q260-393 260-480q0-91.67 64.17-155.83Q388.33-700 480-700q87 0 149.46 58.12 62.46 58.11 69.77 143.73L635.62-517q-12.97-54-55.87-88.5Q536.86-640 480-640q-66 0-113 47t-47 113q0 57 34.69 100T443-324l19.23 63.23Zm48 159.15q-7.56 1.62-15.11 1.62H480q-78.85 0-148.2-29.92t-120.65-81.21q-51.3-51.29-81.22-120.63Q100-401.1 100-479.93q0-78.84 29.92-148.21t81.21-120.68q51.29-51.31 120.63-81.25Q401.1-860 479.93-860q78.84 0 148.21 29.93 69.37 29.92 120.68 81.22t81.25 120.65Q860-558.85 860-480v14.92q0 7.46-1.62 14.93L800-468v-12q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93h12l18.23 58.38Zm295.38 7.39L624.23-276l-43.46 131.38L480-480l335.38 100.77L684-335.77l181.77 181.38-60.16 60.16Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
+                        <SVGPath content="m320-410 79-110h170L320-716v306ZM551-80 406-392 240-160v-720l560 440H516l144 309-109 51ZM399-520Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
                      </graphic>
-                     <tooltip>
-                        <Tooltip text="Selection Tool" />
-                     </tooltip>
+                  </Button>
+                  <Separator layoutX="118.0" layoutY="13.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
+                  <Label layoutX="21.0" layoutY="71.0" prefHeight="20.0" prefWidth="85.0" text="Select and edit" textFill="#797b86">
+                     <font>
+                        <Font name="Inter 18pt Regular" size="68.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="134.0" layoutY="71.0" prefHeight="20.0" prefWidth="58.0" text="Draw line" textFill="#797b86">
+                     <font>
+                        <Font name="Inter 18pt Regular" size="11.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="230.0" layoutY="71.0" prefHeight="20.0" prefWidth="98.0" text="Draw rectangle" textFill="#797b86">
+                     <font>
+                        <Font name="Inter 18pt Regular" size="11.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="341.0" layoutY="71.0" prefHeight="20.0" prefWidth="98.0" text="Draw ellipse" textFill="#797b86">
+                     <font>
+                        <Font name="Inter 18pt Regular" size="11.0" />
+                     </font>
+                  </Label>
+                  <Separator layoutX="436.0" layoutY="14.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
+                  <Group layoutX="220.0" layoutY="-730.7699584960938">
+                     <children>
+                        <SVGPath content="M220-229.23v-20h520v20H220Zm0-100v-40h520v40H220Zm0-120v-58.46h520v58.46H220Zm0-140v-141.54h520v141.54H220Z" fill="#797b86" />
+                     </children>
+                  </Group>
+                  <ToggleButton fx:id="polygonButton" layoutX="460.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onPolygonButtonSelected" prefHeight="55.0" prefWidth="55.0">
+                     <graphic>
+                        <SVGPath content="M298-200h364l123-369-305-213-305 213 123 369Zm-58 80L80-600l400-280 400 280-160 480H240Zm240-371Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
+                     </graphic>
                   </ToggleButton>
-                  <Separator layoutY="90.0" prefHeight="1.0" prefWidth="69.0" />
-                  <MenuButton fx:id="strokeWidthMenuButton" layoutX="7.0" layoutY="393.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" popupSide="RIGHT" prefHeight="27.0" prefWidth="55.0">
-                     <items>
-                        <CustomMenuItem mnemonicParsing="false">
-                           <content>
-                              <Slider fx:id="strokeSlider" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="1" snapToTicks="true" value="3.0" />
-                           </content>
-                        </CustomMenuItem>
-                     </items>
+                  <ToggleButton fx:id="textButton" layoutX="569.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onWriteTextButtonAction" prefHeight="55.0" prefWidth="55.0">
                      <graphic>
-                        <SVGPath content="M220-229.23v-20h520v20H220Zm0-100v-40h520v40H220Zm0-120v-58.46h520v58.46H220Zm0-140v-141.54h520v141.54H220Z" fill="#797b86" scaleX="0.04" scaleY="0.04" translateX="-241.0" />
+                        <SVGPath content="M440-320v-240H320v-80h320v80H520v240h-80ZM40-40v-240h80v-400H40v-240h240v80h400v-80h240v240h-80v400h80v240H680v-80H280v80H40Zm240-160h400v-80h80v-400h-80v-80H280v80h-80v400h80v80ZM120-760h80v-80h-80v80Zm640 0h80v-80h-80v80Zm0 640h80v-80h-80v80Zm-640 0h80v-80h-80v80Zm80-640Zm560 0Zm0 560Zm-560 0Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
                      </graphic>
-                  </MenuButton>
+                  </ToggleButton>
+                  <Label layoutX="462.0" layoutY="71.0" prefHeight="20.0" prefWidth="98.0" text="Draw polygon" textFill="#797b86">
+                     <font>
+                        <Font name="Inter 18pt Regular" size="11.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="573.0" layoutY="71.0" prefHeight="20.0" prefWidth="98.0" text="Write text" textFill="#797b86">
+                     <font>
+                        <Font name="Inter 18pt Regular" size="11.0" />
+                     </font>
+                  </Label>
+                  <Separator layoutX="657.0" layoutY="14.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
+                  <Group layoutX="671.0" layoutY="35.0">
+                     <children>
+                        <SVGPath content="M220-229.23v-20h520v20H220Zm0-100v-40h520v40H220Zm0-120v-58.46h520v58.46H220Zm0-140v-141.54h520v141.54H220Z" fill="#797b86" layoutY="-13.0" scaleX="0.035" scaleY="0.035" translateX="-462.0" translateY="526.0" />
+                     </children>
+                  </Group>
+                  <Slider fx:id="strokeSlider" blockIncrement="1.0" layoutX="708.0" layoutY="60.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="1" prefHeight="16.0" prefWidth="98.0" snapToTicks="true" value="3.0" />
                </AnchorPane>
             </Tab>
-            <Tab fx:id="clipboardTab" closable="false">
+            <Tab fx:id="clipboardTab" closable="false" text="  Edit">
                <graphic>
-                  <SVGPath content="M620-163 450-333l56-56 114 114 226-226 56 56-282 282Zm220-397h-80v-200h-80v120H280v-120h-80v560h240v80H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h167q11-35 43-57.5t70-22.5q40 0 71.5 22.5T594-840h166q33 0 56.5 23.5T840-760v200ZM480-760q17 0 28.5-11.5T520-800q0-17-11.5-28.5T480-840q-17 0-28.5 11.5T440-800q0 17 11.5 28.5T480-760Z" scaleX="0.025" scaleY="0.025" translateX="-377.0" translateY="-4.0" />
+                  <Group>
+                     <children>
+                        <SVGPath content="M200-200h50.46l409.46-409.46-50.46-50.46L200-250.46V-200Zm-60 60v-135.38l527.62-527.39q9.07-8.24 20.03-12.73 10.97-4.5 23-4.5t23.3 4.27q11.28 4.27 19.97 13.58l48.85 49.46q9.31 8.69 13.27 20 3.96 11.31 3.96 22.62 0 12.07-4.12 23.03-4.12 10.97-13.11 20.04L275.38-140H140Zm620.38-570.15-50.23-50.23 50.23 50.23Zm-126.13 75.9-24.79-25.67 50.46 50.46-25.67-24.79Z" scaleX="0.025" scaleY="0.025" translateX="-377.0" translateY="-4.0" />
+                     </children>
+                  </Group>
                </graphic>
-               <AnchorPane fx:id="clipboardTabContainer" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                  <Button fx:id="eraseShapeButton" disable="true" layoutX="8.0" layoutY="240.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onEraseShapeButtonAction" prefHeight="55.0" prefWidth="55.0">
+               <AnchorPane fx:id="clipboardTabContainer" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="898.0">
+                  <Button fx:id="eraseShapeButton" alignment="TOP_LEFT" disable="true" graphicTextGap="12.0" layoutX="231.0" layoutY="51.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onEraseShapeButtonAction" prefHeight="32.0" prefWidth="130.0" text="Delete shapes" textFill="#797b86">
                      <graphic>
-                        <SVGPath content="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
+                        <Group>
+                           <children>
+                              <SVGPath content="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z" fill="#797b86" scaleX="0.03" scaleY="0.03" />
+                           </children>
+                        </Group>
                      </graphic>
                      <tooltip>
                         <Tooltip text="Delete selected shape" />
                      </tooltip>
                   </Button>
-                  <Button fx:id="cutShapeButton" disable="true" layoutX="8.0" layoutY="28.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCutShapeButtonAction" prefHeight="55.0" prefWidth="55.0">
+                  <Button fx:id="cutShapeButton" alignment="TOP_LEFT" disable="true" graphicTextGap="12.0" layoutX="231.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCutShapeButtonAction" prefHeight="32.0" prefWidth="130.0" text="Cut shapes" textFill="#797b86">
                      <graphic>
-                        <SVGPath content="M767.69-129.23 481.54-415.39 372.15-306q8.39 15 11.96 31.81 3.58 16.81 3.58 34.19 0 60.29-42.92 103.22T241.58-93.85q-60.27 0-103.23-42.92T95.39-239.96q0-60.27 42.93-103.23t103.22-42.96q17.38 0 34.19 3.57 16.81 3.58 31.81 11.97L416.92-480 307.54-589.39q-15 8.39-31.81 11.97-16.81 3.57-34.19 3.57-60.29 0-103.22-42.92T95.39-719.96q0-60.27 42.92-103.23t103.19-42.96q60.27 0 103.23 42.93T387.69-720q0 17.38-3.58 34.19Q380.54-669 372.15-654l492.46 492.46v32.31h-96.92ZM592.31-526.15l-64.62-64.62 240-240h96.92v32.31l-272.3 272.31Zm-350.77-107.7q35.54 0 60.85-25.3 25.3-25.31 25.3-60.85 0-35.54-25.3-60.85-25.31-25.3-60.85-25.3-35.54 0-60.85 25.3-25.31 25.31-25.31 60.85 0 35.54 25.31 60.85 25.31 25.3 60.85 25.3Zm240 163.85q4 0 7-3t3-7q0-4-3-7t-7-3q-4 0-7 3t-3 7q0 4 3 7t7 3Zm-240 316.15q35.54 0 60.85-25.3 25.3-25.31 25.3-60.85 0-35.54-25.3-60.85-25.31-25.3-60.85-25.3-35.54 0-60.85 25.3-25.31 25.31-25.31 60.85 0 35.54 25.31 60.85 25.31 25.3 60.85 25.3Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
+                        <Group>
+                           <children>
+                              <SVGPath content="M767.69-129.23 481.54-415.39 372.15-306q8.39 15 11.96 31.81 3.58 16.81 3.58 34.19 0 60.29-42.92 103.22T241.58-93.85q-60.27 0-103.23-42.92T95.39-239.96q0-60.27 42.93-103.23t103.22-42.96q17.38 0 34.19 3.57 16.81 3.58 31.81 11.97L416.92-480 307.54-589.39q-15 8.39-31.81 11.97-16.81 3.57-34.19 3.57-60.29 0-103.22-42.92T95.39-719.96q0-60.27 42.92-103.23t103.19-42.96q60.27 0 103.23 42.93T387.69-720q0 17.38-3.58 34.19Q380.54-669 372.15-654l492.46 492.46v32.31h-96.92ZM592.31-526.15l-64.62-64.62 240-240h96.92v32.31l-272.3 272.31Zm-350.77-107.7q35.54 0 60.85-25.3 25.3-25.31 25.3-60.85 0-35.54-25.3-60.85-25.31-25.3-60.85-25.3-35.54 0-60.85 25.3-25.31 25.31-25.31 60.85 0 35.54 25.31 60.85 25.31 25.3 60.85 25.3Zm240 163.85q4 0 7-3t3-7q0-4-3-7t-7-3q-4 0-7 3t-3 7q0 4 3 7t7 3Zm-240 316.15q35.54 0 60.85-25.3 25.3-25.31 25.3-60.85 0-35.54-25.3-60.85-25.31-25.3-60.85-25.3-35.54 0-60.85 25.3-25.31 25.31-25.31 60.85 0 35.54 25.31 60.85 25.31 25.3 60.85 25.3Z" fill="#797b86" scaleX="0.03" scaleY="0.03" />
+                           </children>
+                        </Group>
                      </graphic>
-                     <tooltip>
-                        <Tooltip text="Cut selected shapes" />
-                     </tooltip>
                   </Button>
-                  <Button fx:id="copyShapeButton" disable="true" layoutX="8.0" layoutY="93.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCopyShapeButtonAction" prefHeight="55.0" prefWidth="55.0">
+                  <Button fx:id="copyShapeButton" alignment="TOP_LEFT" disable="true" graphicTextGap="12.0" layoutX="101.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onCopyShapeButtonAction" prefHeight="32.0" prefWidth="130.0" text="Copy shapes" textFill="#797b86">
                      <graphic>
-                        <SVGPath content="M362.31-260Q332-260 311-281q-21-21-21-51.31v-455.38Q290-818 311-839q21-21 51.31-21h335.38Q728-860 749-839q21 21 21 51.31v455.38Q770-302 749-281q-21 21-51.31 21H362.31Zm0-60h335.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-455.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H362.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v455.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85Zm-140 200Q192-120 171-141q-21-21-21-51.31v-515.38h60v515.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85h395.38v60H222.31ZM350-320v-480 480Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
+                        <Group>
+                           <children>
+                              <SVGPath content="M362.31-260Q332-260 311-281q-21-21-21-51.31v-455.38Q290-818 311-839q21-21 51.31-21h335.38Q728-860 749-839q21 21 21 51.31v455.38Q770-302 749-281q-21 21-51.31 21H362.31Zm0-60h335.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-455.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H362.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v455.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85Zm-140 200Q192-120 171-141q-21-21-21-51.31v-515.38h60v515.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85h395.38v60H222.31ZM350-320v-480 480Z" fill="#797b86" scaleX="0.03" scaleY="0.03" />
+                           </children>
+                        </Group>
                      </graphic>
-                     <tooltip>
-                        <Tooltip text="Copy selected shapes" />
-                     </tooltip>
                   </Button>
-                  <Button fx:id="pasteShapeButton" layoutX="8.0" layoutY="159.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onPasteButtonAction" prefHeight="55.0" prefWidth="55.0">
+                  <Button fx:id="pasteShapeButton" alignment="TOP_LEFT" disable="true" graphicTextGap="10.0" layoutX="101.0" layoutY="51.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onPasteButtonAction" prefHeight="32.0" prefWidth="130.0" text="Paste shapes" textFill="#797b86">
                      <graphic>
-                        <SVGPath content="M212.31-140q-29.92 0-51.12-21.19Q140-182.39 140-212.31v-535.38q0-29.92 21.19-51.12Q182.39-820 212.31-820h176.23q8.31-29.23 33.96-48.46t57.5-19.23q33.08 0 58.42 19.23 25.35 19.23 33.66 48.46h175.61q29.92 0 51.12 21.19Q820-777.61 820-747.69v535.38q0 29.92-21.19 51.12Q777.61-140 747.69-140H212.31Zm0-60h535.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-535.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H660v104.61H300V-760h-87.69q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v535.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM480-755.38q15.46 0 25.81-10.35 10.34-10.35 10.34-25.81 0-15.46-10.34-25.81-10.35-10.34-25.81-10.34-15.46 0-25.81 10.34-10.34 10.35-10.34 25.81 0 15.46 10.34 25.81 10.35 10.35 25.81 10.35Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
+                        <Group>
+                           <children>
+                              <SVGPath content="M212.31-140q-29.92 0-51.12-21.19Q140-182.39 140-212.31v-535.38q0-29.92 21.19-51.12Q182.39-820 212.31-820h176.23q8.31-29.23 33.96-48.46t57.5-19.23q33.08 0 58.42 19.23 25.35 19.23 33.66 48.46h175.61q29.92 0 51.12 21.19Q820-777.61 820-747.69v535.38q0 29.92-21.19 51.12Q777.61-140 747.69-140H212.31Zm0-60h535.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-535.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H660v104.61H300V-760h-87.69q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v535.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM480-755.38q15.46 0 25.81-10.35 10.34-10.35 10.34-25.81 0-15.46-10.34-25.81-10.35-10.34-25.81-10.34-15.46 0-25.81 10.34-10.34 10.35-10.34 25.81 0 15.46 10.34 25.81 10.35 10.35 25.81 10.35Z" fill="#797b86" nodeOrientation="LEFT_TO_RIGHT" scaleX="0.03" scaleY="0.03" />
+                           </children>
+                        </Group>
                      </graphic>
-                     <tooltip>
-                        <Tooltip text="Paste selected shapes" />
-                     </tooltip>
                   </Button>
-                  <Separator layoutY="226.0" prefHeight="1.0" prefWidth="68.0" />
+                  <Separator layoutX="370.0" layoutY="13.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
+                  <Button fx:id="sendToBackButton" disable="true" graphicTextGap="12.0" layoutX="381.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSendToBackAction" prefHeight="32.0" prefWidth="98.0" text="To back" textFill="#797b86">
+                     <graphic>
+                        <Group>
+                           <children>
+                              <SVGPath content="M224.62-160q-26.66 0-45.64-18.98T160-224.62v-427.69h40v427.69q0 10.77 6.92 17.7 6.93 6.92 17.7 6.92h427.69v40H224.62Zm132.3-196.92v49.23q-20.3 0-34.77-14.46-14.46-14.47-14.46-34.77h49.23Zm-49.23-98.46v-49.24h49.23v49.24h-49.23Zm0-147.7v-49.23h49.23v49.23h-49.23Zm49.23-147.69h-49.23q0-20.31 14.46-34.77Q336.62-800 356.92-800v49.23Zm98.46 443.08v-49.23h49.24v49.23h-49.24Zm0-443.08V-800h49.24v49.23h-49.24Zm147.7 0V-800h49.23v49.23h-49.23Zm0 443.08v-49.23h49.23v49.23h-49.23Zm147.69-443.08V-800q20.31 0 34.77 14.46Q800-771.08 800-750.77h-49.23Zm0 393.85H800q0 20.3-14.46 34.77-14.46 14.46-34.77 14.46v-49.23Zm0-98.46v-49.24H800v49.24h-49.23Zm0-147.7v-49.23H800v49.23h-49.23Z" fill="#797b86" scaleX="0.03" scaleY="0.03" />
+                           </children>
+                        </Group>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="bringToFrontButton" disable="true" graphicTextGap="12.0" layoutX="381.0" layoutY="54.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBringToFrontAction" prefHeight="32.0" prefWidth="98.0" text="To front" textFill="#797b86">
+                     <graphic>
+                        <Group>
+                           <children>
+                              <SVGPath content="M372.31-307.69q-27.62 0-46.12-18.5-18.5-18.5-18.5-46.12v-363.07q0-27.62 18.5-46.12 18.5-18.5 46.12-18.5h363.07q27.62 0 46.12 18.5Q800-763 800-735.38v363.07q0 27.62-18.5 46.12-18.5 18.5-46.12 18.5H372.31Zm0-40h363.07q9.24 0 16.93-7.69 7.69-7.7 7.69-16.93v-363.07q0-9.24-7.69-16.93-7.69-7.69-16.93-7.69H372.31q-9.23 0-16.93 7.69-7.69 7.69-7.69 16.93v363.07q0 9.23 7.69 16.93 7.7 7.69 16.93 7.69ZM209.23-209.23V-160q-20.69 0-34.96-14.27T160-209.23h49.23ZM160-307.69v-49.23h49.23v49.23H160Zm0-147.69v-49.24h49.23v49.24H160Zm0-147.7v-49.23h49.23v49.23H160ZM307.69-160v-49.23h49.23V-160h-49.23Zm147.69 0v-49.23h49.24V-160h-49.24Zm147.7 0v-49.23h49.23V-160h-49.23Z" fill="#797b86" scaleX="0.03" scaleY="0.03" />
+                           </children>
+                        </Group>
+                     </graphic>
+                  </Button>
+                  <Separator layoutX="489.0" layoutY="13.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
+                  <Button fx:id="flipXButton" disable="true" graphicTextGap="12.0" layoutX="501.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onFlipHorizontallyAction" prefHeight="32.0" prefWidth="136.0" text="Flip horizontally" textFill="#797b86">
+                     <graphic>
+                        <Group>
+                           <children>
+                              <SVGPath content="M356.92-160H224.98q-27.21 0-46.1-18.98Q160-197.96 160-224.62v-510.76q0-26.66 18.98-45.64T224.62-800h132.3v40h-132.3q-10.77 0-17.7 6.92-6.92 6.93-6.92 17.7v510.76q0 10.77 6.92 17.7 6.93 6.92 17.7 6.92h132.3v40ZM460-40v-864.62h40V-40h-40Zm143.08-120v-49.23h49.23V-160h-49.23Zm0-590.77V-800h49.23v49.23h-49.23ZM750.77-160v-49.23H800q0 20.69-14.46 34.96T750.77-160Zm0-147.69v-49.23H800v49.23h-49.23Zm0-147.69v-49.24H800v49.24h-49.23Zm0-147.7v-49.23H800v49.23h-49.23Zm0-147.69V-800q20.31 0 34.77 14.46Q800-771.08 800-750.77h-49.23Z" fill="#797b86" scaleX="0.028" scaleY="0.028" />
+                           </children>
+                        </Group>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="flipYButton" disable="true" graphicTextGap="12.0" layoutX="501.0" layoutY="54.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onFlipVerticallyAction" prefHeight="32.0" prefWidth="136.0" text="Flip vertically" textFill="#797b86">
+                     <graphic>
+                        <Group>
+                           <children>
+                              <SVGPath content="M356.92-160H224.98q-27.21 0-46.1-18.98Q160-197.96 160-224.62v-510.76q0-26.66 18.98-45.64T224.62-800h132.3v40h-132.3q-10.77 0-17.7 6.92-6.92 6.93-6.92 17.7v510.76q0 10.77 6.92 17.7 6.93 6.92 17.7 6.92h132.3v40ZM460-40v-864.62h40V-40h-40Zm143.08-120v-49.23h49.23V-160h-49.23Zm0-590.77V-800h49.23v49.23h-49.23ZM750.77-160v-49.23H800q0 20.69-14.46 34.96T750.77-160Zm0-147.69v-49.23H800v49.23h-49.23Zm0-147.69v-49.24H800v49.24h-49.23Zm0-147.7v-49.23H800v49.23h-49.23Zm0-147.69V-800q20.31 0 34.77 14.46Q800-771.08 800-750.77h-49.23Z" fill="#797b86" rotate="90.0" scaleX="0.028" scaleY="0.028" />
+                           </children>
+                        </Group>
+                     </graphic>
+                  </Button>
+                  <ColorPicker fx:id="editStrokeColorPicker" disable="true" layoutX="689.0" layoutY="21.0" onAction="#onStrokeColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
+                     <value>
+                        <Color green="0.6000000238418579" blue="1.0" />
+                     </value>
+                  </ColorPicker>
+                  <ColorPicker fx:id="editFillColorPicker" disable="true" layoutX="752.0" layoutY="21.0" onAction="#onFillColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
+                     <value>
+                        <Color green="0.6000000238418579" blue="1.0" />
+                     </value>
+                  </ColorPicker>
+                  <Slider fx:id="editStrokeWidthSlider" blockIncrement="1.0" disable="true" layoutX="692.0" layoutY="58.0" max="10.0" min="1.0" prefHeight="16.0" prefWidth="90.0" />
+                  <CircularSlider fx:id="rotationSlider" disable="true" layoutX="814.0" layoutY="16.0" prefHeight="55.0" prefWidth="55.0" />
+                  <Separator layoutX="647.0" layoutY="13.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
+                  <Group fx:id="editStrokeColourIcon" disable="true" layoutX="652.0" layoutY="-52.0">
+                     <children>
+                        <SVGPath content="M80 0v-120h800V0H80Zm160-303.46h49.46l332-331.39-25.15-25.53-24.92-24.54-331.39 332v49.46Zm-60 60v-135l448.39-447.77q8.69-8.69 19.73-13.15 11.03-4.46 22.96-4.46 11.94 0 23.12 4.46 11.18 4.46 20.49 13.77l48.08 48.69q9.31 8.69 13.46 19.91 4.15 11.21 4.15 23.18 0 11.22-4.21 22.31-4.21 11.1-13.4 20.29L315-243.46H180Zm540.38-490.92-49.46-49.46 49.46 49.46Zm-98.92 99.53-25.15-25.53-24.92-24.54 50.07 50.07Z" fill="#797b86" layoutY="-19.0" scaleX="0.025" scaleY="0.025" translateX="-462.0" translateY="526.0" />
+                     </children>
+                  </Group>
+                  <Group fx:id="editFillColourIcon" disable="true" layoutX="727.0" layoutY="16.0">
+                     <children>
+                        <SVGPath content="m255.46-880.54 42.39-42.53L632-588.92q21.08 21.08 21.08 51.61 0 30.54-21.08 51.62L458.92-311.85q-20.69 20.7-51.23 20.7-30.54 0-51.23-20.7L183.39-485.69q-21.08-21.08-21.08-51.62 0-30.53 21.08-51.61l181.92-181.77-109.85-109.85Zm152.62 152.62L224.77-545.38q-1.92 1.92-2.5 4.04-.58 2.11-.58 4.42h372q0-2.31-.57-4.42-.58-2.12-2.5-4.04L408.08-727.92Zm343.46 461.77q-29.16 0-49.58-20.43-20.42-20.42-20.42-49.57 0-19.46 10.96-40.19 10.96-20.73 23.65-39.04 8.23-11.23 17.08-22.69 8.85-11.47 18.31-22.7 9.46 11.23 18.31 22.7 8.84 11.46 17.07 22.69 12.69 18.31 23.66 39.04 10.96 20.73 10.96 40.19 0 29.15-20.43 49.57-20.42 20.43-49.57 20.43ZM80 0v-120h800V0H80Z" fill="#797b86" scaleX="0.025" scaleY="0.025" stroke="BLACK" strokeType="INSIDE" translateX="-473.0" translateY="478.0" />
+                     </children>
+                  </Group>
+                  <Group fx:id="editStrokeWidthIcon" disable="true" layoutX="651.0" layoutY="33.0">
+                     <children>
+                        <SVGPath content="M220-229.23v-20h520v20H220Zm0-100v-40h520v40H220Zm0-120v-58.46h520v58.46H220Zm0-140v-141.54h520v141.54H220Z" fill="#797b86" layoutY="-13.0" scaleX="0.035" scaleY="0.035" translateX="-462.0" translateY="526.0" />
+                     </children>
+                  </Group>
+                  <Separator layoutX="799.0" layoutY="15.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
+                  <Label layoutX="820.0" layoutY="71.0" prefHeight="20.0" prefWidth="66.0" text="Rotate" textFill="#797b86">
+                     <font>
+                        <Font name="Inter 18pt Regular" size="11.0" />
+                     </font>
+                  </Label>
+                  <ToggleButton fx:id="selectToolButton" contentDisplay="BOTTOM" layoutX="21.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSelectToolButtonSelected" prefHeight="55.0" prefWidth="55.0">
+                     <graphic>
+                        <SVGPath content="m320-410 79-110h170L320-716v306ZM551-80 406-392 240-160v-720l560 440H516l144 309-109 51ZM399-520Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
+                     </graphic>
+                  </ToggleButton>
+                  <Label layoutX="24.0" layoutY="71.0" prefHeight="20.0" prefWidth="41.0" text="Select" textFill="#797b86">
+                     <font>
+                        <Font name="Inter 18pt Regular" size="68.0" />
+                     </font>
+                  </Label>
+                  <Separator layoutX="88.0" layoutY="13.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
                </AnchorPane>
             </Tab>
+            <Tab fx:id="libraryTab" closable="false" text="  Library">
+               <graphic>
+                  <Group>
+                     <children>
+                        <SVGPath content="M252.31-100Q222-100 201-121q-21-21-21-51.31v-615.38Q180-818 201-839q21-21 51.31-21h455.38Q738-860 759-839q21 21 21 51.31v615.38Q780-142 759-121q-21 21-51.31 21H252.31Zm0-60h455.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-615.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H640v262.31l-90-53.85-90 53.85V-800H252.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v615.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM240-160v-640 640Zm220-377.69 90-53.85 90 53.85-90-53.85-90 53.85Z" scaleX="0.025" scaleY="0.025" translateX="-377.0" translateY="-4.0" />
+                     </children>
+                  </Group>
+               </graphic>
+               <content>
+                  <AnchorPane fx:id="libraryTabContainer" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="898.0">
+                     <children>
+                        <Button fx:id="groupButton" disable="true" layoutX="14.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onGroupButtonAction" prefHeight="55.0" prefWidth="55.0">
+                           <graphic>
+                              <SVGPath content="M320-200q-117 0-198.5-81.5T40-480q0-117 81.5-198.5T320-760q27 0 52.5 5t49.5 14q-58 49-90 117t-32 144q0 76 32 144t90 117q-24 9-49.5 14t-52.5 5Zm320 0q-27 0-52.5-5T538-219q17-14 32-30.5t28-34.5q11 2 21 3t21 1q83 0 141.5-58.5T840-480q0-83-58.5-141.5T640-680q-11 0-21 1t-21 3q-13-18-28-34.5T538-741q24-9 49.5-14t52.5-5q117 0 198.5 81.5T920-480q0 117-81.5 198.5T640-200Zm-160-50q-57-39-88.5-100T360-480q0-69 31.5-130T480-710q57 39 88.5 100T600-480q0 69-31.5 130T480-250Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
+                           </graphic>
+                        </Button>
+                        <Button fx:id="unGroupButton" disable="true" layoutX="117.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onUngroupButtonAction" prefHeight="55.0" prefWidth="55.0" textFill="#797b86">
+                           <graphic>
+                              <SVGPath content="M640-200q-27 0-52.5-5T538-219q58-49 90-117t32-144q0-76-32-144t-90-117q24-9 49.5-14t52.5-5q117 0 198.5 81.5T920-480q0 117-81.5 198.5T640-200Zm-320 0q-117 0-198.5-81.5T40-480q0-117 81.5-198.5T320-760q27 0 52.5 5t49.5 14q-17 14-32 30.5T362-676q-10-2-20.5-3t-21.5-1q-83 0-141.5 58.5T120-480q0 83 58.5 141.5T320-280q11 0 21.5-1t20.5-3q13 18 28 34.5t32 30.5q-24 9-49.5 14t-52.5 5Zm160-50q-57-39-88.5-100T360-480q0-69 31.5-130T480-710q57 39 88.5 100T600-480q0 69-31.5 130T480-250Z" fill="#797b86" scaleX="0.05" scaleY="0.05" />
+                           </graphic>
+                        </Button>
+                        <Label layoutX="21.0" layoutY="69.0" prefHeight="20.0" prefWidth="91.0" text="Group Shapes" textFill="#797b86">
+                           <font>
+                              <Font name="Inter 18pt Regular" size="11.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="120.0" layoutY="69.0" prefHeight="20.0" prefWidth="98.0" text="Ungroup Shapes" textFill="#797b86">
+                           <font>
+                              <Font name="Inter 18pt Regular" size="11.0" />
+                           </font>
+                        </Label>
+                        <Separator layoutX="233.0" layoutY="11.0" orientation="VERTICAL" prefHeight="76.0" prefWidth="1.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
          </TabPane>
-         <VBox fx:id="operatingArea" prefHeight="585.0" prefWidth="795.0">
-            <Pane fx:id="quickToolbar" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" prefWidth="781.0">
-               <children>
-                  <Button fx:id="sendToBackButton" disable="true" layoutX="188.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onSendToBackAction" prefHeight="26.0" prefWidth="26.0">
-                     <graphic>
-                        <SVGPath content="M224.62-160q-26.66 0-45.64-18.98T160-224.62v-427.69h40v427.69q0 10.77 6.92 17.7 6.93 6.92 17.7 6.92h427.69v40H224.62Zm132.3-196.92v49.23q-20.3 0-34.77-14.46-14.46-14.47-14.46-34.77h49.23Zm-49.23-98.46v-49.24h49.23v49.24h-49.23Zm0-147.7v-49.23h49.23v49.23h-49.23Zm49.23-147.69h-49.23q0-20.31 14.46-34.77Q336.62-800 356.92-800v49.23Zm98.46 443.08v-49.23h49.24v49.23h-49.24Zm0-443.08V-800h49.24v49.23h-49.24Zm147.7 0V-800h49.23v49.23h-49.23Zm0 443.08v-49.23h49.23v49.23h-49.23Zm147.69-443.08V-800q20.31 0 34.77 14.46Q800-771.08 800-750.77h-49.23Zm0 393.85H800q0 20.3-14.46 34.77-14.46 14.46-34.77 14.46v-49.23Zm0-98.46v-49.24H800v49.24h-49.23Zm0-147.7v-49.23H800v49.23h-49.23Z" fill="#797b86" scaleX="0.03" scaleY="0.03" />
-                     </graphic>
-                     <tooltip>
-                        <Tooltip text="Send shape to back" />
-                     </tooltip>
-                  </Button>
-                  <Button fx:id="bringToFrontButton" disable="true" layoutX="223.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onBringToFrontAction" prefHeight="26.0" prefWidth="26.0">
-                     <graphic>
-                        <SVGPath content="M372.31-307.69q-27.62 0-46.12-18.5-18.5-18.5-18.5-46.12v-363.07q0-27.62 18.5-46.12 18.5-18.5 46.12-18.5h363.07q27.62 0 46.12 18.5Q800-763 800-735.38v363.07q0 27.62-18.5 46.12-18.5 18.5-46.12 18.5H372.31Zm0-40h363.07q9.24 0 16.93-7.69 7.69-7.7 7.69-16.93v-363.07q0-9.24-7.69-16.93-7.69-7.69-16.93-7.69H372.31q-9.23 0-16.93 7.69-7.69 7.69-7.69 16.93v363.07q0 9.23 7.69 16.93 7.7 7.69 16.93 7.69ZM209.23-209.23V-160q-20.69 0-34.96-14.27T160-209.23h49.23ZM160-307.69v-49.23h49.23v49.23H160Zm0-147.69v-49.24h49.23v49.24H160Zm0-147.7v-49.23h49.23v49.23H160ZM307.69-160v-49.23h49.23V-160h-49.23Zm147.69 0v-49.23h49.24V-160h-49.24Zm147.7 0v-49.23h49.23V-160h-49.23Z" fill="#797b86" scaleX="0.03" scaleY="0.03" />
-                     </graphic>
-                     <tooltip>
-                        <Tooltip text="Bring shape to front" />
-                     </tooltip>
-                  </Button>
-                  <Separator layoutX="262.0" orientation="VERTICAL" prefHeight="32.0" prefWidth="1.0" />
-                  <SVGPath fx:id="fillColorToChangeIcon" content="m255.46-880.54 42.39-42.53L632-588.92q21.08 21.08 21.08 51.61 0 30.54-21.08 51.62L458.92-311.85q-20.69 20.7-51.23 20.7-30.54 0-51.23-20.7L183.39-485.69q-21.08-21.08-21.08-51.62 0-30.53 21.08-51.61l181.92-181.77-109.85-109.85Zm152.62 152.62L224.77-545.38q-1.92 1.92-2.5 4.04-.58 2.11-.58 4.42h372q0-2.31-.57-4.42-.58-2.12-2.5-4.04L408.08-727.92Zm343.46 461.77q-29.16 0-49.58-20.43-20.42-20.42-20.42-49.57 0-19.46 10.96-40.19 10.96-20.73 23.65-39.04 8.23-11.23 17.08-22.69 8.85-11.47 18.31-22.7 9.46 11.23 18.31 22.7 8.84 11.46 17.07 22.69 12.69 18.31 23.66 39.04 10.96 20.73 10.96 40.19 0 29.15-20.43 49.57-20.42 20.43-49.57 20.43ZM80 0v-120h800V0H80Z" disable="true" fill="#797b86" layoutX="-194.0" layoutY="477.0" scaleX="0.025" scaleY="0.025" stroke="BLACK" strokeType="INSIDE" />
-                  <ColorPicker fx:id="fillColorToChangePicker" disable="true" layoutX="302.0" layoutY="4.0" onAction="#onFillColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
-                     <value>
-                        <Color green="0.6000000238418579" blue="1.0" />
-                     </value>
-                  </ColorPicker>
-                  <ColorPicker fx:id="strokeColorToChangePicker" disable="true" layoutX="367.0" layoutY="4.0" onAction="#onStrokeColorToChangePickerAction" prefHeight="24.0" prefWidth="24.0">
-                     <value>
-                        <Color green="0.6000000238418579" blue="1.0" />
-                     </value>
-                  </ColorPicker>
-                  <SVGPath fx:id="strokeColorToChangeIcon" content="M80 0v-120h800V0H80Zm160-303.46h49.46l332-331.39-25.15-25.53-24.92-24.54-331.39 332v49.46Zm-60 60v-135l448.39-447.77q8.69-8.69 19.73-13.15 11.03-4.46 22.96-4.46 11.94 0 23.12 4.46 11.18 4.46 20.49 13.77l48.08 48.69q9.31 8.69 13.46 19.91 4.15 11.21 4.15 23.18 0 11.22-4.21 22.31-4.21 11.1-13.4 20.29L315-243.46H180Zm540.38-490.92-49.46-49.46 49.46 49.46Zm-98.92 99.53-25.15-25.53-24.92-24.54 50.07 50.07Z" disable="true" fill="#797b86" layoutX="-130.0" layoutY="478.0" scaleX="0.025" scaleY="0.025" stroke="BLACK" strokeType="INSIDE" translateY="-40.0" />
-                  <SVGPath fx:id="editStrokeWidthIcon" content="M220-229.23v-20h520v20H220Zm0-100v-40h520v40H220Zm0-120v-58.46h520v58.46H220Zm0-140v-141.54h520v141.54H220Z" disable="true" fill="#797b86" layoutX="145.0" scaleX="0.04" scaleY="0.04" translateX="-204.0" translateY="496.0" />
-                  <Slider fx:id="editStrokeWidthSlider" blockIncrement="1.0" disable="true" layoutX="444.0" layoutY="9.0" max="10.0" min="1.0" prefHeight="16.0" prefWidth="85.0" />
-               </children></Pane>
+      </Pane>
+      <HBox fx:id="mainArea" alignment="CENTER_LEFT" prefHeight="623.0" prefWidth="898.0">
+         <VBox fx:id="operatingArea" prefHeight="447.0" prefWidth="909.0">
             <Pane fx:id="canvasQuickToolbar" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" prefWidth="781.0">
                <children>
                   <SVGPath content="M479.23-160 347.69-291.54l27.54-27.54 84 82.23v-487.07l-83.23 83-27.54-27.54L480-800l131.54 131.54-28.31 28.54-84-83.23v486.3l84-82.23 27.54 27.54L479.23-160Z" fill="#797b86" layoutX="-205.0" layoutY="496.0" rotate="90.0" scaleX="0.03" scaleY="0.03" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
@@ -240,28 +385,42 @@
                   <SVGPath content="M479.23-160 347.69-291.54l27.54-27.54 84 82.23v-487.07l-83.23 83-27.54-27.54L480-800l131.54 131.54-28.31 28.54-84-83.23v486.3l84-82.23 27.54 27.54L479.23-160Z" fill="#797b86" layoutX="-298.0" layoutY="1.0" scaleX="0.03" scaleY="0.03" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" translateY="494.0" />
                   <TextField fx:id="canvasHeightInput" layoutX="197.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="58.0" />
                   <Separator layoutX="367.0" orientation="VERTICAL" prefHeight="32.0" prefWidth="1.0" />
+                  <Separator layoutX="553.0" orientation="VERTICAL" prefHeight="32.0" prefWidth="1.0" />
+                  <ToggleButton fx:id="toggleGridButton" layoutX="567.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onToggleGridButtonAction" prefHeight="26.0" prefWidth="26.0">
+                     <graphic>
+                        <SVGPath content="M160-520v-280h280v280H160Zm0 360v-280h280v280H160Zm360-360v-280h280v280H520Zm0 360v-280h280v280H520ZM200-560h200v-200H200v200Zm360 0h200v-200H560v200Zm0 360h200v-200H560v200Zm-360 0h200v-200H200v200Zm360-360Zm0 160Zm-160 0Zm0-160Z" fill="#797b86" scaleX="0.026" scaleY="0.026" />
+                     </graphic></ToggleButton>
+                  <Slider fx:id="gridSizeSlider" layoutX="605.0" layoutY="7.0" min="5.0" prefHeight="16.0" prefWidth="98.0" value="20.0" />
                </children>
             </Pane>
-            <ScrollPane fx:id="scrollableCanvasContainer" prefHeight="554.0" prefWidth="793.0">
-               <content>
-                  <Group fx:id="canvasGroup">
-                     <children>
-                        <Pane fx:id="canvas" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragReleased="#setOnMouseReleased" onMouseDragged="#setOnMouseDragged" onMousePressed="#setOnMousePressed" onMouseReleased="#setOnMouseReleased" prefHeight="520.0" prefWidth="789.0">
-                           <cursor>
-                              <Cursor fx:constant="DEFAULT" />
-                           </cursor>
-                        </Pane>
-                     </children>
-                  </Group>
-               </content>
-            </ScrollPane>
+            <AnchorPane fx:id="helperStackPane">
+               <children>
+                  <ScrollPane fx:id="scrollableCanvasContainer" prefHeight="417.0" prefWidth="898.0">
+                     <content>
+                        <Group fx:id="canvasGroup">
+                           <children>
+                              <StackPane fx:id="stackPane" alignment="TOP_CENTER" style="-fx-background-color: #fffffe;">
+                                 <children>
+                                    <Canvas fx:id="grid" height="416.0" width="896.0" />
+                                    <Pane fx:id="canvas" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseDragReleased="#setOnMouseReleased" onMouseDragged="#setOnMouseDragged" onMousePressed="#setOnMousePressed" onMouseReleased="#setOnMouseReleased" prefHeight="416.0" prefWidth="896.0">
+                                       <cursor>
+                                          <Cursor fx:constant="DEFAULT" />
+                                       </cursor>
+                                    </Pane>
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </Group>
+                     </content>
+                  </ScrollPane>
+               </children>
+            </AnchorPane>
          </VBox>
       </HBox>
       <HBox>
          <children>
-            <Pane fx:id="bottomLeftCorner" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="31.0" prefWidth="57.0" />
-            <Pane fx:id="bottomPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="858.0">
-               <Label fx:id="canvasInfoLabel" layoutX="19.0" layoutY="6.0" prefHeight="16.0" prefWidth="438.0" textFill="#797b86">
+            <Pane fx:id="bottomPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="898.0">
+               <Label fx:id="canvasInfoLabel" layoutX="19.0" layoutY="6.0" prefHeight="16.0" prefWidth="749.0" textFill="#797b86">
                   <font>
                      <Font size="11.0" />
                   </font>

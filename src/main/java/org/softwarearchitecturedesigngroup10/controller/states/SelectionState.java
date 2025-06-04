@@ -1,6 +1,7 @@
 package org.softwarearchitecturedesigngroup10.controller.states;
 
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 import org.softwarearchitecturedesigngroup10.controller.Controller;
@@ -9,6 +10,7 @@ import org.softwarearchitecturedesigngroup10.model.CanvasModel;
 import org.softwarearchitecturedesigngroup10.model.commands.selection.DeselectAllShapeCommand;
 import org.softwarearchitecturedesigngroup10.model.commands.selection.SelectShapeCommand;
 import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.composite.GroupedShapesData;
 import org.softwarearchitecturedesigngroup10.view.CanvasView;
 
 public class SelectionState implements State {
@@ -21,10 +23,10 @@ public class SelectionState implements State {
     @Override
     public void handleMousePressed(MouseEvent event, Controller context) {
         Object target = event.getTarget();
-        System.out.println("SelectionState - Clicked on: " + target); // <-- AGGIUNGI QUESTO
+        System.out.println("SelectionState - Clicked on: " + target);
         if (target instanceof Shape) {
-            System.out.println("  ID: " + ((Shape) target).getId()); // <-- AGGIUNGI QUESTO
-            System.out.println("  UserData: " + ((Shape) target).getUserData()); // <-- AGGIUNGI QUESTO
+            System.out.println("  ID: " + ((Shape) target).getId());
+            System.out.println("  UserData: " + ((Shape) target).getUserData());
         }
         CanvasModel model = context.getCanvasModel();
         pressX = event.getX();
@@ -32,8 +34,7 @@ public class SelectionState implements State {
         isPressOnSelectedShapes = false;
         clickedShapeId = null;
 
-        if (target instanceof Rectangle && ((Rectangle) target).getId() != null && ((Rectangle) target).getId().equals(CanvasView.RESIZE_HANDLE_ID)) {
-            Rectangle handle = (Rectangle) target;
+        if (target instanceof Rectangle handle && handle.getId() != null && handle.getId().equals(CanvasView.RESIZE_HANDLE_ID)) {
             String shapeId = (String) handle.getUserData();
             if (shapeId != null) {
                 ResizingState resizingState = (ResizingState) context.getResizingState();
@@ -46,28 +47,39 @@ public class SelectionState implements State {
             return;
         }
 
-        if (target instanceof Shape shape && shape.getId() != null && !shape.getId().equals(CanvasView.RESIZE_HANDLE_ID)) {
-            ShapeData data = model.getShapes().get(shape.getId());
-            if (data != null) {
-                clickedShapeId = shape.getId();
-                isPressOnSelectedShapes = data.isSelected();
+        Node current = (Node) target;
+        String rootShapeId = null;
+        ShapeData rootShapeData = null;
+
+        while (current != null) {
+            if (current.getId() != null && model.getShapes().containsKey(current.getId())) {
+                rootShapeId = current.getId();
+                rootShapeData = model.getShapes().get(rootShapeId);
+                break;
             }
-        } else if (target == context.getCanvas()) {
-            new DeselectAllShapeCommand(model).execute();
-            event.consume();
-            return;
+            current = current.getParent();
+            if (current == context.getCanvas()) break;
         }
+        System.out.println("SelectionState - Identified rootShapeId: " + rootShapeId);
 
-        if (target instanceof Shape && !isPressOnSelectedShapes && clickedShapeId != null) {
-            if (!event.isShiftDown()) {
-                new DeselectAllShapeCommand(model).execute();
+        if (rootShapeId != null && rootShapeData != null) {
+            clickedShapeId = rootShapeId;
+            isPressOnSelectedShapes = rootShapeData.isSelected();
+
+            if (!isPressOnSelectedShapes) {
+                if (!event.isShiftDown()) {
+                    new DeselectAllShapeCommand(model).execute();
+                }
+                new SelectShapeCommand(model, clickedShapeId).execute();
+                isPressOnSelectedShapes = true;
+            } else {
+                if (event.isShiftDown()) {
+                    new SelectShapeCommand(model, clickedShapeId).execute();
+                    isPressOnSelectedShapes = model.getShapes().get(clickedShapeId).isSelected();
+
+                }
             }
-            new SelectShapeCommand(model, clickedShapeId).execute();
-            isPressOnSelectedShapes = true;
 
-        } else if (target instanceof Shape && isPressOnSelectedShapes && clickedShapeId != null) {
-            // Se clicco su una forma già selezionata, non faccio nulla qui,
-            // aspetto il drag o il release
         } else if (target == context.getCanvas()) {
             new DeselectAllShapeCommand(model).execute();
         }
@@ -88,6 +100,11 @@ public class SelectionState implements State {
             if (Math.sqrt(totalDx * totalDx + totalDy * totalDy) > DRAG_THRESHOLD) {
 
                 MovingState movingState = (MovingState) context.getMovingState();
+                if (context.getCanvasModel().getSelectedShapes().get(clickedShapeId) instanceof GroupedShapesData gd)
+                    gd.getChildren().forEach(child -> {
+
+                    });
+
                 boolean initOk = movingState.initializeMove(context.getCanvasModel(), clickedShapeId, pressX, pressY);
 
                 if (initOk) {

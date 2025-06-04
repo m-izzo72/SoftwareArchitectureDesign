@@ -18,6 +18,10 @@ public class LineData extends ShapeData {
         this.endY = endY;
     }
 
+    public LineData() {
+        setType("LD");
+    }
+
     @Override
     public double getWidth() {
         return Math.abs(getEndX() - getX());

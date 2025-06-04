@@ -1,10 +1,8 @@
 package org.softwarearchitecturedesigngroup10.controller.adapters;
 
-import javafx.scene.shape.Shape;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.EllipseData;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.LineData;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.RectangleData;
-import org.softwarearchitecturedesigngroup10.model.shapesdata.ShapeData;
+import javafx.scene.Node;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.*;
+import org.softwarearchitecturedesigngroup10.model.shapesdata.composite.GroupedShapesData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,9 +14,12 @@ public class ShapeConverter {
         adapters.put(LineData.class, new LineAdapter());
         adapters.put(RectangleData.class, new RectangleAdapter());
         adapters.put(EllipseData.class, new EllipseAdapter());
+        adapters.put(PolygonData.class, new PolygonAdapter());
+        adapters.put(TextData.class, new TextAdapter());
+        adapters.put(GroupedShapesData.class, new GroupedShapesAdapter(this));
     }
 
-    public Shape convert(ShapeData data) {
+    public Node convert(ShapeData data) {
         ShapeAdapterInterface adapter = adapters.get(data.getClass()); // Gets the adapter for the given data type by checking its class
         if (adapter != null) {
             return adapter.toFXShape(data);

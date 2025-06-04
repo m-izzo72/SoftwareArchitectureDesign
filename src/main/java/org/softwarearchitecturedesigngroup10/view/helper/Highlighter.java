@@ -4,38 +4,30 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.scene.Node;
 import javafx.scene.effect.Glow;
-import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap; // Usa WeakHashMap per evitare memory leak
+import java.util.WeakHashMap;
 
 public class Highlighter {
 
-    private static class AnimationContext {
-        final Timeline timeline;
-        final Glow effect;
-
-        AnimationContext(Timeline timeline, Glow effect) {
-            this.timeline = timeline;
-            this.effect = effect;
-        }
+    private record AnimationContext(Timeline timeline, Glow effect) {
     }
 
-    private static final Map<Shape, AnimationContext> activeAnimatedHighlights = new WeakHashMap<>();
-    private static final Map<Shape, Boolean> selectedShapes = new WeakHashMap<>(); // Mappa per lo stato di selezione
+    private static final Map<Node, AnimationContext> activeAnimatedHighlights = new WeakHashMap<>();
+    private static final Map<Node, Boolean> selectedShapes = new WeakHashMap<>();
 
     private static final double MIN_GLOW_LEVEL = 0.1;
     private static final double MAX_GLOW_LEVEL = 0.7;
     private static final double PULSE_DURATION_SECONDS = 1.5;
 
-    public static void highlightShape(Shape shape) {
+    public static void highlightShape(Node shape) {
         if (shape == null) return;
 
         if (activeAnimatedHighlights.containsKey(shape)) {
-            return; // Già evidenziata, non fare nulla
+            return;
         }
 
         Glow animatedEffect = new Glow();
@@ -57,27 +49,27 @@ public class Highlighter {
         timeline.play();
 
         activeAnimatedHighlights.put(shape, new AnimationContext(timeline, animatedEffect));
-        selectedShapes.put(shape, true); // Marca come selezionata
+        selectedShapes.put(shape, true);
     }
 
-    public static void unhighlightShape(Shape shape) {
+    public static void unhighlightShape(Node shape) {
         if (shape == null) return;
 
         if (activeAnimatedHighlights.containsKey(shape)) {
             AnimationContext context = activeAnimatedHighlights.get(shape);
             context.timeline.stop();
             activeAnimatedHighlights.remove(shape);
-            selectedShapes.remove(shape); // Rimuovi dallo stato di selezione
+            selectedShapes.remove(shape);
         }
 
         shape.setEffect(null);
     }
 
-    public static boolean isShapeSelected(Shape shape) {
-        return selectedShapes.getOrDefault(shape, false);
-    }
+//    public static boolean isShapeSelected(Shape shape) {
+//        return selectedShapes.getOrDefault(shape, false);
+//    }
 
-    public static boolean isHighlighted(Shape shape) {
-        return activeAnimatedHighlights.containsKey(shape);
-    }
+//    public static boolean isHighlighted(Shape shape) {
+//        return activeAnimatedHighlights.containsKey(shape);
+//    }
 }

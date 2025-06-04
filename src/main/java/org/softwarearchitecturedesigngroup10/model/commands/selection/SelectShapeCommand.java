@@ -15,7 +15,7 @@ public class SelectShapeCommand implements Command {
 
     @Override
     public void execute() {
-        receiver.selectShape(this.selectedShape);
+        receiver.toggleShapeSelection(this.selectedShape);
     }
 
     @Override

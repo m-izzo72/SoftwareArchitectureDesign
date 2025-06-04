@@ -1,6 +1,8 @@
 package org.softwarearchitecturedesigngroup10.model.shapesdata;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class ShapeData implements Serializable, Cloneable {
 
@@ -12,6 +14,33 @@ public abstract class ShapeData implements Serializable, Cloneable {
     private double strokeWidth;
     private double rotationAngle;
     private boolean isSelected;
+    private boolean isYFlipped;
+    private boolean isXFlipped;
+    private double resizeFactor;
+
+    public double getResizeFactor() {
+        return resizeFactor;
+    }
+
+    public void setResizeFactor(double resizeFactor) {
+        this.resizeFactor = resizeFactor;
+    }
+
+    public boolean isXFlipped() {
+        return isXFlipped;
+    }
+
+    public void setXFlipped() {
+        isXFlipped = !isXFlipped;
+    }
+
+    public boolean isYFlipped() {
+        return isYFlipped;
+    }
+
+    public void setYFlipped() {
+        isYFlipped = !isYFlipped;
+    }
 
     public ShapeData() { }
 
@@ -85,5 +114,19 @@ public abstract class ShapeData implements Serializable, Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }
+    }
+
+    /** FOR GROUPED SHAPES **/
+
+    public void add(ShapeData data) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void remove(ShapeData data) {
+        throw new UnsupportedOperationException();
+    }
+
+    public List<ShapeData> getChildren() {
+        return Collections.emptyList();
     }
 }
