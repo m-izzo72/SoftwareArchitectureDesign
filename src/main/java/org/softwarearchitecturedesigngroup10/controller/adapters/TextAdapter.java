@@ -42,12 +42,22 @@ public class TextAdapter implements ShapeAdapterInterface {
 
         fxText.setRotate(td.getRotationAngle());
 
-        double scaleX = 1.0;
-        double scaleY = 1.0;
-        if (td.isXFlipped()) scaleX = -1.0;
-        if (td.isYFlipped()) scaleY = -1.0;
-        fxText.setScaleX(scaleX);
-        fxText.setScaleY(scaleY);
+        fxText.setRotate(0);
+        fxText.setScaleY(1.0); fxText.setScaleX(1.0);
+        if(td.isYFlipped() && td.isXFlipped()) {
+            fxText.setRotate(td.getRotationAngle());
+            fxText.setScaleY(-1); fxText.setScaleX(-1);
+        } else if(td.isYFlipped() && !td.isXFlipped()) {
+            fxText.setRotate(-td.getRotationAngle());
+            fxText.setScaleY(-1); fxText.setScaleX(1);
+        } else if(td.isXFlipped() && !td.isYFlipped()) {
+            fxText.setRotate(-td.getRotationAngle());
+            fxText.setScaleY(1);
+            fxText.setScaleX(-1);
+        } else {
+            fxText.setRotate(td.getRotationAngle());
+            fxText.setScaleY(1); fxText.setScaleX(1);
+        }
 
         return fxText;
     }

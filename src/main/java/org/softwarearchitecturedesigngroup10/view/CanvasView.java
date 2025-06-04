@@ -312,7 +312,7 @@ public class CanvasView implements CanvasViewInterface {
     }
 
     public void updateResizeHandle(Node shape) {
-        if (shape != null && !(shape instanceof Group)) {
+        if (shape != null && !(shape instanceof Group || shape instanceof Text)) {
             Bounds bounds = shape.getBoundsInParent();
             resizeHandle.setX(bounds.getMaxX() - HANDLE_SIZE / 2);
             resizeHandle.setY(bounds.getMaxY() - HANDLE_SIZE / 2);
